@@ -1,0 +1,38 @@
+{
+  "name": "@waves/ledger",
+  "version": "0.0.2",
+  "description": "Waves ladger lib for browser",
+  "main": "./dist/wavesLedger.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wavesplatform/waves-ledger-js.git"
+  },
+  "scripts": {
+    "build": "gulp buld"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Waves Platform",
+    "email": "info@wavesplatform.com",
+    "url": "https://wavesplatform.com"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.53",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.53",
+    "@babel/preset-env": "^7.0.0-beta.53",
+    "@babel/runtime": "^7.0.0-beta.53",
+    "babelify": "^9.0.0",
+    "browserify": "^16.2.2",
+    "gulp": "^3.9.1",
+    "gulp-uglify": "^3.0.1",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "dependencies": {
+    "@ledgerhq/hw-transport-u2f": "^4.15.0",
+    "babel-runtime": "^6.26.0",
+    "bs58": "^4.0.1",
+    "u2f-api": "^1.0.6"
+  }
+}

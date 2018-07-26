@@ -73,6 +73,20 @@ export class Waves {
         return this._signData(dataForSign);
     }
 
+    signOrder (path, amountPrecission, txData) {
+        const dataForSign = Buffer.concat([
+            Waves.splitPath(path),
+            Buffer.from([
+                amountPrecission,
+                WAVES_CONFIG.WAVES_PRECISION,
+                WAVES_CONFIG.SIGNED_CODES.ORDER
+            ]),
+            msgBuffer
+        ]);
+
+        return this._signData(dataForSign)
+    }
+
     signSomeData(path, msgBuffer) {
         const dataForSign = Buffer.concat([
             Waves.splitPath(path),
@@ -165,5 +179,6 @@ export class Waves {
 
         return buffer;
     }
+    
 }
 

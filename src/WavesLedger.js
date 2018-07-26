@@ -80,7 +80,18 @@ export class WavesLedger {
         try {
             const waves = await this._wavesLibPromise;
             return await waves.signTransaction(path, asset.precision, msgData);
+        } catch (e) {
+            this._error = e;
+            throw e;
+        }
+    }
 
+    async signOrder (userId, asset, txData) {
+        const path = this.getPathById(userId);
+        const msgData = new Buffer(txData);
+        try {
+            const waves = await this._wavesLibPromise;
+            return await waves.signOrder(path, asset.precision, msgData);
         } catch (e) {
             this._error = e;
             throw e;
@@ -93,7 +104,6 @@ export class WavesLedger {
         try {
             const waves = await this._wavesLibPromise;
             return await waves.signSomeData(path, msgData);
-
         } catch (e) {
             this._error = e;
             throw e;
@@ -106,7 +116,6 @@ export class WavesLedger {
         try {
             const waves = await this._wavesLibPromise;
             return await waves.signRequest(path, msgData);
-
         } catch (e) {
             this._error = e;
             throw e;
@@ -119,7 +128,6 @@ export class WavesLedger {
         try {
             const waves = await this._wavesLibPromise;
             return await waves.signMessage(path, msgData);
-
         } catch (e) {
             this._error = e;
             throw e;
@@ -143,6 +151,7 @@ export class WavesLedger {
             this._error = e;
             return false;
         }
+
         return true;
     }
 
@@ -169,4 +178,6 @@ export class WavesLedger {
         });
         return this._wavesLibPromise;
     }
+    
 }
+

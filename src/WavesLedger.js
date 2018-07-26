@@ -8,8 +8,6 @@ export class WavesLedger {
     constructor(debug = false) {
         this._wavesLibPromise = null;
         this._initTransportPromise = null;
-        this._addressHashByAddress = {};
-        this._addressHashById = {};
         this._debug = debug;
         this._error = null;
         this.ready = null;
@@ -39,23 +37,17 @@ export class WavesLedger {
     }
 
     async getUserDataById(id) {
-
-        if (!this._addressHashById[id]) {
-            try {
-                const waves = await this._wavesLibPromise;
-                const path = this.getPathById(id);
-                const userData = await waves.getWalletPublicKey(path, false);
-                this._addressHashByAddress[userData.wavesAddress] = {
-                    ...userData, id, path
-                };
-                this._addressHashById[id] = this._addressHashByAddress[userData.wavesAddress];
-            } catch (e) {
-                this._error = e;
-                throw e;
-            }
+        try {
+            const waves = await this._wavesLibPromise;
+            const path = this.getPathById(id);
+            const userData = await waves.getWalletPublicKey(path, false);
+            return {
+                ...userData, id, path
+            };
+        } catch (e) {
+            this._error = e;
+            throw e;
         }
-
-        return this._addressHashById[id];
     }
 
     async getPaginationUsersData(from, limit) {
@@ -178,6 +170,6 @@ export class WavesLedger {
         });
         return this._wavesLibPromise;
     }
-    
+
 }
 

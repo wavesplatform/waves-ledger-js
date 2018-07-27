@@ -1,14 +1,14 @@
 {
   "name": "@waves/ledger",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Waves ladger lib for browser",
-  "main": "./dist/wavesLedger.js",
+  "main": "./dist/waves-ledger.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"
   },
   "scripts": {
-    "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u Buffer -u @waves/waves-signature-generator -u @ledgerhq/hw-transport-u2f -o dist/waves-ledjer-js.js",
+    "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u Buffer -u @waves/waves-signature-generator -u @ledgerhq/hw-transport-u2f -o dist/waves-ledger.js",
     "prepare": "npm run build",
     "build_ledger_monitor": "npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -x @waves/waves-signature-generator -t [ babelify ] -t [browserify-global-shim [\"@waves/waves-signature-generator\"= \"wavesSignatureGenerator\"] ]"
   },

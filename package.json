@@ -1,8 +1,9 @@
 {
   "name": "@waves/ledger",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Waves ladger lib for browser",
-  "main": "./dist/waves-ledger.js",
+  "main": "dist/waves-ledger.js",
+  "types": "src/WavesLedger.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"

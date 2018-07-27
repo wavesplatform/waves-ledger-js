@@ -1,9 +1,16 @@
-import { Waves } from './Waves';
-import { default as TransportU2F} from '@ledgerhq/hw-transport-u2f';
+import { Waves, IUserData } from './Waves';
+import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
+declare const Buffer;
 
 const ADDRES_PREFIX = "44'/5741564'/0'/0'/";
 
 export class WavesLedger {
+
+    public ready: boolean;
+    private _wavesLibPromise: Promise<Waves>;
+    private _initTransportPromise: Promise<TransportU2F>;
+    private _debug: boolean;
+    private _error: any;
 
     constructor(debug = false) {
         this._wavesLibPromise = null;
@@ -14,7 +21,7 @@ export class WavesLedger {
         this.tryConnect();
     }
 
-    async tryConnect() {
+    async tryConnect(): Promise<void> {
         const disconnectPromise = this.disconnect();
         this._initU2FTransport();
         this._setDebugMode();
@@ -23,7 +30,7 @@ export class WavesLedger {
         await Promise.all([this._initTransportPromise,  this._wavesLibPromise]);
     }
 
-    async disconnect() {
+    async disconnect(): Promise<void> {
         const transportpromise = this._initTransportPromise;
         this._initTransportPromise = null;
         this._wavesLibPromise = null;
@@ -36,7 +43,7 @@ export class WavesLedger {
         }
     }
 
-    async getUserDataById(id) {
+    async getUserDataById(id): Promise<IUser> {
         try {
             const waves = await this._wavesLibPromise;
             const path = this.getPathById(id);
@@ -173,3 +180,8 @@ export class WavesLedger {
 
 }
 
+
+interface IUser extends IUserData {
+    id: number;
+    path: string;
+}

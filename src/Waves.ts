@@ -1,4 +1,5 @@
-const base58 = require('bs58');
+import { libs } from '@waves/waves-signature-generator';
+declare const Buffer;
 
 const WAVES_CONFIG = {
     STATUS: {
@@ -27,6 +28,8 @@ const WAVES_CONFIG = {
 
 export class Waves {
 
+    protected transport;
+
     constructor(transport) {
         this.transport = transport;
         this.decorateClassByTransport();
@@ -36,21 +39,22 @@ export class Waves {
         this.transport.decorateAppAPIMethods(
             this,
             [
-                'signTransaction',
                 'getWalletPublicKey',
+                'signTransaction',
                 'signMessage',
                 'signSomeData',
-                'signRequest'
+                'signRequest',
+                'signOrder'
             ],
             WAVES_CONFIG.SECRET
         );
     }
 
-    async getWalletPublicKey(path, verify = false) {
+    async getWalletPublicKey(path, verify = false): Promise<IUserData> {
         const buffer = Waves.splitPath(path);
         const p1 = verify ? 0x80 : 0x00;
         const response = await this.transport.send(0x80, 0x04, p1, 0x00, buffer);
-        const publicKey = base58.encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
+        const publicKey = libs.base58.encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
         const wavesAddress = response
             .slice(WAVES_CONFIG.PUBLIC_KEY_LENGTH, WAVES_CONFIG.PUBLIC_KEY_LENGTH + WAVES_CONFIG.ADDRESS_LENGTH)
             .toString("ascii");
@@ -60,7 +64,7 @@ export class Waves {
         return { publicKey, wavesAddress, statusCode };
     }
 
-    signTransaction (path, amountPrecission, txData) {
+    signTransaction (path, amountPrecission, txData): Promise<string> {
         const dataForSign = Buffer.concat([
             Waves.splitPath(path),
             Buffer.from([
@@ -73,7 +77,7 @@ export class Waves {
         return this._signData(dataForSign);
     }
 
-    signOrder (path, amountPrecission, txData) {
+    signOrder (path, amountPrecission, txData): Promise<string> {
         const dataForSign = Buffer.concat([
             Waves.splitPath(path),
             Buffer.from([
@@ -81,13 +85,13 @@ export class Waves {
                 WAVES_CONFIG.WAVES_PRECISION,
                 WAVES_CONFIG.SIGNED_CODES.ORDER
             ]),
-            msgBuffer
+            txData
         ]);
 
         return this._signData(dataForSign)
     }
 
-    signSomeData(path, msgBuffer) {
+    signSomeData(path, msgBuffer): Promise<string> {
         const dataForSign = Buffer.concat([
             Waves.splitPath(path),
             Buffer.from([
@@ -101,7 +105,7 @@ export class Waves {
         return this._signData(dataForSign)
     }
 
-    signRequest(path, msgBuffer) {
+    signRequest(path, msgBuffer): Promise<string> {
         const dataForSign = Buffer.concat([
             Waves.splitPath(path),
             Buffer.from([
@@ -115,7 +119,7 @@ export class Waves {
         return this._signData(dataForSign)
     }
 
-    signMessage(path, msgBuffer) {
+    signMessage(path, msgBuffer): Promise<string> {
         const dataForSign = Buffer.concat([
             Waves.splitPath(path),
             Buffer.from([
@@ -129,7 +133,7 @@ export class Waves {
         return this._signData(dataForSign)
     }
 
-    async _signData(dataBuffer) {
+    protected async _signData(dataBuffer): Promise<string> {
         const maxChankLength = WAVES_CONFIG.MAX_SIZE - 5;
         const dataLength = dataBuffer.length;
         let sendBytes = 0;
@@ -147,12 +151,12 @@ export class Waves {
             }
         }
 
-        return base58.encode(result.slice(0,-2));
+        return libs.base58.encode(result.slice(0,-2));
     }
 
-    static checkError(data) {
-        const statusCode = data[0] * 16 * 16 + data[1] === WAVES_CONFIG.STATUS.SW_OK;
-        if (data.length > 2 || statusCode) {
+    static checkError(data): {error: string, status: number} {
+        const statusCode = data[0] * 16 * 16 + data[1];
+        if (statusCode === WAVES_CONFIG.STATUS.SW_OK) {
             return null;
         }
         return {error: 'Wrong data', status: statusCode};
@@ -182,3 +186,9 @@ export class Waves {
     
 }
 
+
+export interface IUserData {
+    publicKey: string;
+    wavesAddress: string;
+    statusCode: string;
+}

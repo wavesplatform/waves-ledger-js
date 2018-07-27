@@ -1,4 +1,4 @@
-import { WavesLedger } from '../src/WavesLedger';
+const { WavesLedger } = require('../lib/WavesLedger');
 
 const statusEl = document.querySelector('.device-status');
 const usersListEl = document.querySelector('.users-list');

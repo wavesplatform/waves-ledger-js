@@ -8,7 +8,9 @@
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"
   },
   "scripts": {
-    "build": "gulp buld"
+    "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u Buffer -u @waves/waves-signature-generator -u @ledgerhq/hw-transport-u2f -o dist/waves-ledjer-js.js",
+    "prepare": "npm run build",
+    "build_ledger_monitor": "npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -x @waves/waves-signature-generator -t [ babelify ] -t [browserify-global-shim [\"@waves/waves-signature-generator\"= \"wavesSignatureGenerator\"] ]"
   },
   "keywords": [],
   "author": {
@@ -18,21 +20,19 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.53",
-    "@babel/plugin-transform-runtime": "^7.0.0-beta.53",
-    "@babel/preset-env": "^7.0.0-beta.53",
-    "@babel/runtime": "^7.0.0-beta.53",
+    "@babel/core": "^7.0.0-beta.54",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.54",
+    "@babel/preset-env": "^7.0.0-beta.54",
+    "@babel/runtime": "^7.0.0-beta.54",
     "babelify": "^9.0.0",
-    "browserify": "^16.2.2",
-    "gulp": "^3.9.1",
-    "gulp-uglify": "^3.0.1",
+    "browserify-global-shim": "^1.0.3",
+    "typescript": "^2.9.2",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-u2f": "^4.15.0",
-    "babel-runtime": "^6.26.0",
-    "bs58": "^4.0.1",
-    "u2f-api": "^1.0.6"
+    "@waves/waves-signature-generator": "^0.13.0",
+    "browserify": "^16.2.2"
   }
 }

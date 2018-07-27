@@ -3,7 +3,7 @@
 ## Install
 
 ```
-$ npm install --save @Waves/ledger
+$ npm install --save @waves/ledger
 ```
 
 ## Usage

@@ -1,6 +1,6 @@
 {
   "name": "@waves/ledger",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Waves ladger lib for browser",
   "main": "dist/waves-ledger.js",
   "types": "src/WavesLedger.ts",
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-u2f": "^4.15.0",
-    "@waves/waves-signature-generator": "^0.13.0",
+    "@waves/waves-signature-generator": "0.14.0",
     "browserify": "^16.2.2"
   }
 }

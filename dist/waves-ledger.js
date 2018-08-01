@@ -56,13 +56,13 @@ class Waves {
             const p1 = verify ? 0x80 : 0x00;
             const response = yield this.transport.send(0x80, 0x04, p1, 0x00, buffer);
             const publicKey = waves_signature_generator_1.libs.base58.encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
-            const wavesAddress = response
+            const address = response
                 .slice(WAVES_CONFIG.PUBLIC_KEY_LENGTH, WAVES_CONFIG.PUBLIC_KEY_LENGTH + WAVES_CONFIG.ADDRESS_LENGTH)
                 .toString("ascii");
             const statusCode = response
                 .slice(-WAVES_CONFIG.STATUS_LENGTH)
                 .toString("hex");
-            return { publicKey, wavesAddress, statusCode };
+            return { publicKey, address, statusCode };
         });
     }
     signTransaction(path, amountPrecission, txData) {

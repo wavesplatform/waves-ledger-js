@@ -328,7 +328,7 @@ class WavesLedger {
     probeDevice() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.ready) {
-                this.tryConnect();
+                yield this.tryConnect();
             }
             this._error = null;
             try {

@@ -139,7 +139,7 @@ export class WavesLedger {
 
     async probeDevice() {
         if (!this.ready) {
-            this.tryConnect();
+            await this.tryConnect();
         }
 
         this._error = null;

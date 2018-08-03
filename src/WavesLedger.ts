@@ -1,5 +1,6 @@
 import { Waves, IUserData } from './Waves';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
+import { default as TransportNode } from '@ledgerhq/hw-transport-node-hid';
 declare const Buffer;
 
 const ADDRES_PREFIX = "44'/5741564'/0'/0'/";
@@ -10,14 +11,18 @@ export class WavesLedger {
     private _wavesLibPromise: Promise<Waves>;
     private _initTransportPromise: Promise<TransportU2F>;
     private _debug: boolean;
+    private _isNative: boolean;
+    private _timeout: number;
     private _error: any;
 
-    constructor(debug = false) {
+    constructor(options: { debug?: boolean; isNative?: boolean; timeout?: number}) {
+        this.ready = null;
         this._wavesLibPromise = null;
         this._initTransportPromise = null;
-        this._debug = debug;
+        this._debug = options.debug;
+        this._isNative = options.isNative;
+        this._timeout = options.timeout;
         this._error = null;
-        this.ready = null;
         this.tryConnect();
     }
 
@@ -166,15 +171,19 @@ export class WavesLedger {
 
     _initU2FTransport() {
         this.ready = false;
-        this._initTransportPromise = TransportU2F.create();
+        this._initTransportPromise =
+            this._isNative ?
+            TransportNode.create(this._timeout) :
+            TransportU2F.create(this._timeout);
         return this._initTransportPromise;
     }
 
     _initWavesLib() {
-        this._wavesLibPromise = this._initTransportPromise.then((transport) => {
-            this.ready = true;
-            return new Waves(transport);
-        });
+        this._wavesLibPromise = this._initTransportPromise.then(
+            (transport) => {
+                this.ready = true;
+                return new Waves(transport);
+            });
         return this._wavesLibPromise;
     }
 

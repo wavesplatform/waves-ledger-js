@@ -142,7 +142,7 @@ export class Waves {
         while (dataLength > sendBytes) {
             const chankLength = Math.min(dataLength - sendBytes, maxChankLength);
             const isLastByte = (dataLength - sendBytes > maxChankLength) ? 0x00 : 0x80;
-            const txChank = dataBuffer.slice(sendBytes, chankLength);
+            const txChank = dataBuffer.slice(sendBytes, chankLength + sendBytes);
             sendBytes += chankLength;
             result = await this.transport.send(0x80, 0x02, isLastByte, 0x00, txChank);
             const isError = Waves.checkError(result.slice(-2));

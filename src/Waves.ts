@@ -29,9 +29,11 @@ const WAVES_CONFIG = {
 export class Waves {
 
     protected transport;
+    protected networkCode;
 
-    constructor(transport) {
+    constructor(transport, networkCode = 87) {
         this.transport = transport;
+        this.networkCode = networkCode;
         this.decorateClassByTransport();
     }
 
@@ -53,7 +55,7 @@ export class Waves {
     async getWalletPublicKey(path, verify = false): Promise<IUserData> {
         const buffer = Waves.splitPath(path);
         const p1 = verify ? 0x80 : 0x00;
-        const response = await this.transport.send(0x80, 0x04, p1, 0x00, buffer);
+        const response = await this.transport.send(0x80, 0x04, p1, this.networkCode, buffer);
         const publicKey = libs.base58.encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
         const address = response
             .slice(WAVES_CONFIG.PUBLIC_KEY_LENGTH, WAVES_CONFIG.PUBLIC_KEY_LENGTH + WAVES_CONFIG.ADDRESS_LENGTH)
@@ -142,6 +144,7 @@ export class Waves {
         while (dataLength > sendBytes) {
             const chankLength = Math.min(dataLength - sendBytes, maxChankLength);
             const isLastByte = (dataLength - sendBytes > maxChankLength) ? 0x00 : 0x80;
+            const chainId = isLastByte ? this.networkCode : 0x00;
             const txChank = dataBuffer.slice(sendBytes, chankLength + sendBytes);
             sendBytes += chankLength;
             result = await this.transport.send(0x80, 0x02, isLastByte, 0x00, txChank);

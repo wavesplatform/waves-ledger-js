@@ -36,8 +36,9 @@ const WAVES_CONFIG = {
     WAVES_PRECISION: 8,
 };
 class Waves {
-    constructor(transport) {
+    constructor(transport, networkCode = 87) {
         this.transport = transport;
+        this.networkCode = networkCode;
         this.decorateClassByTransport();
     }
     decorateClassByTransport() {
@@ -54,7 +55,7 @@ class Waves {
         return __awaiter(this, void 0, void 0, function* () {
             const buffer = Waves.splitPath(path);
             const p1 = verify ? 0x80 : 0x00;
-            const response = yield this.transport.send(0x80, 0x04, p1, 0x00, buffer);
+            const response = yield this.transport.send(0x80, 0x04, p1, this.networkCode, buffer);
             const publicKey = waves_signature_generator_1.libs.base58.encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
             const address = response
                 .slice(WAVES_CONFIG.PUBLIC_KEY_LENGTH, WAVES_CONFIG.PUBLIC_KEY_LENGTH + WAVES_CONFIG.ADDRESS_LENGTH)
@@ -133,6 +134,7 @@ class Waves {
             while (dataLength > sendBytes) {
                 const chankLength = Math.min(dataLength - sendBytes, maxChankLength);
                 const isLastByte = (dataLength - sendBytes > maxChankLength) ? 0x00 : 0x80;
+                const chainId = isLastByte ? this.networkCode : 0x00;
                 const txChank = dataBuffer.slice(sendBytes, chankLength + sendBytes);
                 sendBytes += chankLength;
                 result = yield this.transport.send(0x80, 0x02, isLastByte, 0x00, txChank);
@@ -192,6 +194,7 @@ const ADDRES_PREFIX = "44'/5741564'/0'/0'/";
 class WavesLedger {
     constructor(options) {
         this.ready = null;
+        this._networkCode = options.networkCode == null ? 87 : options.networkCode;
         this._wavesLibPromise = null;
         this._initTransportPromise = null;
         this._debug = options.debug;
@@ -363,7 +366,7 @@ class WavesLedger {
     _initWavesLib() {
         this._wavesLibPromise = this._initTransportPromise.then((transport) => {
             this.ready = true;
-            return new Waves_1.Waves(transport);
+            return new Waves_1.Waves(transport, this._networkCode);
         });
         return this._wavesLibPromise;
     }

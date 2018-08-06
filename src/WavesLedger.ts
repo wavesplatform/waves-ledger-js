@@ -13,10 +13,12 @@ export class WavesLedger {
     private _debug: boolean;
     private _isNative: boolean;
     private _timeout: number;
+    private _networkCode: number;
     private _error: any;
 
-    constructor(options: { debug?: boolean; isNative?: boolean; timeout?: number}) {
+    constructor(options: { debug?: boolean; isNative?: boolean; timeout?: number; networkCode?: number}) {
         this.ready = null;
+        this._networkCode = options.networkCode == null ? 87 : options.networkCode;
         this._wavesLibPromise = null;
         this._initTransportPromise = null;
         this._debug = options.debug;
@@ -182,7 +184,7 @@ export class WavesLedger {
         this._wavesLibPromise = this._initTransportPromise.then(
             (transport) => {
                 this.ready = true;
-                return new Waves(transport);
+                return new Waves(transport, this._networkCode);
             });
         return this._wavesLibPromise;
     }

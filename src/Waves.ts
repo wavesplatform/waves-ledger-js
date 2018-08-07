@@ -147,7 +147,7 @@ export class Waves {
             const chainId = isLastByte ? this.networkCode : 0x00;
             const txChank = dataBuffer.slice(sendBytes, chankLength + sendBytes);
             sendBytes += chankLength;
-            result = await this.transport.send(0x80, 0x02, isLastByte, 0x00, txChank);
+            result = await this.transport.send(0x80, 0x02, isLastByte, chainId, txChank);
             const isError = Waves.checkError(result.slice(-2));
             if (isError) {
                 throw isError;

@@ -189,7 +189,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Waves_1 = require("./Waves");
 const hw_transport_u2f_1 = require("@ledgerhq/hw-transport-u2f");
-const hw_transport_node_hid_1 = require("@ledgerhq/hw-transport-node-hid");
 const ADDRES_PREFIX = "44'/5741564'/0'/0'/";
 class WavesLedger {
     constructor(options) {
@@ -359,7 +358,7 @@ class WavesLedger {
         this.ready = false;
         this._initTransportPromise =
             this._isNative ?
-                hw_transport_node_hid_1.default.create(this._timeout) :
+                null : // TransportNode.create(this._timeout) :
                 hw_transport_u2f_1.default.create(this._timeout);
         return this._initTransportPromise;
     }
@@ -374,7 +373,7 @@ class WavesLedger {
 exports.WavesLedger = WavesLedger;
 
 }).call(this,require("buffer").Buffer)
-},{"./Waves":1,"@ledgerhq/hw-transport-node-hid":undefined,"@ledgerhq/hw-transport-u2f":undefined,"buffer":4}],3:[function(require,module,exports){
+},{"./Waves":1,"@ledgerhq/hw-transport-u2f":undefined,"buffer":4}],3:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength

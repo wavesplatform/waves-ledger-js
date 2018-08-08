@@ -1,6 +1,5 @@
 import { Waves, IUserData } from './Waves';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
-import { default as TransportNode } from '@ledgerhq/hw-transport-node-hid';
 declare const Buffer;
 
 const ADDRES_PREFIX = "44'/5741564'/0'/0'/";
@@ -175,7 +174,7 @@ export class WavesLedger {
         this.ready = false;
         this._initTransportPromise =
             this._isNative ?
-            TransportNode.create(this._timeout) :
+            null : // TransportNode.create(this._timeout) :
             TransportU2F.create(this._timeout);
         return this._initTransportPromise;
     }

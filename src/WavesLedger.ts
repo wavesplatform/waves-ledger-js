@@ -11,19 +11,23 @@ export class WavesLedger {
     private _initTransportPromise: Promise<TransportU2F>;
     private _debug: boolean;
     private _isNative: boolean;
-    private _timeout: number;
+    private _openTimeout: number;
+    private _listenTimeout: number;
     private _networkCode: number;
     private _error: any;
+    private _transport;
 
-    constructor(options: { debug?: boolean; isNative?: boolean; timeout?: number; networkCode?: number}) {
+    constructor(options: IWavesLedger) {
         this.ready = null;
         this._networkCode = options.networkCode == null ? 87 : options.networkCode;
         this._wavesLibPromise = null;
         this._initTransportPromise = null;
         this._debug = options.debug;
         this._isNative = options.isNative;
-        this._timeout = options.timeout;
+        this._openTimeout = options.openTimeout;
+        this._listenTimeout = options.listenTimeout;
         this._error = null;
+        this._transport = options.transport || TransportU2F;
         this.tryConnect();
     }
 
@@ -175,7 +179,7 @@ export class WavesLedger {
         this._initTransportPromise =
             this._isNative ?
             null : // TransportNode.create(this._timeout) :
-            TransportU2F.create(this._timeout);
+            this._transport.create(this._openTimeout, this._listenTimeout);
         return this._initTransportPromise;
     }
 
@@ -190,6 +194,14 @@ export class WavesLedger {
 
 }
 
+interface IWavesLedger  {
+    debug?: boolean;
+    isNative?: boolean;
+    openTimeout?: number;
+    listenTimeout?: number;
+    networkCode?: number,
+    transport?
+}
 
 interface IUser extends IUserData {
     id: number;

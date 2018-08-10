@@ -198,8 +198,10 @@ class WavesLedger {
         this._initTransportPromise = null;
         this._debug = options.debug;
         this._isNative = options.isNative;
-        this._timeout = options.timeout;
+        this._openTimeout = options.openTimeout;
+        this._listenTimeout = options.listenTimeout;
         this._error = null;
+        this._transport = options.transport || hw_transport_u2f_1.default;
         this.tryConnect();
     }
     tryConnect() {
@@ -359,7 +361,7 @@ class WavesLedger {
         this._initTransportPromise =
             this._isNative ?
                 null : // TransportNode.create(this._timeout) :
-                hw_transport_u2f_1.default.create(this._timeout);
+                this._transport.create(this._openTimeout, this._listenTimeout);
         return this._initTransportPromise;
     }
     _initWavesLib() {

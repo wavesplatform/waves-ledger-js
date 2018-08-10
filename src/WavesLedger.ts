@@ -13,6 +13,7 @@ export class WavesLedger {
     private _isNative: boolean;
     private _openTimeout: number;
     private _listenTimeout: number;
+    private _exchangeTimeout: number;
     private _networkCode: number;
     private _error: any;
     private _transport;
@@ -26,6 +27,7 @@ export class WavesLedger {
         this._isNative = options.isNative;
         this._openTimeout = options.openTimeout;
         this._listenTimeout = options.listenTimeout;
+        this._exchangeTimeout = options.exchangeTimeout;
         this._error = null;
         this._transport = options.transport || TransportU2F;
         this.tryConnect();
@@ -34,7 +36,7 @@ export class WavesLedger {
     async tryConnect(): Promise<void> {
         const disconnectPromise = this.disconnect();
         this._initU2FTransport();
-        this._setDebugMode();
+        this._setSettings();
         this._initWavesLib();
         await disconnectPromise;
         await Promise.all([this._initTransportPromise,  this._wavesLibPromise]);
@@ -168,9 +170,10 @@ export class WavesLedger {
         return `${ADDRES_PREFIX}${id}'`;
     }
 
-    _setDebugMode() {
+    _setSettings() {
         this._initTransportPromise.then((transport) => {
             transport.setDebugMode(this._debug);
+            transport.setExchangeTimeout(this._exchangeTimeout);
         });
     }
 
@@ -199,6 +202,7 @@ interface IWavesLedger  {
     isNative?: boolean;
     openTimeout?: number;
     listenTimeout?: number;
+    exchangeTimeout?: number;
     networkCode?: number,
     transport?
 }

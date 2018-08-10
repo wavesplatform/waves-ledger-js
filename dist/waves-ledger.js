@@ -200,6 +200,7 @@ class WavesLedger {
         this._isNative = options.isNative;
         this._openTimeout = options.openTimeout;
         this._listenTimeout = options.listenTimeout;
+        this._exchangeTimeout = options.exchangeTimeout;
         this._error = null;
         this._transport = options.transport || hw_transport_u2f_1.default;
         this.tryConnect();
@@ -208,7 +209,7 @@ class WavesLedger {
         return __awaiter(this, void 0, void 0, function* () {
             const disconnectPromise = this.disconnect();
             this._initU2FTransport();
-            this._setDebugMode();
+            this._setSettings();
             this._initWavesLib();
             yield disconnectPromise;
             yield Promise.all([this._initTransportPromise, this._wavesLibPromise]);
@@ -351,9 +352,10 @@ class WavesLedger {
     getPathById(id) {
         return `${ADDRES_PREFIX}${id}'`;
     }
-    _setDebugMode() {
+    _setSettings() {
         this._initTransportPromise.then((transport) => {
             transport.setDebugMode(this._debug);
+            transport.setExchangeTimeout(this._exchangeTimeout);
         });
     }
     _initU2FTransport() {

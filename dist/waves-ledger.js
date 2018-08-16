@@ -197,7 +197,6 @@ class WavesLedger {
         this._wavesLibPromise = null;
         this._initTransportPromise = null;
         this._debug = options.debug;
-        this._isNative = options.isNative;
         this._openTimeout = options.openTimeout;
         this._listenTimeout = options.listenTimeout;
         this._exchangeTimeout = options.exchangeTimeout;
@@ -230,15 +229,27 @@ class WavesLedger {
             }
         });
     }
+    getTransport() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this._wavesLibPromise;
+            }
+            catch (e) {
+                yield this.tryConnect();
+                return yield this._wavesLibPromise;
+            }
+        });
+    }
     getUserDataById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const waves = yield this._wavesLibPromise;
+                const waves = yield this.getTransport();
                 const path = this.getPathById(id);
                 const userData = yield waves.getWalletPublicKey(path, false);
                 return Object.assign({}, userData, { id, path });
             }
             catch (e) {
+                this.tryConnect();
                 this._error = e;
                 throw e;
             }
@@ -254,6 +265,7 @@ class WavesLedger {
                 }
             }
             catch (e) {
+                this.tryConnect();
                 this._error = e;
                 throw e;
             }
@@ -265,10 +277,11 @@ class WavesLedger {
             const path = this.getPathById(userId);
             const msgData = new Buffer(txData);
             try {
-                const waves = yield this._wavesLibPromise;
+                const waves = yield this.getTransport();
                 return yield waves.signTransaction(path, asset.precision, msgData);
             }
             catch (e) {
+                this.tryConnect();
                 this._error = e;
                 throw e;
             }
@@ -279,10 +292,11 @@ class WavesLedger {
             const path = this.getPathById(userId);
             const msgData = new Buffer(txData);
             try {
-                const waves = yield this._wavesLibPromise;
+                const waves = yield this.getTransport();
                 return yield waves.signOrder(path, asset.precision, msgData);
             }
             catch (e) {
+                this.tryConnect();
                 this._error = e;
                 throw e;
             }
@@ -293,10 +307,11 @@ class WavesLedger {
             const path = this.getPathById(userId);
             const msgData = new Buffer(dataBuffer);
             try {
-                const waves = yield this._wavesLibPromise;
+                const waves = yield this.getTransport();
                 return yield waves.signSomeData(path, msgData);
             }
             catch (e) {
+                this.tryConnect();
                 this._error = e;
                 throw e;
             }
@@ -307,10 +322,11 @@ class WavesLedger {
             const path = this.getPathById(userId);
             const msgData = new Buffer(dataBuffer);
             try {
-                const waves = yield this._wavesLibPromise;
+                const waves = yield this.getTransport();
                 return yield waves.signRequest(path, msgData);
             }
             catch (e) {
+                this.tryConnect();
                 this._error = e;
                 throw e;
             }
@@ -321,10 +337,11 @@ class WavesLedger {
             const path = this.getPathById(userId);
             const msgData = new Buffer(message, 'ascii');
             try {
-                const waves = yield this._wavesLibPromise;
+                const waves = yield this.getTransport();
                 return yield waves.signMessage(path, msgData);
             }
             catch (e) {
+                this.tryConnect();
                 this._error = e;
                 throw e;
             }
@@ -360,10 +377,7 @@ class WavesLedger {
     }
     _initU2FTransport() {
         this.ready = false;
-        this._initTransportPromise =
-            this._isNative ?
-                null : // TransportNode.create(this._timeout) :
-                this._transport.create(this._openTimeout, this._listenTimeout);
+        this._initTransportPromise = this._transport.create(this._openTimeout, this._listenTimeout);
         return this._initTransportPromise;
     }
     _initWavesLib() {

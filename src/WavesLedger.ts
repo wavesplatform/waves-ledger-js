@@ -10,7 +10,6 @@ export class WavesLedger {
     private _wavesLibPromise: Promise<Waves>;
     private _initTransportPromise: Promise<TransportU2F>;
     private _debug: boolean;
-    private _isNative: boolean;
     private _openTimeout: number;
     private _listenTimeout: number;
     private _exchangeTimeout: number;
@@ -24,7 +23,6 @@ export class WavesLedger {
         this._wavesLibPromise = null;
         this._initTransportPromise = null;
         this._debug = options.debug;
-        this._isNative = options.isNative;
         this._openTimeout = options.openTimeout;
         this._listenTimeout = options.listenTimeout;
         this._exchangeTimeout = options.exchangeTimeout;
@@ -55,15 +53,25 @@ export class WavesLedger {
         }
     }
 
+    async getTransport(): Promise<TransportU2F> {
+        try {
+            return await this._wavesLibPromise;
+        } catch (e) {
+            await this.tryConnect();
+            return await  this._wavesLibPromise;
+        }
+    }
+
     async getUserDataById(id): Promise<IUser> {
         try {
-            const waves = await this._wavesLibPromise;
+            const waves = await this.getTransport();
             const path = this.getPathById(id);
             const userData = await waves.getWalletPublicKey(path, false);
             return {
                 ...userData, id, path
             };
         } catch (e) {
+            this.tryConnect();
             this._error = e;
             throw e;
         }
@@ -78,6 +86,7 @@ export class WavesLedger {
                 usersData.push(userData);
             }
         } catch (e) {
+            this.tryConnect();
             this._error = e;
             throw e
         }
@@ -89,9 +98,10 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(txData);
         try {
-            const waves = await this._wavesLibPromise;
+            const waves = await this.getTransport();
             return await waves.signTransaction(path, asset.precision, msgData);
         } catch (e) {
+            this.tryConnect();
             this._error = e;
             throw e;
         }
@@ -101,9 +111,10 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(txData);
         try {
-            const waves = await this._wavesLibPromise;
+            const waves = await this.getTransport();
             return await waves.signOrder(path, asset.precision, msgData);
         } catch (e) {
+            this.tryConnect();
             this._error = e;
             throw e;
         }
@@ -113,9 +124,10 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(dataBuffer);
         try {
-            const waves = await this._wavesLibPromise;
+            const waves = await this.getTransport();
             return await waves.signSomeData(path, msgData);
         } catch (e) {
+            this.tryConnect();
             this._error = e;
             throw e;
         }
@@ -125,9 +137,10 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(dataBuffer);
         try {
-            const waves = await this._wavesLibPromise;
+            const waves = await this.getTransport();
             return await waves.signRequest(path, msgData);
         } catch (e) {
+            this.tryConnect();
             this._error = e;
             throw e;
         }
@@ -137,9 +150,10 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(message, 'ascii');
         try {
-            const waves = await this._wavesLibPromise;
+            const waves = await this.getTransport();
             return await waves.signMessage(path, msgData);
         } catch (e) {
+            this.tryConnect();
             this._error = e;
             throw e;
         }
@@ -179,10 +193,7 @@ export class WavesLedger {
 
     _initU2FTransport() {
         this.ready = false;
-        this._initTransportPromise =
-            this._isNative ?
-            null : // TransportNode.create(this._timeout) :
-            this._transport.create(this._openTimeout, this._listenTimeout);
+        this._initTransportPromise = this._transport.create(this._openTimeout, this._listenTimeout);
         return this._initTransportPromise;
     }
 
@@ -199,7 +210,6 @@ export class WavesLedger {
 
 interface IWavesLedger  {
     debug?: boolean;
-    isNative?: boolean;
     openTimeout?: number;
     listenTimeout?: number;
     exchangeTimeout?: number;

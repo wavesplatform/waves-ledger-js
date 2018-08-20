@@ -1,4 +1,4 @@
-import { libs } from '@waves/waves-signature-generator';
+import { libs } from '@waves/signature-generator';
 declare const Buffer;
 
 const WAVES_CONFIG = {

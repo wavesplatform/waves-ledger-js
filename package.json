@@ -9,7 +9,7 @@
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"
   },
   "scripts": {
-    "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u @waves/waves-signature-generator -u @ledgerhq/hw-transport-u2f -o dist/waves-ledger.js && npm run build_transport",
+    "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u @waves/signature-generator -u @ledgerhq/hw-transport-u2f -o dist/waves-ledger.js && npm run build_transport",
     "build_transport": "node_modules/.bin/browserify ./node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F.js -s TransportU2F -o dist/transport-u2f.js",
     "prepare": "npm run build",
     "build_ledger_monitor": "npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -x @waves/waves-signature-generator -t [ babelify ] -t [browserify-global-shim [\"@waves/waves-signature-generator\"=\"wavesSignatureGenerator\"] ]"
@@ -36,6 +36,6 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-u2f": "^4.15.0",
-    "@waves/waves-signature-generator": "0.14.0"
+    "@waves/signature-generator": "^0.15.1"
   }
 }

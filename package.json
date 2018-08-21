@@ -2,7 +2,7 @@
   "name": "@waves/ledger",
   "version": "0.0.25",
   "description": "Waves ladger lib for browser",
-  "main": "dist/waves-ledger.js",
+  "main": "lib/WavesLedger.js",
   "types": "src/WavesLedger.ts",
   "repository": {
     "type": "git",

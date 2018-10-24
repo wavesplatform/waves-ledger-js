@@ -76,7 +76,19 @@ export class WavesLedger {
             throw e;
         }
     }
+    
+    async getVersion(): Promise<Array<number>> {
+        try {
+            const waves = await this.getTransport();
+            return await waves.getVersion();
 
+        } catch (e) {
+            this.tryConnect();
+            this._error = e;
+            throw e;
+        }
+    }
+    
     async getPaginationUsersData(from, limit) {
         const usersData = [];
 

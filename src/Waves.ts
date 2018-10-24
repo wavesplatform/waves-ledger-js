@@ -67,17 +67,26 @@ export class Waves {
         return { publicKey, address, statusCode };
     }
 
-    signTransaction (path, amountPrecession, txData): Promise<string> {
-        const dataForSign = Buffer.concat([
+    async signTransaction (path, amountPrecession, txData, version = 2): Promise<string> {
+        
+        if (txData[0] === 4 ) {
+            const type = await this._versionNum();
+            if (type === 0) {
+                return await this.signSomeData(path, txData);
+            }
+        }
+        
+        const prefixData = Buffer.concat([
             Waves.splitPath(path),
             Buffer.from([
                 amountPrecession,
                 WAVES_CONFIG.WAVES_PRECISION,
+                txData[0]
             ]),
-            txData
         ]);
-
-        return this._signData(dataForSign);
+        
+        const dataForSign = await this._fillData(prefixData , txData.slice(1), version);
+        return await this._signData(dataForSign);
     }
 
     async signOrder (path, amountPrecession, txData): Promise<string> {
@@ -155,19 +164,23 @@ export class Waves {
         }
     }
     
-    protected async _fillData(prefixBuffer, dataBuffer) {
+    protected async _versionNum() {
         const version = await this.getVersion();
-        const type = WAVES_CONFIG.VERSIONS.reduce((acc, conf_version, index) => {
-            const isMyVersion = version.join('') >= conf_version.join('');
+        return WAVES_CONFIG.VERSIONS.reduce((acc, conf_version, index) => {
+            const isMyVersion = version.some((num, ind) => conf_version[ind] <= num);
             return isMyVersion ? index : acc;
         }, 0);
+    }
+    
+    protected async _fillData(prefixBuffer, dataBuffer, ver = 0) {
+        const type = await this._versionNum();
         
         switch (type) {
             case 0:
                 return Buffer.concat([prefixBuffer, dataBuffer]);
             case 1:
-                return Buffer.concat([prefixBuffer, Buffer.from([0]), dataBuffer]);
-            
+            default:
+                return Buffer.concat([prefixBuffer, Buffer.from([ver]), dataBuffer]);
         }
     }
     

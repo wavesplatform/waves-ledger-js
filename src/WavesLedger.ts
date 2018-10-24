@@ -106,12 +106,12 @@ export class WavesLedger {
         return usersData;
     }
 
-    async signTransaction (userId, asset, txData) {
+    async signTransaction (userId, asset, txData, version = 2) {
         const path = this.getPathById(userId);
         const msgData = new Buffer(txData);
         try {
             const waves = await this.getTransport();
-            return await waves.signTransaction(path, asset.precision, msgData);
+            return await waves.signTransaction(path, asset.precision, msgData, version);
         } catch (e) {
             this.tryConnect();
             this._error = e;

@@ -38,7 +38,6 @@ export class Waves {
         this.transport = transport;
         this.networkCode = networkCode;
         this.decorateClassByTransport();
-        this.getVersion();
     }
 
     decorateClassByTransport() {

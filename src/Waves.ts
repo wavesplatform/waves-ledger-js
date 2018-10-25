@@ -68,11 +68,18 @@ export class Waves {
 
     async signTransaction (path, amountPrecession, txData, version = 2): Promise<string> {
         
-        if (txData[0] === 4 ) {
-            const type = await this._versionNum();
+        const transctionType = txData[0];
+    
+        const type = await this._versionNum();
+        
+        if (transctionType === 4 ) {
             if (type === 0) {
                 return await this.signSomeData(path, txData);
             }
+        }
+        
+        if (type === 0) {
+            txData = txData.slice(1);
         }
         
         const prefixData = Buffer.concat([
@@ -80,7 +87,7 @@ export class Waves {
             Buffer.from([
                 amountPrecession,
                 WAVES_CONFIG.WAVES_PRECISION,
-                txData[0]
+                transctionType
             ]),
         ]);
         

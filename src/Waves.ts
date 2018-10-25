@@ -85,7 +85,7 @@ export class Waves {
             ]),
         ]);
         
-        const dataForSign = await this._fillData(prefixData , txData.slice(1), version);
+        const dataForSign = await this._fillData(prefixData , txData, version);
         return await this._signData(dataForSign);
     }
 

@@ -68,18 +68,14 @@ export class Waves {
 
     async signTransaction (path, amountPrecession, txData, version = 2): Promise<string> {
         
-        const transctionType = txData[0];
-    
+        const transactionType = txData[0];
+        const version2 = [transactionType, version];
         const type = await this._versionNum();
         
-        if (transctionType === 4 ) {
+        if (transactionType === 4 ) {
             if (type === 0) {
                 return await this.signSomeData(path, txData);
             }
-        }
-        
-        if (type === 0) {
-            txData = txData.slice(1);
         }
         
         const prefixData = Buffer.concat([
@@ -87,11 +83,10 @@ export class Waves {
             Buffer.from([
                 amountPrecession,
                 WAVES_CONFIG.WAVES_PRECISION,
-                transctionType
             ]),
         ]);
         
-        const dataForSign = await this._fillData(prefixData , txData, version);
+        const dataForSign = await this._fillData(prefixData , txData, version2);
         return await this._signData(dataForSign);
     }
 
@@ -178,7 +173,7 @@ export class Waves {
         }, 0);
     }
     
-    protected async _fillData(prefixBuffer, dataBuffer, ver = 0) {
+    protected async _fillData(prefixBuffer, dataBuffer, ver2 = [0]) {
         const type = await this._versionNum();
         
         switch (type) {
@@ -186,7 +181,7 @@ export class Waves {
                 return Buffer.concat([prefixBuffer, dataBuffer]);
             case 1:
             default:
-                return Buffer.concat([prefixBuffer, Buffer.from([ver]), dataBuffer]);
+                return Buffer.concat([prefixBuffer, Buffer.from(ver2), dataBuffer]);
         }
     }
     
@@ -214,7 +209,7 @@ export class Waves {
     }
 
     static checkError(data): {error: string, status: number} {
-        const statusCode = data[0] * 16 * 16 + data[1];
+        const statusCode = data[0] * 256 + data[1];
         if (statusCode === WAVES_CONFIG.STATUS.SW_OK) {
             return null;
         }

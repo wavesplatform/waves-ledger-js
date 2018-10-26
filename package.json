@@ -35,7 +35,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "@ledgerhq/hw-transport-u2f": "^4.15.0",
+    "@ledgerhq/hw-transport-u2f": "^4.24.0",
     "@waves/signature-generator": "^1.0.4"
   }
 }

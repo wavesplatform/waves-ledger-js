@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import { Waves, IUserData } from './Waves';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
 declare const Buffer;

@@ -12,7 +12,7 @@
     "noImplicitReturns": false,
     "noUnusedLocals": true,
     "strict": true,
-    "outDir": "dist",
+    "outDir": "lib",
     "lib": ["es6", "es7", "dom", "es5", "es2017.object"],
     "baseUrl": "src",
     "skipLibCheck": true,

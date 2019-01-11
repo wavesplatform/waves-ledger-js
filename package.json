@@ -3,7 +3,7 @@
   "version": "1.0.1-beta",
   "description": "Waves ladger lib for browser",
   "main": "lib/WavesLedger.js",
-  "types": "dist/WavesLedger.d.ts",
+  "types": "lib/WavesLedger.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-u2f": "^4.24.0",
-    "@waves/signature-generator": "^1.0.4",
+    "@waves/signature-generator": "^3.0.0",
     "babel-polyfill": "^6.26.0"
   }
 }

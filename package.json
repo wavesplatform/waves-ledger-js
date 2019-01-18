@@ -1,9 +1,9 @@
 {
   "name": "@waves/ledger",
-  "version": "1.0.1-beta",
+  "version": "3.0.0",
   "description": "Waves ladger lib for browser",
   "main": "lib/WavesLedger.js",
-  "types": "src/WavesLedger.ts",
+  "types": "lib/WavesLedger.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"
@@ -30,13 +30,13 @@
     "babelify": "^9.0.0",
     "browserify": "^16.2.2",
     "browserify-global-shim": "^1.0.3",
-    "typescript": "^2.9.2",
+    "typescript": "^3.2.2",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-u2f": "^4.24.0",
-    "@waves/signature-generator": "^1.0.4",
+    "@waves/signature-generator": "^4.0.0",
     "babel-polyfill": "^6.26.0"
   }
 }

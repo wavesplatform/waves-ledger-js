@@ -1,6 +1,6 @@
 {
   "name": "@waves/ledger",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Waves ladger lib for browser",
   "main": "lib/WavesLedger.js",
   "types": "lib/WavesLedger.d.ts",

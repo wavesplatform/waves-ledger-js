@@ -1,4 +1,4 @@
-import { libs } from '@waves/signature-generator';
+import { base58Encode } from './utils';
 
 declare const Buffer: any;
 
@@ -57,7 +57,7 @@ export class Waves {
         const buffer = Waves.splitPath(path);
         const p1 = verify ? 0x80 : 0x00;
         const response = await this.transport.send(0x80, 0x04, p1, this.networkCode, buffer);
-        const publicKey = libs.base58.encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
+        const publicKey = base58Encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
         const address = response
             .slice(WAVES_CONFIG.PUBLIC_KEY_LENGTH, WAVES_CONFIG.PUBLIC_KEY_LENGTH + WAVES_CONFIG.ADDRESS_LENGTH)
             .toString('ascii');
@@ -206,7 +206,7 @@ export class Waves {
             }
         }
 
-        return libs.base58.encode(result.slice(0, -2));
+        return base58Encode(result.slice(0, -2));
     }
 
     static checkError(data: Array<number>): { error: string, status: number } | null {

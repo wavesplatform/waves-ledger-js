@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-u2f": "^4.35.0",
-    "@waves/signature-generator": "^5.0.0",
     "babel-polyfill": "^6.26.0"
   }
 }

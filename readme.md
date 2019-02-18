@@ -46,7 +46,7 @@ const ledger = new WavesLedger();
 
 ### WavesLedger API
 
-Almost many methods
+
 
 + ##### probeDevice
     

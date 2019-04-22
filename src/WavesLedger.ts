@@ -225,6 +225,8 @@ export class WavesLedger {
 
 }
 
+export default WavesLedger;
+
 interface IWavesLedger {
     debug?: boolean;
     openTimeout?: number;

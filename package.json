@@ -36,6 +36,6 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
-    "@ledgerhq/hw-transport-u2f": "^4.54.0"
+    "@ledgerhq/hw-transport-u2f": "^4.56.0"
   }
 }

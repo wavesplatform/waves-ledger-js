@@ -2,7 +2,7 @@ import { base58Encode } from './utils';
 
 declare const Buffer: any;
 
-const WAVES_CONFIG = {
+const BCT_CONFIG = {
     STATUS: {
         SW_OK: 0x9000,
         SW_USER_CANCELLED: 0x9100,
@@ -13,7 +13,7 @@ const WAVES_CONFIG = {
         SW_CLA_NOT_SUPPORTED: 0x6E00,
         SW_SECURITY_STATUS_NOT_SATISFIED: 0x6982
     },
-    SECRET: 'WAVES',
+    SECRET: 'BCT',
     PUBLIC_KEY_LENGTH: 32,
     ADDRESS_LENGTH: 35,
     STATUS_LENGTH: 2,
@@ -24,18 +24,18 @@ const WAVES_CONFIG = {
         MESSAGE: 0xFF
     },
     MAX_SIZE: 128,
-    WAVES_PRECISION: 8,
+    BCT_PRECISION: 8,
     MAIN_NET_CODE: 87,
     VERSIONS: [[0, 9, 6], [0, 9, 7]],
 };
 
-export class Waves {
+export class Bancoin {
 
     protected transport: any;
     protected networkCode: number;
     protected _version: Promise<Array<number>> | null = null;
 
-    constructor(transport: any, networkCode = WAVES_CONFIG.MAIN_NET_CODE) {
+    constructor(transport: any, networkCode = BCT_CONFIG.MAIN_NET_CODE) {
         this.transport = transport;
         this.networkCode = networkCode;
         this.decorateClassByTransport();
@@ -49,20 +49,20 @@ export class Waves {
                 '_signData',
                 'getVersion',
             ],
-            WAVES_CONFIG.SECRET
+            BCT_CONFIG.SECRET
         );
     }
 
     async getWalletPublicKey(path: string, verify = false): Promise<IUserData> {
-        const buffer = Waves.splitPath(path);
+        const buffer = Bancoin.splitPath(path);
         const p1 = verify ? 0x80 : 0x00;
         const response = await this.transport.send(0x80, 0x04, p1, this.networkCode, buffer);
-        const publicKey = base58Encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
+        const publicKey = base58Encode(response.slice(0, BCT_CONFIG.PUBLIC_KEY_LENGTH));
         const address = response
-            .slice(WAVES_CONFIG.PUBLIC_KEY_LENGTH, WAVES_CONFIG.PUBLIC_KEY_LENGTH + WAVES_CONFIG.ADDRESS_LENGTH)
+            .slice(BCT_CONFIG.PUBLIC_KEY_LENGTH, BCT_CONFIG.PUBLIC_KEY_LENGTH + BCT_CONFIG.ADDRESS_LENGTH)
             .toString('ascii');
         const statusCode = response
-            .slice(-WAVES_CONFIG.STATUS_LENGTH)
+            .slice(-BCT_CONFIG.STATUS_LENGTH)
             .toString('hex');
         return { publicKey, address, statusCode };
     }
@@ -80,10 +80,10 @@ export class Waves {
         }
 
         const prefixData = Buffer.concat([
-            Waves.splitPath(path),
+            Bancoin.splitPath(path),
             Buffer.from([
                 amountPrecession,
-                WAVES_CONFIG.WAVES_PRECISION,
+                BCT_CONFIG.BCT_PRECISION,
             ]),
         ]);
 
@@ -93,11 +93,11 @@ export class Waves {
 
     async signOrder(path: string, amountPrecession: number, txData: Uint8Array): Promise<string> {
         const prefixData = Buffer.concat([
-            Waves.splitPath(path),
+            Bancoin.splitPath(path),
             Buffer.from([
                 amountPrecession,
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.SIGNED_CODES.ORDER,
+                BCT_CONFIG.BCT_PRECISION,
+                BCT_CONFIG.SIGNED_CODES.ORDER,
             ])
         ]);
 
@@ -107,11 +107,11 @@ export class Waves {
 
     async signSomeData(path: string, msgBuffer: Uint8Array): Promise<string> {
         const prefixData = Buffer.concat([
-            Waves.splitPath(path),
+            Bancoin.splitPath(path),
             Buffer.from([
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.SIGNED_CODES.SOME_DATA,
+                BCT_CONFIG.BCT_PRECISION,
+                BCT_CONFIG.BCT_PRECISION,
+                BCT_CONFIG.SIGNED_CODES.SOME_DATA,
             ])
         ]);
 
@@ -121,11 +121,11 @@ export class Waves {
 
     async signRequest(path: string, msgBuffer: Uint8Array): Promise<string> {
         const prefixData = Buffer.concat([
-            Waves.splitPath(path),
+            Bancoin.splitPath(path),
             Buffer.from([
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.SIGNED_CODES.REQUEST,
+                BCT_CONFIG.BCT_PRECISION,
+                BCT_CONFIG.BCT_PRECISION,
+                BCT_CONFIG.SIGNED_CODES.REQUEST,
             ])
         ]);
         const dataForSign = await this._fillData(prefixData, msgBuffer);
@@ -134,11 +134,11 @@ export class Waves {
 
     async signMessage(path: string, msgBuffer: Uint8Array): Promise<string> {
         const prefixData = Buffer.concat([
-            Waves.splitPath(path),
+            Bancoin.splitPath(path),
             Buffer.from([
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.SIGNED_CODES.MESSAGE,
+                BCT_CONFIG.BCT_PRECISION,
+                BCT_CONFIG.BCT_PRECISION,
+                BCT_CONFIG.SIGNED_CODES.MESSAGE,
             ])
         ]);
 
@@ -153,7 +153,7 @@ export class Waves {
 
         try {
             const version: Array<number> = await this._version as Array<number>;
-            const isError = Waves.checkError(version.slice(-2));
+            const isError = Bancoin.checkError(version.slice(-2));
 
             if (isError) {
                 throw isError;
@@ -168,7 +168,7 @@ export class Waves {
 
     protected async _versionNum() {
         const version = await this.getVersion();
-        return WAVES_CONFIG.VERSIONS.reduce((acc, conf_version, index) => {
+        return BCT_CONFIG.VERSIONS.reduce((acc, conf_version, index) => {
             const isMyVersion = !version.some((num, ind) => conf_version[ind] > num);
             return isMyVersion ? index : acc;
         }, 0);
@@ -188,7 +188,7 @@ export class Waves {
 
     protected async _signData(dataBufferAsync: Uint8Array): Promise<string> {
         const dataBuffer = await dataBufferAsync;
-        const maxChunkLength = WAVES_CONFIG.MAX_SIZE - 5;
+        const maxChunkLength = BCT_CONFIG.MAX_SIZE - 5;
         const dataLength = dataBuffer.length;
         let sendBytes = 0;
         let result;
@@ -200,7 +200,7 @@ export class Waves {
             const txChunk = dataBuffer.slice(sendBytes, chunkLength + sendBytes);
             sendBytes += chunkLength;
             result = await this.transport.send(0x80, 0x02, isLastByte, chainId, txChunk);
-            const isError = Waves.checkError(result.slice(-2));
+            const isError = Bancoin.checkError(result.slice(-2));
             if (isError) {
                 throw isError;
             }
@@ -211,7 +211,7 @@ export class Waves {
 
     static checkError(data: Array<number>): { error: string, status: number } | null {
         const statusCode = data[0] * 256 + data[1];
-        if (statusCode === WAVES_CONFIG.STATUS.SW_OK) {
+        if (statusCode === BCT_CONFIG.STATUS.SW_OK) {
             return null;
         }
         return { error: 'Wrong data', status: statusCode };

@@ -2,17 +2,17 @@
 
 
 import 'babel-polyfill';
-import { Waves, IUserData } from './Waves';
+import { Bancoin, IUserData } from './Bancoin';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
 
 declare const Buffer: any;
 
 const ADDRES_PREFIX = '44\'/5741564\'/0\'/0\'/';
 
-export class WavesLedger {
+export class BancoimLedger {
 
     public ready: boolean;
-    private _wavesLibPromise: Promise<Waves> | null;
+    private _BancoinLibPromise: Promise<Bancoin> | null;
     private _initTransportPromise: Promise<any> | null;
     private _debug: boolean;
     private _openTimeout: number | undefined;
@@ -22,10 +22,10 @@ export class WavesLedger {
     private _error: any;
     private _transport: any;
 
-    constructor(options: IWavesLedger) {
+    constructor(options: IBancoinLedger) {
         this.ready = false;
         this._networkCode = options.networkCode == null ? 87 : options.networkCode;
-        this._wavesLibPromise = null;
+        this._bancoinLibPromise = null;
         this._initTransportPromise = null;
         this._debug = options.debug == null ? false : options.debug;
         this._openTimeout = options.openTimeout;
@@ -40,15 +40,15 @@ export class WavesLedger {
         const disconnectPromise = this.disconnect();
         this._initU2FTransport();
         this._setSettings();
-        this._initWavesLib();
+        this._initBancoinLib();
         await disconnectPromise;
-        await Promise.all([this._initTransportPromise, this._wavesLibPromise]);
+        await Promise.all([this._initTransportPromise, this._bancoinLibPromise]);
     }
 
     async disconnect(): Promise<void> {
         const transportpromise = this._initTransportPromise;
         this._initTransportPromise = null;
-        this._wavesLibPromise = null;
+        this._bancoinLibPromise = null;
         if (transportpromise) {
             try {
                 const transport = await transportpromise;
@@ -60,18 +60,18 @@ export class WavesLedger {
 
     async getTransport(): Promise<any> {
         try {
-            return await this._wavesLibPromise;
+            return await this._bancoinLibPromise;
         } catch (e) {
             await this.tryConnect();
-            return await this._wavesLibPromise;
+            return await this._bancoinLibPromise;
         }
     }
 
     async getUserDataById(id: number): Promise<IUser> {
         try {
-            const waves = await this.getTransport();
+            const bancoin = await this.getTransport();
             const path = this.getPathById(id);
-            const userData = await waves.getWalletPublicKey(path, false);
+            const userData = await bancoin.getWalletPublicKey(path, false);
             return {
                 ...userData, id, path
             };
@@ -84,8 +84,8 @@ export class WavesLedger {
 
     async getVersion(): Promise<Array<number>> {
         try {
-            const waves = await this.getTransport();
-            return await waves.getVersion();
+            const bancoin = await this.getTransport();
+            return await bancoin.getVersion();
 
         } catch (e) {
             this.tryConnect();
@@ -115,8 +115,8 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(txData);
         try {
-            const waves = await this.getTransport();
-            return await waves.signTransaction(path, asset.precision, msgData, version);
+            const bancoin = await this.getTransport();
+            return await bancoin.signTransaction(path, asset.precision, msgData, version);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -128,8 +128,8 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(txData);
         try {
-            const waves = await this.getTransport();
-            return await waves.signOrder(path, asset.precision, msgData);
+            const bancoin = await this.getTransport();
+            return await bancoin.signOrder(path, asset.precision, msgData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -141,8 +141,8 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(dataBuffer);
         try {
-            const waves = await this.getTransport();
-            return await waves.signSomeData(path, msgData);
+            const bancoin = await this.getTransport();
+            return await bancoin.signSomeData(path, msgData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -154,8 +154,8 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(dataBuffer);
         try {
-            const waves = await this.getTransport();
-            return await waves.signRequest(path, msgData);
+            const bancoin = await this.getTransport();
+            return await bancoin.signRequest(path, msgData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -167,8 +167,8 @@ export class WavesLedger {
         const path = this.getPathById(userId);
         const msgData = new Buffer(message, 'ascii');
         try {
-            const waves = await this.getTransport();
-            return await waves.signMessage(path, msgData);
+            const bancoin = await this.getTransport();
+            return await bancoin.signMessage(path, msgData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -214,18 +214,18 @@ export class WavesLedger {
         return this._initTransportPromise;
     }
 
-    _initWavesLib() {
-        this._wavesLibPromise = (this._initTransportPromise as Promise<any>).then(
+    _initBancoinLib() {
+        this._bancoinLibPromise = (this._initTransportPromise as Promise<any>).then(
             (transport: any) => {
                 this.ready = true;
-                return new Waves(transport, this._networkCode);
+                return new Bancoin(transport, this._networkCode);
             });
-        return this._wavesLibPromise;
+        return this._bancoinLibPromise;
     }
 
 }
 
-interface IWavesLedger {
+interface IBancoinLedger {
     debug?: boolean;
     openTimeout?: number;
     listenTimeout?: number;

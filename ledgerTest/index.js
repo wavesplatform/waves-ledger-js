@@ -1,4 +1,4 @@
-const { WavesLedger } = require('../lib/WavesLedger');
+const { BancoinLedger } = require('../lib/BancoinLedger');
 
 const statusEl = document.querySelector('.device-status');
 const usersListEl = document.querySelector('.users-list');
@@ -14,7 +14,7 @@ const errorButton = document.querySelector('.error button');
 
 const filterEl = document.querySelector('.hide-selected');
 
-const ledger = new WavesLedger(true);
+const ledger = new BancoinLedger(true);
 const appData = { ledger, users: []};
 const buttons = {
     transaction: signTransactionEl,
@@ -168,7 +168,7 @@ function drawUsers() {
         <p class="user-item" user-id="${user.id}">
             <span class="user-title">Id:      </span><code class="user-data id">${user.id}</code>
             <span class="user-title">Path:    </span><code class="user-data path">${user.path}</code>
-            <span class="user-title">Address: </span><code class="user-data address">${user.wavesAddress}</code> 
+            <span class="user-title">Address: </span><code class="user-data address">${user.bancoinAddress}</code> 
             <span class="user-title">Pub key: </span><code class="user-data key">${user.publicKey}</code>
         </p>
 `;

@@ -1,19 +1,19 @@
-# Waves sign data by ledger in browser
+# Bancoin sign data by ledger in browser
 
 ## Install
 
 ```
-$ npm install --save @waves/ledger
+$ npm install --save @bancoin/ledger
 ```
 
 ## Usage
 
 ##### Create connection
 ```js
-const WavesLedger = require('@Waves/ledger');
-const ledger = new WavesLedger();
+const BancoinLedger = require('@Bancoin/ledger');
+const ledger = new BancoinLedger();
 ```
-`WavesLedger` can have optional arguments.
+`BancoinLedger` can have optional arguments.
 
 ```js
     import TransportNodeHid from '@ledgerhq/hw-transport-node-u2f';
@@ -27,7 +27,7 @@ const ledger = new WavesLedger();
         transport: TransportNodeHid
     };
 
-    const ledger = new WavesLedger(options);
+    const ledger = new BancoinLedger(options);
 ```
  
 ##### Where: 
@@ -35,7 +35,7 @@ const ledger = new WavesLedger();
 `openTimeout` is a delay number in ms for waiting connection.    
 `listenTimeout` is a delay number in ms for waiting listen request to U2F device.    
 `exchangeTimeout` is a timeout (in milliseconds) for the exchange call. Only some transport might implement it. (e.g. U2F).    
-`networkCode` is Waves network code (87 - for mainet)  
+`networkCode` is Bancoin network code (87 - for mainet)  
 `transport` is U2F Transport implementation. (hw-transport-u2f by default) 
 + [@ledgerhq/hw-transport-u2f](https://github.com/LedgerHQ/ledgerjs/tree/master/packages/hw-transport-u2f) 
 + [@ledgerhq/hw-transport-webusb](https://github.com/LedgerHQ/ledgerjs/tree/master/packages/hw-transport-webusb) 
@@ -44,7 +44,7 @@ const ledger = new WavesLedger();
 
 [Read about transport](https://github.com/LedgerHQ/ledgerjs)
 
-### WavesLedger API
+### BancoinLedger API
 
 
 
@@ -72,11 +72,11 @@ const ledger = new WavesLedger();
 
 + ##### getUserDataById
      getUserDataById(id): Promise<user>. Get user from ledger, where user is:
-     `{ id: number, path: string, wavesAddress: string, publicKey: string }` 
+     `{ id: number, path: string, BancoinAddress: string, publicKey: string }` 
 
      id - is number from 0  
      path - is string in internal ledger format  
-     wavesAddress - is string in base58 format  
+     BancoinAddress - is string in base58 format  
      publicKey - is string in base58 format  
      
     ```js
@@ -88,7 +88,7 @@ const ledger = new WavesLedger();
     ```
 
 + ##### signTransaction
-    Sign waves transaction bytes (ledger show detailed transaction info)
+    Sign Bancoin transaction bytes (ledger show detailed transaction info)
     ```js
         ledger.signTransaction(userId, asset, data)
     ```

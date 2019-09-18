@@ -33,25 +33,31 @@ export class WavesLedger {
         this._exchangeTimeout = options.exchangeTimeout;
         this._error = null;
         this._transport = options.transport || TransportU2F;
-        this.tryConnect();
+        this.tryConnect().catch(
+            (e) => console.warn('Ledger lib is not available', e)
+        );
     }
 
     async tryConnect(): Promise<void> {
-        const disconnectPromise = this.disconnect();
-        this._initU2FTransport();
-        this._setSettings();
-        this._initWavesLib();
-        await disconnectPromise;
-        await Promise.all([this._initTransportPromise, this._wavesLibPromise]);
+        try {
+            const disconnectPromise = this.disconnect();
+            this._initU2FTransport();
+            this._setSettings();
+            this._initWavesLib();
+            await disconnectPromise;
+            await Promise.all([this._initTransportPromise, this._wavesLibPromise]);
+        } catch (e) {
+            throw new Error(e);
+        }
     }
 
     async disconnect(): Promise<void> {
-        const transportpromise = this._initTransportPromise;
+        const transportPromise = this._initTransportPromise;
         this._initTransportPromise = null;
         this._wavesLibPromise = null;
-        if (transportpromise) {
+        if (transportPromise) {
             try {
-                const transport = await transportpromise;
+                const transport = await transportPromise;
                 transport.close();
             } catch (e) {
             }

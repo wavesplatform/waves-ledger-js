@@ -211,12 +211,13 @@ export class WavesLedger {
         (this._initTransportPromise as Promise<any>).then((transport) => {
             transport.setDebugMode(this._debug);
             transport.setExchangeTimeout(this._exchangeTimeout);
-        });
+        }).catch(e => console.warn('can\'t init ledger', e));
     }
 
     _initU2FTransport() {
         this.ready = false;
         this._initTransportPromise = this._transport.create(this._openTimeout, this._listenTimeout);
+        (this._initTransportPromise as Promise<any>).catch((e) => console.warn('Can\'t init transport', e));
         return this._initTransportPromise;
     }
 

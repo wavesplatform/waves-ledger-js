@@ -35,7 +35,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.3",
-    "@ledgerhq/hw-transport-u2f": "^4.56.0"
+    "@babel/polyfill": "^7.6.0",
+    "@ledgerhq/hw-transport-u2f": "^4.70.0"
   }
 }

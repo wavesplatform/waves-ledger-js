@@ -169,7 +169,7 @@ export class Waves {
     protected async _versionNum() {
         const version = await this.getVersion();
         return WAVES_CONFIG.VERSIONS.reduce((acc, conf_version, index) => {
-            const isMyVersion = !version.some((num, ind) => conf_version[ind] > num);
+            const isMyVersion = version.some((num, ind) => conf_version[ind] < num);
             return isMyVersion ? index : acc;
         }, 0);
     }

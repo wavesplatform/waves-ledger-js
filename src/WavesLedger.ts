@@ -1,7 +1,7 @@
 /// <reference path="../interface.d.ts"/>
 
 
-import 'babel-polyfill';
+import '@babel/polyfill';
 import { Waves, IUserData } from './Waves';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
 
@@ -33,25 +33,31 @@ export class WavesLedger {
         this._exchangeTimeout = options.exchangeTimeout;
         this._error = null;
         this._transport = options.transport || TransportU2F;
-        this.tryConnect();
+        this.tryConnect().catch(
+            (e) => console.warn('Ledger lib is not available', e)
+        );
     }
 
     async tryConnect(): Promise<void> {
-        const disconnectPromise = this.disconnect();
-        this._initU2FTransport();
-        this._setSettings();
-        this._initWavesLib();
-        await disconnectPromise;
-        await Promise.all([this._initTransportPromise, this._wavesLibPromise]);
+        try {
+            const disconnectPromise = this.disconnect();
+            this._initU2FTransport();
+            this._setSettings();
+            this._initWavesLib();
+            await disconnectPromise;
+            await Promise.all([this._initTransportPromise, this._wavesLibPromise]);
+        } catch (e) {
+            throw new Error(e);
+        }
     }
 
     async disconnect(): Promise<void> {
-        const transportpromise = this._initTransportPromise;
+        const transportPromise = this._initTransportPromise;
         this._initTransportPromise = null;
         this._wavesLibPromise = null;
-        if (transportpromise) {
+        if (transportPromise) {
             try {
-                const transport = await transportpromise;
+                const transport = await transportPromise;
                 transport.close();
             } catch (e) {
             }
@@ -205,12 +211,13 @@ export class WavesLedger {
         (this._initTransportPromise as Promise<any>).then((transport) => {
             transport.setDebugMode(this._debug);
             transport.setExchangeTimeout(this._exchangeTimeout);
-        });
+        }).catch(e => console.warn('can\'t init ledger', e));
     }
 
     _initU2FTransport() {
         this.ready = false;
         this._initTransportPromise = this._transport.create(this._openTimeout, this._listenTimeout);
+        (this._initTransportPromise as Promise<any>).catch((e) => console.warn('Can\'t init transport', e));
         return this._initTransportPromise;
     }
 
@@ -224,6 +231,8 @@ export class WavesLedger {
     }
 
 }
+
+export default WavesLedger;
 
 interface IWavesLedger {
     debug?: boolean;

@@ -53,6 +53,13 @@ export class Waves {
         );
     }
 
+    toInt32Bytes(num): Uint8Array {
+        arr = new Uint8Array(32); // an Int32 takes 4 bytes
+        view = new DataView(arr);
+        view.setUint32(0, num, false); // byteOffset = 0; litteEndian = false
+        return arr;
+    }
+
     async getWalletPublicKey(path: string, verify = false): Promise<IUserData> {
         const buffer = Waves.splitPath(path);
         const p1 = verify ? 0x80 : 0x00;
@@ -70,25 +77,21 @@ export class Waves {
     async signTransaction(path: string, amountPrecession: number, txData: Uint8Array, version = 2): Promise<string> {
 
         const transactionType = txData[0];
-        const version2 = [transactionType, version];
         const type = await this._versionNum();
-
-        if (transactionType === 4) {
-            if (type === 0) {
-                return await this.signSomeData(path, txData);
-            }
-        }
 
         const prefixData = Buffer.concat([
             Waves.splitPath(path),
             Buffer.from([
                 amountPrecession,
                 WAVES_CONFIG.WAVES_PRECISION,
+                transactionType,
+                version
             ]),
+            toInt32Bytes(txData)
         ]);
 
-        const dataForSign = await this._fillData(prefixData, txData, version2);
-        return await this._signData(dataForSign);
+        const dataForDevice = Buffer.concat([prefixData, txData, txData]);
+        return await this._signData(dataForDevice);
     }
 
     async signOrder(path: string, amountPrecession: number, txData: Uint8Array): Promise<string> {
@@ -98,11 +101,13 @@ export class Waves {
                 amountPrecession,
                 WAVES_CONFIG.WAVES_PRECISION,
                 WAVES_CONFIG.SIGNED_CODES.ORDER,
-            ])
+                0,
+            ]),
+            toInt32Bytes(txData.byteLength)
         ]);
 
-        const dataForSign = await this._fillData(prefixData, txData);
-        return await this._signData(dataForSign);
+        const dataForDevice = Buffer.concat([prefixData, txData, txData]);
+        return await this._signData(dataForDevice);
     }
 
     async signSomeData(path: string, msgBuffer: Uint8Array): Promise<string> {
@@ -112,11 +117,13 @@ export class Waves {
                 WAVES_CONFIG.WAVES_PRECISION,
                 WAVES_CONFIG.WAVES_PRECISION,
                 WAVES_CONFIG.SIGNED_CODES.SOME_DATA,
-            ])
+                0
+            ]),
+            toInt32Bytes(txData.byteLength)
         ]);
 
-        const dataForSign = await this._fillData(prefixData, msgBuffer);
-        return await this._signData(dataForSign);
+        const dataForDevice = Buffer.concat([prefixData, txData, txData]);
+        return await this._signData(dataForDevice);
     }
 
     async signRequest(path: string, msgBuffer: Uint8Array): Promise<string> {
@@ -126,10 +133,12 @@ export class Waves {
                 WAVES_CONFIG.WAVES_PRECISION,
                 WAVES_CONFIG.WAVES_PRECISION,
                 WAVES_CONFIG.SIGNED_CODES.REQUEST,
-            ])
+                0
+            ]),
+            toInt32Bytes(txData.byteLength)
         ]);
-        const dataForSign = await this._fillData(prefixData, msgBuffer);
-        return await this._signData(dataForSign);
+        const dataForDevice = Buffer.concat([prefixData, txData, txData]);
+        return await this._signData(dataForDevice);
     }
 
     async signMessage(path: string, msgBuffer: Uint8Array): Promise<string> {
@@ -172,18 +181,6 @@ export class Waves {
             const isMyVersion = version.some((num, ind) => conf_version[ind] < num);
             return isMyVersion ? index : acc;
         }, 0);
-    }
-
-    protected async _fillData(prefixBuffer: Uint8Array, dataBuffer: Uint8Array, ver2 = [0]) {
-        const type = await this._versionNum();
-
-        switch (type) {
-            case 0:
-                return Buffer.concat([prefixBuffer, dataBuffer]);
-            case 1:
-            default:
-                return Buffer.concat([prefixBuffer, Buffer.from(ver2), dataBuffer]);
-        }
     }
 
     protected async _signData(dataBufferAsync: Uint8Array): Promise<string> {

@@ -26,7 +26,6 @@ const WAVES_CONFIG = {
     MAX_SIZE: 128,
     WAVES_PRECISION: 8,
     MAIN_NET_CODE: 87,
-    VERSIONS: [[0, 9, 6], [0, 9, 7]],
 };
 
 export class Waves {
@@ -53,11 +52,11 @@ export class Waves {
         );
     }
 
-    toInt32Bytes(num): Uint8Array {
-        arr = new Uint8Array(32); // an Int32 takes 4 bytes
-        view = new DataView(arr);
+    protected static _toInt32Bytes(num: number): ArrayBuffer {
+        const buf = new ArrayBuffer(4); // an Int32 takes 4 bytes
+        const view = new DataView(buf);
         view.setUint32(0, num, false); // byteOffset = 0; litteEndian = false
-        return arr;
+        return new Uint8Array(buf);
     }
 
     async getWalletPublicKey(path: string, verify = false): Promise<IUserData> {
@@ -75,83 +74,28 @@ export class Waves {
     }
 
     async signTransaction(path: string, amountPrecession: number, txData: Uint8Array, version = 2): Promise<string> {
-
         const transactionType = txData[0];
-        const type = await this._versionNum();
-
-        const prefixData = Buffer.concat([
-            Waves.splitPath(path),
-            Buffer.from([
-                amountPrecession,
-                WAVES_CONFIG.WAVES_PRECISION,
-                transactionType,
-                version
-            ]),
-            toInt32Bytes(txData)
-        ]);
-
-        const dataForDevice = Buffer.concat([prefixData, txData, txData]);
+        const dataForDevice = await this._fillDataForSign(path, transactionType, 2, amountPrecession, WAVES_CONFIG.WAVES_PRECISION, txData);
         return await this._signData(dataForDevice);
     }
 
     async signOrder(path: string, amountPrecession: number, txData: Uint8Array): Promise<string> {
-        const prefixData = Buffer.concat([
-            Waves.splitPath(path),
-            Buffer.from([
-                amountPrecession,
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.SIGNED_CODES.ORDER,
-                0,
-            ]),
-            toInt32Bytes(txData.byteLength)
-        ]);
-
-        const dataForDevice = Buffer.concat([prefixData, txData, txData]);
+        const dataForDevice = await this._fillDataForSign(path, WAVES_CONFIG.SIGNED_CODES.ORDER, 0, amountPrecession, WAVES_CONFIG.WAVES_PRECISION, txData);
         return await this._signData(dataForDevice);
     }
 
     async signSomeData(path: string, msgBuffer: Uint8Array): Promise<string> {
-        const prefixData = Buffer.concat([
-            Waves.splitPath(path),
-            Buffer.from([
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.SIGNED_CODES.SOME_DATA,
-                0
-            ]),
-            toInt32Bytes(txData.byteLength)
-        ]);
-
-        const dataForDevice = Buffer.concat([prefixData, txData, txData]);
+        const dataForDevice = await this._fillDataForSign(path, WAVES_CONFIG.SIGNED_CODES.SOME_DATA, 0, 0, 0, msgBuffer);
         return await this._signData(dataForDevice);
     }
 
     async signRequest(path: string, msgBuffer: Uint8Array): Promise<string> {
-        const prefixData = Buffer.concat([
-            Waves.splitPath(path),
-            Buffer.from([
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.SIGNED_CODES.REQUEST,
-                0
-            ]),
-            toInt32Bytes(txData.byteLength)
-        ]);
-        const dataForDevice = Buffer.concat([prefixData, txData, txData]);
+        const dataForDevice = await this._fillDataForSign(path, WAVES_CONFIG.SIGNED_CODES.REQUEST, 0, 0, 0, msgBuffer);
         return await this._signData(dataForDevice);
     }
 
     async signMessage(path: string, msgBuffer: Uint8Array): Promise<string> {
-        const prefixData = Buffer.concat([
-            Waves.splitPath(path),
-            Buffer.from([
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.WAVES_PRECISION,
-                WAVES_CONFIG.SIGNED_CODES.MESSAGE,
-            ])
-        ]);
-
-        const dataForSign = await this._fillData(prefixData, msgBuffer);
+        const dataForSign = await this._fillDataForSign(path, WAVES_CONFIG.SIGNED_CODES.MESSAGE, 0, 0, 0, msgBuffer);
         return await this._signData(dataForSign);
     }
 
@@ -175,12 +119,37 @@ export class Waves {
         }
     }
 
-    protected async _versionNum() {
-        const version = await this.getVersion();
-        return WAVES_CONFIG.VERSIONS.reduce((acc, conf_version, index) => {
-            const isMyVersion = version.some((num, ind) => conf_version[ind] < num);
-            return isMyVersion ? index : acc;
-        }, 0);
+    protected async _fillDataForSign(path: string, dataType: number, dataVersion: number,
+                                     amountPrecision: number, feePrecision: number,
+                                     dataBuffer: Uint8Array) {
+        const appVersion = await this.getVersion();
+
+        if (appVersion[0] >= 1 && appVersion[1] >= 1 && appVersion[2] >= 0) {
+            const prefixData = Buffer.concat([
+                Waves.splitPath(path),
+                Buffer.from([
+                    amountPrecision,
+                    feePrecision,
+                    dataType,
+                    dataVersion
+                ]),
+                Waves._toInt32Bytes(dataBuffer.byteLength)
+            ]);
+
+            return Buffer.concat([prefixData, dataBuffer, dataBuffer]);
+        } else {
+            const prefixData = Buffer.concat([
+                Waves.splitPath(path),
+                Buffer.from([
+                    amountPrecision,
+                    feePrecision,
+                    dataType,
+                    dataVersion
+                ])
+            ]);
+
+            return Buffer.concat([prefixData, dataBuffer]);
+        }
     }
 
     protected async _signData(dataBufferAsync: Uint8Array): Promise<string> {
@@ -193,7 +162,7 @@ export class Waves {
         while (dataLength > sendBytes) {
             const chunkLength = Math.min(dataLength - sendBytes, maxChunkLength);
             const isLastByte = (dataLength - sendBytes > maxChunkLength) ? 0x00 : 0x80;
-            const chainId = isLastByte ? this.networkCode : 0x00;
+            const chainId = this.networkCode;
             const txChunk = dataBuffer.slice(sendBytes, chunkLength + sendBytes);
             sendBytes += chunkLength;
             result = await this.transport.send(0x80, 0x02, isLastByte, chainId, txChunk);

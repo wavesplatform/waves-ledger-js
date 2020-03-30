@@ -6,20 +6,27 @@ const nextUsersEl = document.querySelector('.users-list-next');
 const sendUserFormEl = document.querySelector('.send-form');
 
 const signTransactionEl = document.querySelector('.sign-transaction');
-const signTransferEl = document.querySelector('.sign-transfer');
-const signMessageEl = document.querySelector('.sign-message');
+const signRequestEl = document.querySelector('.sign-request');
 const signCustomEl = document.querySelector('.sign-custom');
 const errorEl = document.querySelector('.error');
 const errorButton = document.querySelector('.error button');
 
 const filterEl = document.querySelector('.hide-selected');
 
-const ledger = new WavesLedger(true);
+const Transport = require('../node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F').default;
+// const Transport = require('../node_modules/@ledgerhq/hw-transport-webusb/lib/TransportWebUSB').default;
+const ledger = new WavesLedger({
+    debug: false,
+    openTimeout: 3000,
+    listenTimeout: 30000,
+    exchangeTimeout: 30000,
+    networkCode: 87, //mainnet
+    transport: Transport
+});
 const appData = { ledger, users: []};
 const buttons = {
     transaction: signTransactionEl,
-    transfer: signTransferEl,
-    message: signMessageEl,
+    request: signRequestEl,
     custom: signCustomEl,
 };
 
@@ -28,7 +35,7 @@ nextUsersEl.addEventListener('click', getNextUsers);
 usersListEl.addEventListener('click', _selectUser);
 signCustomEl.addEventListener('click', _signCustom);
 signTransactionEl.addEventListener('click', _signTransaction);
-signTransferEl.addEventListener('click', _signRequest);
+signRequestEl.addEventListener('click', _signRequest);
 errorButton.addEventListener('click', _toggleShowError);
 
 filterEl.addEventListener('change', () => {
@@ -94,11 +101,14 @@ function _signCustom() {
             appData.outData = data;
         },
         (err) => {
-            const outEl = document.querySelector('.data-out');
+            console.log(err);
             statusEl.setAttribute('loading', false);
             statusEl.setAttribute('error', true);
             signCustomEl.setAttribute('disable', false);
-            outEl.value = '';
+            const outEl = document.querySelector('.data-out');
+            if (outEl) {
+                outEl.value = '';
+            }
             appData.outData = null;
         }
     );
@@ -122,11 +132,14 @@ function _signTransaction() {
             appData.outData = data;
         },
         (err) => {
-            const outEl = document.querySelector('.data-out');
+            console.log(err);
             statusEl.setAttribute('loading', false);
             statusEl.setAttribute('error', true);
             signTransactionEl.setAttribute('disable', false);
-            outEl.value = '';
+            const outEl = document.querySelector('.data-out');
+            if (outEl) {
+                outEl.value = '';
+            }
             appData.outData = null;
         }
     );
@@ -150,11 +163,14 @@ function _signRequest() {
             appData.outData = data;
         },
         (err) => {
-            const outEl = document.querySelector('.data-out');
+            console.log(err);
             statusEl.setAttribute('loading', false);
             statusEl.setAttribute('error', true);
             signTransactionEl.setAttribute('disable', false);
-            outEl.value = '';
+            const outEl = document.querySelector('.data-out');
+            if (outEl) {
+                outEl.value = '';
+            }
             appData.outData = null;
         }
     );

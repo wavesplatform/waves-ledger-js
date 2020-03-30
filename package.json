@@ -1,6 +1,6 @@
 {
   "name": "@waves/ledger",
-  "version": "3.5.1",
+  "version": "3.6.0",
   "description": "Waves ladger lib for browser",
   "main": "lib/WavesLedger.js",
   "types": "lib/WavesLedger.d.ts",
@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.6.0",
-    "@ledgerhq/hw-transport-u2f": "^4.70.0"
+    "@ledgerhq/hw-transport-u2f": "^5.12.0",
+    "@ledgerhq/hw-transport-webusb": "^5.12.0"
   }
 }

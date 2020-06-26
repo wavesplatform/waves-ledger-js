@@ -133,7 +133,7 @@ export class Waves {
                     dataType,
                     dataVersion
                 ]),
-                Waves._toInt32Bytes(dataBuffer.byteLength)
+                new Buffer(Waves._toInt32Bytes(dataBuffer.byteLength))
             ]);
 
             return Buffer.concat([prefixData, dataBuffer, dataBuffer]);

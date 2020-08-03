@@ -9,10 +9,10 @@
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"
   },
   "scripts": {
-    "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u @waves/signature-generator -u @ledgerhq/hw-transport-u2f -o dist/waves-ledger.js && npm run build_transport",
+    "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u @ledgerhq/logs -u @ledgerhq/hw-transport-u2f -o dist/waves-ledger.js && npm run build_transport",
     "build_transport": "node_modules/.bin/browserify ./node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F.js -s TransportU2F -o dist/transport-u2f.js",
     "prepare": "npm run build",
-    "build_ledger_monitor": "npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -x @waves/waves-signature-generator -t [ babelify ] -t [browserify-global-shim [\"@waves/waves-signature-generator\"=\"wavesSignatureGenerator\"] ]"
+    "build_ledger_monitor": "npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -t [ babelify ] -t"
   },
   "keywords": [],
   "author": {
@@ -23,6 +23,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.54",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.0.0-beta.54",
     "@babel/preset-env": "^7.0.0-beta.54",
     "@babel/runtime": "^7.0.0-beta.54",
@@ -30,13 +31,15 @@
     "babelify": "^9.0.0",
     "browserify": "^16.2.3",
     "browserify-global-shim": "^1.0.3",
-    "typescript": "^3.2.2",
+    "typescript": "^3.9.6",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
     "@babel/polyfill": "^7.6.0",
-    "@ledgerhq/hw-transport-u2f": "^5.12.0",
-    "@ledgerhq/hw-transport-webusb": "^5.12.0"
+    "@ledgerhq/hw-transport-u2f": "^5.19.1",
+    "@ledgerhq/hw-transport-webusb": "^5.19.1",
+    "@ledgerhq/logs": "^5.19.1",
+    "@waves/ts-lib-crypto": "^1.4.3"
   }
 }

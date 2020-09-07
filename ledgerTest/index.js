@@ -2,7 +2,6 @@ const { WavesLedger } = require('../lib/WavesLedger');
 import { verifySignature } from '@waves/ts-lib-crypto'
 import * as testData from '../ledgerTest/testdata.json';
 
-import { base58Decode } from '../lib/utils';
 import { base58Encode } from '../lib/utils';
 
 const statusEl = document.querySelector('.device-status');
@@ -201,7 +200,6 @@ async function testProtoTxs(txs, userData, one= false) {
         let out = " Tx Type: " + tx.dataType +
             "\n Tx Version: " + tx.dataVersion +
             "\n Tx Data: " + tx.dataBuffer +
-            "\n Tx Data base58: " + tx.dataBuffer +
             "\n Tx amount Precision: " + (tx.amountPrecision ?? 8) +
             "\n Tx amount Precision 2: " + (tx.amount2Precision ?? 0) +
             "\n Tx fee Precision: " + (tx.feePrecision ?? 8);

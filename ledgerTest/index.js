@@ -11,8 +11,6 @@ const nextUsersEl = document.querySelector('.users-list-next');
 
 const autoTestEl = document.querySelector('.autotest-data');
 
-//autoTestEl.append(base58Decode(""));
-
 const protoTxTestBut = document.querySelector('.proto-tx');
 const byteTxTestBut = document.querySelector('.byte-tx');
 const protoOrderTestBut = document.querySelector('.proto-order');
@@ -117,6 +115,9 @@ async function autoTest() {
     if(testData.order.proto.length > 0) {
         await testProtoOrder(testData.order.proto, userData);
     }
+    if(testData.order.old.length > 0) {
+        await testByteOrder(testData.order.old, userData);
+    }
     if(testData.request.length > 0) {
         await testRequest(testData.request, userData);
     }
@@ -155,14 +156,14 @@ async function testOne(type) {
             break;
         case 'protoOrder':
             if(testData.order.proto.length > 0) {
-                await testProtoTxs(testData.order.proto, userData, true);
+                await testProtoOrder(testData.order.proto, userData, true);
             } else {
                 autoTestEl.append(" No data for testing\n");
             }
             break;
         case 'byteOrder':
             if(testData.order.old.length > 0) {
-                await testProtoTxs(testData.order.old, userData, true);
+                await testByteOrder(testData.order.old, userData, true);
             } else {
                 autoTestEl.append(" No data for testing\n");
             }
@@ -207,7 +208,6 @@ async function testProtoTxs(txs, userData, one= false) {
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
-            autoTestEl.append(base58Encode(dataBuf));
             let sign = await appData.ledger.signTransaction(userData.id, {
                 dataType: tx.dataType,
                 dataVersion: tx.dataVersion,
@@ -275,6 +275,42 @@ async function testOldTxs(txs, userData, one= false) {
 
 async function testProtoOrder(orders, userData, one= false) {
     autoTestEl.append(" Prototype Orders\n\n");
+    for (const order of orders) {
+        let out = " Order Version: " + order.dataVersion +
+            "\n Order Data: " + order.dataBuffer +
+            "\n Order amount Precision: " +(order.amountPrecision ?? 8) +
+            "\n Order fee Precision: " + (order.feePrecision ?? 8);
+        autoTestEl.append(out);
+        try {
+            let dataBuf = new Buffer(new Buffer(order.dataBuffer.split(',')));
+            let sign = await appData.ledger.signOrder(userData.id, {
+                dataVersion: order.dataVersion,
+                dataBuffer: dataBuf,
+                amountPrecision: order.amountPrecision ?? null,
+                amount2Precision: order.amount2Precision ?? null,
+                feePrecision: order.feePrecision ?? null,
+            });
+            out = "\n Signature: " + sign;
+            if(verifySignature(userData.publicKey, dataBuf, sign)) {
+                out += "\n PASS";
+            } else {
+                out += "\n NOT PASS: Invalid signature";
+            }
+
+            out += "\n-------------------------------\n\n";
+        } catch (e) {
+            out = "\n NOT PASS: " + e.message;
+            out += "\n-------------------------------\n\n";
+        }
+        autoTestEl.append(out);
+        if(one === true) {
+            break;
+        }
+    }
+}
+
+async function testByteOrder(orders, userData, one= false) {
+    autoTestEl.append(" Byte Orders\n\n");
     for (const order of orders) {
         let out = " Order Version: " + order.dataVersion +
             "\n Order Data: " + order.dataBuffer +
@@ -488,8 +524,6 @@ function _signTransaction() {
     if (signCustomEl.getAttribute('disable') === 'true') {
         return null;
     }
-
-
     signTransactionEl.setAttribute('disable', true);
     statusEl.setAttribute('loading', true);
     statusEl.setAttribute('error', false);

@@ -152,7 +152,7 @@ export class Waves {
                 ]),
                 new Buffer(Waves._toInt32Bytes(sData.dataBuffer.byteLength))
             ]);
-            return Buffer.concat([prefixData, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer]);
+            return Buffer.concat([prefixData, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer]);
         } else if (appVersion[0] >= 1 && appVersion[1] >= 1 && appVersion[2] >= 0) {
             const prefixData = Buffer.concat([
                 Waves.splitPath(path),
@@ -187,7 +187,6 @@ export class Waves {
         const dataLength = dataBuffer.length;
         let sendBytes = 0;
         let result;
-
         while (dataLength > sendBytes) {
             const chunkLength = Math.min(dataLength - sendBytes, maxChunkLength);
             const isLastByte = (dataLength - sendBytes > maxChunkLength) ? 0x00 : 0x80;

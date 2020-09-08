@@ -148,7 +148,7 @@ async function testOne(type) {
             break;
         case 'byteTx':
             if(testData.tx.old.length > 0) {
-                await testProtoTxs(testData.tx.old, userData, true);
+                await testOldTxs(testData.tx.old, userData, true);
             } else {
                 autoTestEl.append(" No data for testing\n");
             }
@@ -234,7 +234,7 @@ async function testProtoTxs(txs, userData, one= false) {
 }
 
 async function testOldTxs(txs, userData, one= false) {
-    autoTestEl.append(" Old type transactions\n\n");
+    autoTestEl.append(" Byte transactions\n\n");
     for (const tx of txs) {
         let out = " Tx Type: " + tx.dataType +
             "\n Tx Version: " + tx.dataVersion +
@@ -630,13 +630,13 @@ function destroyTestData() {
 
 function enableButtons() {
     for (const [key, el] of Object.entries(buttons)) {
-        el.setAttribute('disable', false);
+        el.removeAttribute('disabled');
     }
 }
 
 function disableButtons() {
     for (const [key, el] of Object.entries(buttons)) {
-        el.setAttribute('disable', true);
+        el.setAttribute('disabled', true);
     }
 }
 

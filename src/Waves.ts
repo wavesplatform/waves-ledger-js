@@ -146,7 +146,7 @@ export class Waves {
         const amountPrecision = sData?.amountPrecision ?? WAVES_CONFIG.WAVES_PRECISION;
         const amount2Precision = sData?.amount2Precision ?? 0;
         const feePrecision = sData.feePrecision ?? WAVES_CONFIG.WAVES_PRECISION;
-        if (appVersion[0] >= 1 && appVersion[1] >= 1 && appVersion[2] >= 0) {
+        if (appVersion[0] >= 1 && appVersion[1] >= 2 && appVersion[2] >= 0) {
             const prefixData = Buffer.concat([
                 Waves.splitPath(path),
                 Buffer.from([

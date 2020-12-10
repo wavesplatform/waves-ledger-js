@@ -12,7 +12,7 @@
     "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u @ledgerhq/logs -u @ledgerhq/hw-transport-u2f -o dist/waves-ledger.js && npm run build_transport",
     "build_transport": "node_modules/.bin/browserify ./node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F.js -s TransportU2F -o dist/transport-u2f.js",
     "prepare": "npm run build",
-    "build_ledger_monitor": "npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -t [ babelify ] -t"
+    "build_ledger_monitor": "rimraf dist && npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -t [ babelify ] -t"
   },
   "keywords": [],
   "author": {
@@ -40,6 +40,7 @@
     "@ledgerhq/hw-transport-u2f": "^5.19.1",
     "@ledgerhq/hw-transport-webusb": "^5.19.1",
     "@ledgerhq/logs": "^5.19.1",
-    "@waves/ts-lib-crypto": "^1.4.3"
+    "@waves/ts-lib-crypto": "^1.4.3",
+    "rimraf": "^3.0.2"
   }
 }

@@ -202,7 +202,8 @@ async function testProtoTxs(txs, userData, one= false) {
             "\n Tx Data: " + tx.dataBuffer +
             "\n Tx amount Precision: " + (tx.amountPrecision ?? 8) +
             "\n Tx amount Precision 2: " + (tx.amount2Precision ?? 0) +
-            "\n Tx fee Precision: " + (tx.feePrecision ?? 8);
+            "\n Tx fee Precision: " + (tx.feePrecision ?? 8) +
+            "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
@@ -240,7 +241,8 @@ async function testOldTxs(txs, userData, one= false) {
             "\n Tx Version: " + tx.dataVersion +
             "\n Tx Data: " + tx.dataBuffer +
             "\n Tx amount Precision: " +(tx.amountPrecision ?? 8) +
-            "\n Tx fee Precision: " + (tx.feePrecision ?? 8);
+            "\n Tx fee Precision: " + (tx.feePrecision ?? 8) +
+            "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
@@ -277,7 +279,8 @@ async function testProtoOrder(orders, userData, one= false) {
         let out = " Order Version: " + order.dataVersion +
             "\n Order Data: " + order.dataBuffer +
             "\n Order amount Precision: " +(order.amountPrecision ?? 8) +
-            "\n Order fee Precision: " + (order.feePrecision ?? 8);
+            "\n Order fee Precision: " + (order.feePrecision ?? 8) +
+            "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(order.dataBuffer.split(',')));
@@ -313,43 +316,8 @@ async function testByteOrder(orders, userData, one= false) {
         let out = " Order Version: " + order.dataVersion +
             "\n Order Data: " + order.dataBuffer +
             "\n Order amount Precision: " +(order.amountPrecision ?? 8) +
-            "\n Order fee Precision: " + (order.feePrecision ?? 8);
-        autoTestEl.append(out);
-        try {
-            let dataBuf = new Buffer(new Buffer(order.dataBuffer.split(',')));
-            let sign = await appData.ledger.signOrder(userData.id, {
-                dataVersion: order.dataVersion,
-                dataBuffer: dataBuf,
-                amountPrecision: order.amountPrecision ?? null,
-                amount2Precision: order.amount2Precision ?? null,
-                feePrecision: order.feePrecision ?? null,
-            });
-            out = "\n Signature: " + sign;
-            if(verifySignature(userData.publicKey, dataBuf, sign)) {
-                out += "\n PASS";
-            } else {
-                out += "\n NOT PASS: Invalid signature";
-            }
-
-            out += "\n-------------------------------\n\n";
-        } catch (e) {
-            out = "\n NOT PASS: " + e.message;
-            out += "\n-------------------------------\n\n";
-        }
-        autoTestEl.append(out);
-        if(one === true) {
-            break;
-        }
-    }
-}
-
-async function testOldOrder(orders, userData, one= false) {
-    autoTestEl.append(" Old type Orders\n\n");
-    for (const order of orders) {
-        let out = " Order Version: " + order.dataVersion +
-            "\n Order Data: " + order.dataBuffer +
-            "\n Order amount Precision: " +(order.amountPrecision ?? 8) +
-            "\n Order fee Precision: " + (order.feePrecision ?? 8);
+            "\n Order fee Precision: " + (order.feePrecision ?? 8) +
+            "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(order.dataBuffer.split(',')));

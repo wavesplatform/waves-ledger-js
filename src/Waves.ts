@@ -6,7 +6,13 @@ const WAVES_CONFIG = {
     STATUS: {
         SW_OK: 0x9000,
         SW_USER_CANCELLED: 0x9100,
+        SW_DEPRECATED_SIGN_PROTOCOL: 0x9102,
+        SW_INCORRECT_PRECISION_VALUE: 0x9103,
+        SW_INCORRECT_TRANSACTION_TYPE_VERSION: 0x9104,
+        SW_PROTOBUF_DECODING_FAILED: 0x9105,
+        SW_BYTE_DECODING_FAILED: 0x9106,
         SW_CONDITIONS_NOT_SATISFIED: 0x6985,
+        SW_DEVICE_IS_LOCKED: 0x6986,
         SW_BUFFER_OVERFLOW: 0x6990,
         SW_INCORRECT_P1_P2: 0x6A86,
         SW_INS_NOT_SUPPORTED: 0x6D00,
@@ -73,30 +79,46 @@ export class Waves {
         return { publicKey, address, statusCode };
     }
 
-    async signTransaction(path: string, amountPrecession: number, txData: Uint8Array, version = 2): Promise<string> {
-        const transactionType = txData[0];
-        const dataForDevice = await this._fillDataForSign(path, transactionType, 2, amountPrecession, WAVES_CONFIG.WAVES_PRECISION, txData);
+    async signTransaction(path: string, sData: ISignTxData): Promise<string> {
+        const dataForDevice = await this._fillDataForSign(path, sData);
         return await this._signData(dataForDevice);
     }
 
-    async signOrder(path: string, amountPrecession: number, txData: Uint8Array): Promise<string> {
-        const dataForDevice = await this._fillDataForSign(path, WAVES_CONFIG.SIGNED_CODES.ORDER, 0, amountPrecession, WAVES_CONFIG.WAVES_PRECISION, txData);
+    async signOrder(path: string, sOData: ISignOrderData): Promise<string> {
+        const sData = sOData as ISignTxData;
+        sData.dataType = WAVES_CONFIG.SIGNED_CODES.ORDER
+        const dataForDevice = await this._fillDataForSign(path, sData);
         return await this._signData(dataForDevice);
     }
 
-    async signSomeData(path: string, msgBuffer: Uint8Array): Promise<string> {
-        const dataForDevice = await this._fillDataForSign(path, WAVES_CONFIG.SIGNED_CODES.SOME_DATA, 0, 0, 0, msgBuffer);
+    async signSomeData(path: string, sOData: ISignData): Promise<string> {
+        const sData = sOData as ISignTxData;
+        sData.dataType = WAVES_CONFIG.SIGNED_CODES.SOME_DATA
+        sData.dataVersion = 0;
+        sData.amountPrecision = 0;
+        sData.feePrecision = 0;
+        const dataForDevice = await this._fillDataForSign(path, sData);
         return await this._signData(dataForDevice);
     }
 
-    async signRequest(path: string, msgBuffer: Uint8Array): Promise<string> {
-        const dataForDevice = await this._fillDataForSign(path, WAVES_CONFIG.SIGNED_CODES.REQUEST, 0, 0, 0, msgBuffer);
+    async signRequest(path: string, sOData: ISignData): Promise<string> {
+        const sData = sOData as ISignTxData;
+        sData.dataType = WAVES_CONFIG.SIGNED_CODES.REQUEST
+        sData.dataVersion = 0;
+        sData.amountPrecision = 0;
+        sData.feePrecision = 0;
+        const dataForDevice = await this._fillDataForSign(path, sData);
         return await this._signData(dataForDevice);
     }
 
-    async signMessage(path: string, msgBuffer: Uint8Array): Promise<string> {
-        const dataForSign = await this._fillDataForSign(path, WAVES_CONFIG.SIGNED_CODES.MESSAGE, 0, 0, 0, msgBuffer);
-        return await this._signData(dataForSign);
+    async signMessage(path: string, sOData: ISignData): Promise<string> {
+        const sData = sOData as ISignTxData;
+        sData.dataType = WAVES_CONFIG.SIGNED_CODES.MESSAGE
+        sData.dataVersion = 0;
+        sData.amountPrecision = 0;
+        sData.feePrecision = 0;
+        const dataForDevice = await this._fillDataForSign(path, sData);
+        return await this._signData(dataForDevice);
     }
 
     async getVersion(): Promise<Array<number>> {
@@ -119,36 +141,49 @@ export class Waves {
         }
     }
 
-    protected async _fillDataForSign(path: string, dataType: number, dataVersion: number,
-                                     amountPrecision: number, feePrecision: number,
-                                     dataBuffer: Uint8Array) {
+    protected async _fillDataForSign(path: string, sData: ISignTxData) {
         const appVersion = await this.getVersion();
-
-        if (appVersion[0] >= 1 && appVersion[1] >= 1 && appVersion[2] >= 0) {
+        const amountPrecision = sData?.amountPrecision ?? WAVES_CONFIG.WAVES_PRECISION;
+        const amount2Precision = sData?.amount2Precision ?? 0;
+        const feePrecision = sData.feePrecision ?? WAVES_CONFIG.WAVES_PRECISION;
+        if (appVersion[0] >= 1 && appVersion[1] >= 2 && appVersion[2] >= 0) {
+            const prefixData = Buffer.concat([
+                Waves.splitPath(path),
+                Buffer.from([
+                    amountPrecision,
+                    amount2Precision,
+                    feePrecision,
+                    sData.dataType,
+                    sData.dataVersion
+                ]),
+                new Buffer(Waves._toInt32Bytes(sData.dataBuffer.byteLength))
+            ]);
+            return Buffer.concat([prefixData, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer]);
+        } else if (appVersion[0] >= 1 && appVersion[1] >= 1 && appVersion[2] >= 0) {
             const prefixData = Buffer.concat([
                 Waves.splitPath(path),
                 Buffer.from([
                     amountPrecision,
                     feePrecision,
-                    dataType,
-                    dataVersion
+                    sData.dataType,
+                    sData.dataVersion
                 ]),
-                Waves._toInt32Bytes(dataBuffer.byteLength)
+                new Buffer(Waves._toInt32Bytes(sData.dataBuffer.byteLength))
             ]);
 
-            return Buffer.concat([prefixData, dataBuffer, dataBuffer]);
+            return Buffer.concat([prefixData, sData.dataBuffer, sData.dataBuffer]);
         } else {
             const prefixData = Buffer.concat([
                 Waves.splitPath(path),
                 Buffer.from([
                     amountPrecision,
                     feePrecision,
-                    dataType,
-                    dataVersion
+                    sData.dataType,
+                    sData.dataVersion
                 ])
             ]);
 
-            return Buffer.concat([prefixData, dataBuffer]);
+            return Buffer.concat([prefixData, sData.dataBuffer]);
         }
     }
 
@@ -158,7 +193,6 @@ export class Waves {
         const dataLength = dataBuffer.length;
         let sendBytes = 0;
         let result;
-
         while (dataLength > sendBytes) {
             const chunkLength = Math.min(dataLength - sendBytes, maxChunkLength);
             const isLastByte = (dataLength - sendBytes > maxChunkLength) ? 0x00 : 0x80;
@@ -212,4 +246,22 @@ export interface IUserData {
     publicKey: string;
     address: string;
     statusCode: string;
+}
+
+export interface ISignData {
+    dataBuffer: Uint8Array;
+}
+
+export interface ISignTxData extends ISignData{
+    dataType: number;
+    dataVersion: number;
+    amountPrecision?: number;
+    amount2Precision?: number;
+    feePrecision?: number;
+}
+
+export interface ISignOrderData extends ISignData{
+    dataVersion: number;
+    amountPrecision?: number;
+    feePrecision?: number;
 }

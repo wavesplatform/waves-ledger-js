@@ -2,8 +2,9 @@
 
 
 import '@babel/polyfill';
-import { Waves, IUserData } from './Waves';
+import {Waves, IUserData, ISignTxData, ISignOrderData, ISignData} from './Waves';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
+import { listen } from '@ledgerhq/logs';
 
 declare const Buffer: any;
 
@@ -117,12 +118,12 @@ export class WavesLedger {
         return usersData;
     }
 
-    async signTransaction(userId: number, asset: { precision: number }, txData: Uint8Array, version = 2) {
+    async signTransaction(userId: number, sData: ISignTxData) {
         const path = this.getPathById(userId);
-        const msgData = new Buffer(txData);
+        sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signTransaction(path, asset.precision, msgData, version);
+            return await waves.signTransaction(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -130,12 +131,12 @@ export class WavesLedger {
         }
     }
 
-    async signOrder(userId: number, asset: { precision: number }, txData: Uint8Array) {
+    async signOrder(userId: number, sData: ISignOrderData) {
         const path = this.getPathById(userId);
-        const msgData = new Buffer(txData);
+        sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signOrder(path, asset.precision, msgData);
+            return await waves.signOrder(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -143,12 +144,12 @@ export class WavesLedger {
         }
     }
 
-    async signSomeData(userId: number, dataBuffer: Uint8Array) {
+    async signSomeData(userId: number, sData: ISignData) {
         const path = this.getPathById(userId);
-        const msgData = new Buffer(dataBuffer);
+        sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signSomeData(path, msgData);
+            return await waves.signSomeData(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -156,12 +157,12 @@ export class WavesLedger {
         }
     }
 
-    async signRequest(userId: number, dataBuffer: Uint8Array) {
+    async signRequest(userId: number, sData: ISignData) {
         const path = this.getPathById(userId);
-        const msgData = new Buffer(dataBuffer);
+        sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signRequest(path, msgData);
+            return await waves.signRequest(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -171,10 +172,10 @@ export class WavesLedger {
 
     async signMessage(userId: number, message: string) {
         const path = this.getPathById(userId);
-        const msgData = new Buffer(message, 'ascii');
+        let sData: ISignData = {dataBuffer: new Buffer(message, 'ascii')};
         try {
             const waves = await this.getTransport();
-            return await waves.signMessage(path, msgData);
+            return await waves.signMessage(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -209,7 +210,13 @@ export class WavesLedger {
 
     _setSettings() {
         (this._initTransportPromise as Promise<any>).then((transport) => {
-            transport.setDebugMode(this._debug);
+            if(this._debug) {
+                listen(function (l:  any) {
+                    console.log(123);
+                    console.log(l);
+                })
+            }
+            //transport.setDebugMode(this._debug);
             transport.setExchangeTimeout(this._exchangeTimeout);
         }).catch(e => console.warn('can\'t init ledger', e));
     }

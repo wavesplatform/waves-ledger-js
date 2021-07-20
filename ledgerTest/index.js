@@ -10,6 +10,8 @@ const nextUsersEl = document.querySelector('.users-list-next');
 
 const autoTestEl = document.querySelector('.autotest-data');
 
+const initDeviceBtn = document.querySelector('.device-init');
+const tryConnectBtn = document.querySelector('.device-connect');
 const protoTxTestBut = document.querySelector('.proto-tx');
 const byteTxTestBut = document.querySelector('.byte-tx');
 const protoOrderTestBut = document.querySelector('.proto-order');
@@ -24,17 +26,15 @@ const autoTestButton = document.querySelector('.autotest');
 
 const filterEl = document.querySelector('.hide-selected');
 
-const Transport = require('../node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F').default;
-// const Transport = require('../node_modules/@ledgerhq/hw-transport-webusb/lib/TransportWebUSB').default;
-const ledger = new WavesLedger({
-    debug: true,
-    openTimeout: 3000,
-    listenTimeout: 30000,
-    exchangeTimeout: 30000,
-    networkCode: 82, //stagenet
-    transport: Transport
-});
-const appData = { ledger, users: []};
+// const Transport = require('../node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F').default;
+const Transport = require('../node_modules/@ledgerhq/hw-transport-webusb/lib/TransportWebUSB').default;
+
+const appData = {
+    _ledger: null,
+    ledger: function() { return this._ledger },
+    users: []
+};
+
 const buttons = {
     all: autoTestButton,
     protoTx: protoTxTestBut,
@@ -46,6 +46,8 @@ const buttons = {
     message: messageTestBut
 };
 
+initDeviceBtn.addEventListener('click', initDevice);
+tryConnectBtn.addEventListener('click', tryConnect);
 autoTestButton.addEventListener('click', autoTest);
 nextUsersEl.addEventListener('click', getNextUsers);
 usersListEl.addEventListener('click', _selectUser);
@@ -76,10 +78,23 @@ filterEl.addEventListener('change', () => {
     usersListEl.setAttribute('show-selected', !!filterEl.checked);
 });
 
+function initDevice() {
+    const ledger = new WavesLedger({
+        debug: true,
+        openTimeout: 3000,
+        listenTimeout: 30000,
+        exchangeTimeout: 30000,
+        networkCode: 82, //stagenet
+        transport: Transport
+    });
+
+    appData._ledger = ledger;
+}
+
 function tryConnect() {
     statusEl.setAttribute('loading', true);
     nextUsersEl.setAttribute('disable', true);
-    ledger.probeDevice().then(
+    appData.ledger().probeDevice().then(
         (status) => {
             appData.status = status ? 'on' : 'off';
             statusEl.setAttribute('status', appData.status);
@@ -100,7 +115,7 @@ async function autoTest() {
     disableButtons();
     destroyTestData();
     if(userData === null || userData === undefined) {
-        userData = await appData.ledger.getUserDataById(0);
+        userData = await appData.ledger().getUserDataById(0);
     }
     autoTestEl.append(" Start Testing\n");
     autoTestEl.append("-------------------------------\n\n");
@@ -207,7 +222,7 @@ async function testProtoTxs(txs, userData, one= false) {
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
-            let sign = await appData.ledger.signTransaction(userData.id, {
+            let sign = await appData.ledger().signTransaction(userData.id, {
                 dataType: tx.dataType,
                 dataVersion: tx.dataVersion,
                 dataBuffer: dataBuf,
@@ -246,7 +261,7 @@ async function testOldTxs(txs, userData, one= false) {
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
-            let sign = await appData.ledger.signTransaction(userData.id, {
+            let sign = await appData.ledger().signTransaction(userData.id, {
                 dataType: tx.dataType,
                 dataVersion: tx.dataVersion,
                 dataBuffer: dataBuf,
@@ -284,7 +299,7 @@ async function testProtoOrder(orders, userData, one= false) {
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(order.dataBuffer.split(',')));
-            let sign = await appData.ledger.signOrder(userData.id, {
+            let sign = await appData.ledger().signOrder(userData.id, {
                 dataVersion: order.dataVersion,
                 dataBuffer: dataBuf,
                 amountPrecision: order.amountPrecision ?? null,
@@ -321,7 +336,7 @@ async function testByteOrder(orders, userData, one= false) {
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(order.dataBuffer.split(',')));
-            let sign = await appData.ledger.signOrder(userData.id, {
+            let sign = await appData.ledger().signOrder(userData.id, {
                 dataVersion: order.dataVersion,
                 dataBuffer: dataBuf,
                 amountPrecision: order.amountPrecision ?? null,
@@ -354,7 +369,7 @@ async function testRequest(requests, userData, one= false) {
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(request.dataBuffer.split(',')));
-            let sign = await appData.ledger.signRequest(userData.id, {
+            let sign = await appData.ledger().signRequest(userData.id, {
                 dataBuffer: dataBuf,
             });
             out = "\n Signature: " + sign;
@@ -383,7 +398,7 @@ async function testCustomData(items, userData, one= false) {
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(data.dataBuffer.split(',')));
-            let sign = await appData.ledger.signSomeData(userData.id, {
+            let sign = await appData.ledger().signSomeData(userData.id, {
                 dataBuffer: dataBuf,
             });
             out = "\n Signature: " + sign;
@@ -411,7 +426,7 @@ async function testMessage(messages, userData, one= false) {
         let out = "\n Message: " + message;
         autoTestEl.append(out);
         try {
-            let sign = await appData.ledger.signMessage(userData.id, message);
+            let sign = await appData.ledger().signMessage(userData.id, message);
             out = "\n Signature: " + sign;
             let dataBuf = new Buffer(message, 'ascii');
             if(verifySignature(userData.publicKey, dataBuf, sign)) {
@@ -440,7 +455,7 @@ function getNextUsers(data) {
     nextUsersEl.setAttribute('disable', true);
     statusEl.setAttribute('loading', true);
     statusEl.setAttribute('error', false);
-    appData.ledger.getPaginationUsersData(appData.users.length, appData.users.length + 5).then(
+    appData.ledger().getPaginationUsersData(appData.users.length, appData.users.length + 5).then(
         (users) => {
             appData.users = [...appData.users, ...users];
             drawUsers();
@@ -464,7 +479,7 @@ function _signCustom() {
     statusEl.setAttribute('loading', true);
     statusEl.setAttribute('error', false);
 
-    appData.ledger.signSomeData(appData.selectedUser, {dataBuffer: appData.signData}).then(
+    appData.ledger().signSomeData(appData.selectedUser, {dataBuffer: appData.signData}).then(
         (data) => {
             statusEl.setAttribute('loading', false);
             signCustomEl.setAttribute('disable', false);
@@ -493,7 +508,7 @@ function _signTransaction() {
     signTransactionEl.setAttribute('disable', true);
     statusEl.setAttribute('loading', true);
     statusEl.setAttribute('error', false);
-    appData.ledger.signTransaction(appData.selectedUser, {
+    appData.ledger().signTransaction(appData.selectedUser, {
         dataType: 4,
         dataVersion: 3,
         dataBuffer: appData.signData
@@ -528,7 +543,7 @@ function _signRequest() {
     statusEl.setAttribute('loading', true);
     statusEl.setAttribute('error', false);
 
-    appData.ledger.signRequest(appData.selectedUser, {dataBuffer: appData.signData}).then(
+    appData.ledger().signRequest(appData.selectedUser, {dataBuffer: appData.signData}).then(
         (data) => {
             statusEl.setAttribute('loading', false);
             signTransactionEl.setAttribute('disable', false);
@@ -616,9 +631,9 @@ function onChangeData() {
 }
 
 function showError() {
-    const error = appData.ledger.getLastError();
+    const error = appData.ledger().getLastError();
     errorEl.setAttribute('hide', !error);
-    const errorText = (error ? JSON.stringify(appData.ledger.getLastError(), 4 ,4, 4) : '');
+    const errorText = (error ? JSON.stringify(appData.ledger().getLastError(), 4 ,4, 4) : '');
     const textEl =  document.querySelector('.error-text');
     if (textEl.innerHTML !== errorText ) {
         textEl.innerHTML = errorText;
@@ -635,4 +650,4 @@ function _toggleShowError() {
 
 
 disableButtons();
-tryConnect();
+// tryConnect();

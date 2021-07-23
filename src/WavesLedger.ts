@@ -34,9 +34,6 @@ export class WavesLedger {
         this._exchangeTimeout = options.exchangeTimeout;
         this._error = null;
         this._transport = options.transport || TransportU2F;
-        this.tryConnect().catch(
-            (e) => console.warn('Ledger lib is not available', e)
-        );
     }
 
     async tryConnect(): Promise<void> {
@@ -48,6 +45,7 @@ export class WavesLedger {
             await disconnectPromise;
             await Promise.all([this._initTransportPromise, this._wavesLibPromise]);
         } catch (e) {
+            console.warn('Ledger lib is not available', e);
             throw new Error(e);
         }
     }

@@ -1,8 +1,37 @@
-const { WavesLedger } = require('../lib/WavesLedger');
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { verifySignature } from '@waves/ts-lib-crypto'
-import * as testData from '../ledgerTest/testdata.json';
+import { Signer } from '@waves/signer';
+import { ProviderLedger } from '@waves/provider-ledger';
+import { WavesLedger } from '../lib/WavesLedger';
 
-import { base58Encode } from '../lib/utils';
+const TEST_DATA_URL = './testdata.json'
+const Transport = TransportWebUSB;
+
+const appData = {
+    _ledger: null,
+    _testData: null,
+
+    signer: null,
+    users: [],
+
+    ledger: function() { return this._ledger; },
+    getTestData: function() { return this._testData; },
+    loadTestData: function() {
+        if(this._testData) {
+            return Promise.resolve(this._testData);
+        } else {
+            fetch(`${TEST_DATA_URL}?${Date.now()}`)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    appData._testData = data;
+
+                    return data;
+                });
+        }        
+    }
+};
 
 const statusEl = document.querySelector('.device-status');
 const usersListEl = document.querySelector('.users-list');
@@ -11,7 +40,6 @@ const nextUsersEl = document.querySelector('.users-list-next');
 const autoTestEl = document.querySelector('.autotest-data');
 
 const initDeviceBtn = document.querySelector('.device-init');
-const tryConnectBtn = document.querySelector('.device-connect');
 const protoTxTestBut = document.querySelector('.proto-tx');
 const byteTxTestBut = document.querySelector('.byte-tx');
 const protoOrderTestBut = document.querySelector('.proto-order');
@@ -26,14 +54,8 @@ const autoTestButton = document.querySelector('.autotest');
 
 const filterEl = document.querySelector('.hide-selected');
 
-// const Transport = require('../node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F').default;
-const Transport = require('../node_modules/@ledgerhq/hw-transport-webusb/lib/TransportWebUSB').default;
-
-const appData = {
-    _ledger: null,
-    ledger: function() { return this._ledger },
-    users: []
-};
+const signerInitBtn = document.querySelector('.signer-init');
+const signerSignBtn = document.querySelector('.signer-sign');
 
 const buttons = {
     all: autoTestButton,
@@ -47,10 +69,13 @@ const buttons = {
 };
 
 initDeviceBtn.addEventListener('click', initDevice);
-tryConnectBtn.addEventListener('click', tryConnect);
 autoTestButton.addEventListener('click', autoTest);
 nextUsersEl.addEventListener('click', getNextUsers);
 usersListEl.addEventListener('click', _selectUser);
+
+signerInitBtn.addEventListener('click', signerInit);
+signerSignBtn.addEventListener('click', signTx);
+
 protoTxTestBut.addEventListener('click', function(){
     testOne('protoTx');
 });
@@ -89,9 +114,47 @@ function initDevice() {
     });
 
     appData._ledger = ledger;
+
+    ledger.tryConnect().then(() => {
+        checkConnect();
+    })
+
+    appData.loadTestData();
 }
 
-function tryConnect() {
+function signerInit() {
+    console.log(' :: Init signer');
+
+    const signer = new Signer({
+        NODE_URL: 'https://nodes-testnet.wavesnodes.com' // Specify URL of the node on Testnet
+    });
+    const provider = new ProviderLedger();
+
+    signer.setProvider(provider);
+
+    appData.signer = signer;
+}
+
+function signTx() {
+    console.log(' :: Sign tx');
+
+    const tx = {"id":"AiCWg4DTqgr5AKCYdD4M7hHDvVPg9ojM986CZwYmBTHT","type":15,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"E5Rcha533YfMJZE9aDmx2m5tZSYYt6HWgFU3jkP4YGDV","script":"base64:AwZd0cYf","fee":100000000,"feeAssetId":null,"timestamp":1601366036889,"proofs":["5uvrjcUikMPipfxbQtAQEqFcwVz14Kcn7pACKPxAU7zs2ttK2szcBSoDviVqzK2i5qXbzFAwvyoxyXmuChVDaA6s"]};
+
+    appData.signer.login()
+        .then(() => {
+            appData.signer
+            .transfer({ amount: 100000000, recipient: 'alias:T:merry' })
+            .sign()
+            .then((data) => {
+                const [signedTransfer] = data;
+    
+                console.log('Sign');
+                console.log(signedTransfer);
+            });
+        });
+}
+
+function checkConnect() {
     statusEl.setAttribute('loading', true);
     nextUsersEl.setAttribute('disable', true);
     appData.ledger().probeDevice().then(
@@ -111,14 +174,20 @@ function tryConnect() {
 
 async function autoTest() {
     let userData = appData.users[appData.selectedUser];
+    const testData = appData.getTestData();
+
     statusEl.setAttribute('loading', true);
+
     disableButtons();
     destroyTestData();
+
     if(userData === null || userData === undefined) {
         userData = await appData.ledger().getUserDataById(0);
     }
+
     autoTestEl.append(" Start Testing\n");
     autoTestEl.append("-------------------------------\n\n");
+
     // testing txs
     if(testData.tx.proto.length > 0) {
         await testProtoTxs(testData.tx.proto, userData);
@@ -148,6 +217,8 @@ async function autoTest() {
 
 async function testOne(type) {
     let userData = appData.users[appData.selectedUser];
+    const testData = appData.getTestData();
+
     destroyTestData();
     disableButtons();
     autoTestEl.append(" Start Test\n");
@@ -650,4 +721,3 @@ function _toggleShowError() {
 
 
 disableButtons();
-// tryConnect();

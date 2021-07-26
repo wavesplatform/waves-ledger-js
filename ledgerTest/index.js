@@ -104,6 +104,10 @@ filterEl.addEventListener('change', () => {
 });
 
 function initDevice() {
+    if(appData._ledger) {
+        return;
+    }
+
     const ledger = new WavesLedger({
         debug: true,
         openTimeout: 3000,
@@ -115,11 +119,9 @@ function initDevice() {
 
     appData._ledger = ledger;
 
-    ledger.tryConnect().then(() => {
+    return ledger.tryConnect().then(() => {
         checkConnect();
     })
-
-    appData.loadTestData();
 }
 
 function signerInit() {
@@ -135,23 +137,70 @@ function signerInit() {
     appData.signer = signer;
 }
 
-function signTx() {
-    console.log(' :: Sign tx');
+async function signTx() {
+    // console.log(' :: Sign tx');
 
-    const tx = {"id":"AiCWg4DTqgr5AKCYdD4M7hHDvVPg9ojM986CZwYmBTHT","type":15,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"E5Rcha533YfMJZE9aDmx2m5tZSYYt6HWgFU3jkP4YGDV","script":"base64:AwZd0cYf","fee":100000000,"feeAssetId":null,"timestamp":1601366036889,"proofs":["5uvrjcUikMPipfxbQtAQEqFcwVz14Kcn7pACKPxAU7zs2ttK2szcBSoDviVqzK2i5qXbzFAwvyoxyXmuChVDaA6s"]};
+    // const tx = {"id":"AiCWg4DTqgr5AKCYdD4M7hHDvVPg9ojM986CZwYmBTHT","type":15,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"E5Rcha533YfMJZE9aDmx2m5tZSYYt6HWgFU3jkP4YGDV","script":"base64:AwZd0cYf","fee":100000000,"feeAssetId":null,"timestamp":1601366036889,"proofs":["5uvrjcUikMPipfxbQtAQEqFcwVz14Kcn7pACKPxAU7zs2ttK2szcBSoDviVqzK2i5qXbzFAwvyoxyXmuChVDaA6s"]};
 
-    appData.signer.login()
-        .then(() => {
-            appData.signer
-            .transfer({ amount: 100000000, recipient: 'alias:T:merry' })
-            .sign()
-            .then((data) => {
-                const [signedTransfer] = data;
+    // if(appData.signer == null) {
+    //     signerInit();
+    // }
+
+    // appData.signer.login()
+    //     .then(() => {
+    //         appData.signer
+    //         .transfer({ amount: 100000000, recipient: 'alias:T:merry' })
+    //         .sign()
+    //         .then((data) => {
+    //             const [signedTransfer] = data;
     
-                console.log('Sign');
-                console.log(signedTransfer);
-            });
-        });
+    //             console.log('Sign');
+    //             console.log(signedTransfer);
+    //         });
+    //     });
+
+    // const user = await signer.login();
+    // const balances = await signer.getBalance();
+    // const [broadcastedTransfer] = await signer
+    //     .transfer({amount: 100000000, recipient: 'alias:T:merry'}) // Transfer 1 WAVES to alias merry
+    //     .broadcast(); // Promise will resolved after user sign and node response
+
+    // signerInit();
+    // console.log('Sign');
+    // const [signedTransfer] = appData.signer
+    //     .transfer({amount: 100000000, recipient: 'alias:T:merry'}) // Transfer 1 WAVES to alias merry
+    //     // then((s) => {
+    //     //     s.sign(); // Promise will resolved after user sign
+    //     //     console.log('End');
+    //     // })
+
+    //     let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
+    //     let sign = await appData.ledger().signTransaction(userData.id, {
+    //         dataType: tx.dataType,
+    //         dataVersion: tx.dataVersion,
+    //         dataBuffer: dataBuf,
+    //         amountPrecision: tx.amountPrecision ?? null,
+    //         amount2Precision: tx.amount2Precision ?? null,
+    //         feePrecision: tx.feePrecision ?? null,
+    //     });
+
+    // await initDevice();
+
+    let tx = appData.getTestData().tx.proto[0];
+    let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
+    let userId = 0; //userData.id;
+
+    let sign = await appData.ledger().signTransaction(userId, {
+        dataType: tx.dataType,
+        dataVersion: tx.dataVersion,
+        dataBuffer: dataBuf,
+        amountPrecision: tx.amountPrecision ?? null,
+        amount2Precision: tx.amount2Precision ?? null,
+        feePrecision: tx.feePrecision ?? null,
+    });
+
+    autoTestEl.append('Signer: ' + sign);
+    console.log(sign);
 }
 
 function checkConnect() {
@@ -218,7 +267,7 @@ async function autoTest() {
 async function testOne(type) {
     let userData = appData.users[appData.selectedUser];
     const testData = appData.getTestData();
-
+debugger;
     destroyTestData();
     disableButtons();
     autoTestEl.append(" Start Test\n");
@@ -721,3 +770,4 @@ function _toggleShowError() {
 
 
 disableButtons();
+appData.loadTestData();

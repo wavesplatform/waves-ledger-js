@@ -10,7 +10,6 @@
   },
   "scripts": {
     "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u @ledgerhq/logs -o dist/waves-ledger.js",
-    "prepare": "npm run build",
     "build_monitor": "rimraf dist && npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -t [ babelify ] -t"
   },
   "keywords": [],

@@ -15,7 +15,7 @@ export class MenuComponent extends React.Component {
                         Users:&nbsp;<button className="users-list-next">Get</button>
                     </div>
                     <div>
-                        Hide:&nbsp;<input type="checkbox" className="hide-selected" />
+                        Hide:&nbsp;<input type="checkbox" className="hide-user-list" />
                     </div>
                     <div className="error hide">
                         <button>Error</button>

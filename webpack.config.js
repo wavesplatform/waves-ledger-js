@@ -8,14 +8,14 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 const webAppDir = __dirname;
 const rootDir = path.resolve(webAppDir, ".");
-const buildDir = path.join(webAppDir, "dist");
+const distrDir = path.join(webAppDir, "dist_monitor");
 
 module.exports = {
     mode: "development",
     context: rootDir,
     entry: "./monitor/index.ts",
     output: {
-        path: buildDir,
+        path: distrDir,
         filename: "bundle.[hash].js",
         publicPath: "/",
     },
@@ -41,25 +41,26 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: "./monitor/index.html",
+            minify: false
         }),
         new MiniCssExtractPlugin({
             filename: '[name].[hash].css'
         }),
         new CopyPlugin({
             patterns: [
-                { from: "./monitor/testdata.json", to: buildDir },
-                { from: "./monitor/main.css", to: buildDir },
+                { from: "./monitor/testdata.json", to: distrDir },
+                { from: "./monitor/main.css", to: distrDir },
             ],
         }),
     ],
     devServer: {
         port: 3000,
-        contentBase: buildDir,
+        contentBase: distrDir,
         compress: false,
         historyApiFallback: true,
     },
     watchOptions: {
-        ignored: [buildDir, "node_modules"],
+        ignored: [distrDir, "node_modules"],
         aggregateTimeout: 1500,
     },
 };

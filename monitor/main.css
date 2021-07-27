@@ -40,12 +40,9 @@ button {
     box-sizing: border-box;
     height: 24px;
     padding: 4px 8px;
-}
 
-button {
     border-radius: 5px;
     border: 2px transparent;
-    height: 20px;
     min-width: 50px;
     box-shadow: darkgreen 0px 0px 1px;
 }

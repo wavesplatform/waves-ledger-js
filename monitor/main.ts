@@ -9,7 +9,10 @@ import { WavesLedger } from '../src/WavesLedger';
 
 export function main() {
 
-const TEST_DATA_URL = './testdata.json'
+const DEFAULT_NODE_URL = 'https://nodes-testnet.wavesnodes.com'; // Specify URL of the node on Testnet
+const DEFAULT_NETWORK_CODE = 68; // 82
+
+const TEST_DATA_URL = './testdata.json';
 const Transport = TransportWebUSB;
 
 const appData: any = {
@@ -57,7 +60,7 @@ const appData: any = {
 const statusEl = document.querySelector('.device-status');
 const initDeviceBtn = document.querySelector('.device-init');
 const nextUsersEl = document.querySelector('.users-list-next');
-const hideUserList: HTMLInputElement = document.querySelector('.hide-selected');
+const hideUserList: HTMLInputElement = document.querySelector('.hide-user-list');
 const errorEl = document.querySelector('.error');
 const errorButton = document.querySelector('.error button');
 
@@ -123,9 +126,9 @@ errorButton.addEventListener('click', _toggleShowError);
 
 hideUserList.addEventListener('change', () => {
     if(!!hideUserList.checked) {
-        usersListEl.classList.add('hide');
+        usersListEl.classList.add('hidden');
     } else {
-        usersListEl.classList.remove('hide');
+        usersListEl.classList.remove('hidden');
     }
 });
 
@@ -139,7 +142,7 @@ function initDevice() {
         openTimeout: 3000,
         listenTimeout: 30000,
         exchangeTimeout: 30000,
-        networkCode: 82, //stagenet
+        networkCode: DEFAULT_NETWORK_CODE,
         transport: Transport
     });
 
@@ -154,9 +157,13 @@ function signerInit() {
     console.log(' :: Init signer');
 
     const signer = new Signer({
-        NODE_URL: 'https://nodes-testnet.wavesnodes.com' // Specify URL of the node on Testnet
+        NODE_URL: DEFAULT_NODE_URL,
     });
     const provider = new ProviderLedger();
+
+    provider.ledgerConfig({
+        networkCode: DEFAULT_NETWORK_CODE
+    });
 
     signer.setProvider(provider);
 

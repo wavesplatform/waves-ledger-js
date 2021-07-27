@@ -2,4 +2,5 @@
 lib
 node_modules
 dist
+dist_monitor
 lib

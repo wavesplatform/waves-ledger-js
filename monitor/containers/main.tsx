@@ -2,6 +2,7 @@ import React from "react";
 import {
     AutotestLogComponent,
     MenuComponent,
+    TxPreviewComponent,
     UserListComponent
 } from "../components";
 
@@ -13,8 +14,8 @@ export default class MainContainer extends React.Component<IMainContainerProps, 
         return (
             <React.Fragment>
                 <MenuComponent />
-                <br />
                 <UserListComponent />
+                <TxPreviewComponent />
                 <AutotestLogComponent />
             </React.Fragment>
         );

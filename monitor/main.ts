@@ -4,9 +4,11 @@ import { verifySignature } from '@waves/ts-lib-crypto'
 import { Signer } from '@waves/signer';
 import { ProviderLedger } from '@waves/provider-ledger';
 import { WavesLedger } from '../src/WavesLedger';
+// import { ThemeConsumer } from 'styled-components';
+// import { isConstructorDeclaration } from 'typescript';
 
 export function main() {
-    
+
 const TEST_DATA_URL = './testdata.json'
 const Transport = TransportWebUSB;
 
@@ -14,6 +16,7 @@ const appData: any = {
     _ledger: null,
     _testData: null,
 
+    selectedTxIndex: null,
     signer: null,
     users: [],
 
@@ -31,18 +34,35 @@ const appData: any = {
                     appData._testData = data;
 
                     return data;
-                });
+                })
+                .then((data) => {
+                    const txList = data.tx.proto;
+
+                    txListEL.innerHTML = txList
+                        .map((tx, index) => {
+                            const text = `T: ${tx.dataType} V: ${tx.dataVersion} A: ${tx.amountPrecision} F: ${tx.feePrecision}`;
+                            const option = `<option value="${index}">${text}</option>`;
+
+                            return option;
+                        })
+                        .join('');
+
+                        txListEL.value = null;
+                })
+            
         }        
     }
 };
 
 const statusEl = document.querySelector('.device-status');
-const usersListEl = document.querySelector('.users-list');
-const nextUsersEl = document.querySelector('.users-list-next');
-
-const autoTestEl = document.querySelector('.autotest-data');
-
 const initDeviceBtn = document.querySelector('.device-init');
+const nextUsersEl = document.querySelector('.users-list-next');
+const hideUserList: HTMLInputElement = document.querySelector('.hide-selected');
+const errorEl = document.querySelector('.error');
+const errorButton = document.querySelector('.error button');
+
+const autoTestButton = document.querySelector('.autotest');
+const autoTestEl = document.querySelector('.autotest-data');
 const protoTxTestBut = document.querySelector('.proto-tx');
 const byteTxTestBut = document.querySelector('.byte-tx');
 const protoOrderTestBut = document.querySelector('.proto-order');
@@ -51,14 +71,12 @@ const requestTestBut = document.querySelector('.request');
 const customDataTestBut = document.querySelector('.custom-data');
 const messageTestBut = document.querySelector('.message');
 
-const errorEl = document.querySelector('.error');
-const errorButton = document.querySelector('.error button');
-const autoTestButton = document.querySelector('.autotest');
-
-const filterEl: HTMLInputElement = document.querySelector('.hide-selected');
-
 const signerInitBtn = document.querySelector('.signer-init');
 const signerSignBtn = document.querySelector('.signer-sign');
+const txListEL = document.querySelector('.tx-list');
+const txPreviewEl = document.querySelector('.tx-preview-json');
+
+const usersListEl = document.querySelector('.users-list');
 
 const buttons = {
     all: autoTestButton,
@@ -78,6 +96,7 @@ usersListEl.addEventListener('click', _selectUser);
 
 signerInitBtn.addEventListener('click', signerInit);
 signerSignBtn.addEventListener('click', signTx);
+txListEL.addEventListener('change', onChangeTxList);
 
 protoTxTestBut.addEventListener('click', function(){
     testOne('protoTx');
@@ -102,8 +121,12 @@ messageTestBut.addEventListener('click', function(){
 });
 errorButton.addEventListener('click', _toggleShowError);
 
-filterEl.addEventListener('change', () => {
-    usersListEl.setAttribute('show-selected', String(!!filterEl.checked));
+hideUserList.addEventListener('change', () => {
+    if(!!hideUserList.checked) {
+        usersListEl.classList.add('hide');
+    } else {
+        usersListEl.classList.remove('hide');
+    }
 });
 
 function initDevice() {
@@ -162,10 +185,15 @@ async function signTx() {
     //         });
     //     });
 
+    if (!appData.selectedTxIndex) {
+        alert('Select tx');
+    }
+
     // ITS WORK
     await initDevice();
 
-    let tx = appData.getTestData().tx.proto[0];
+    const index = appData.selectedTxIndex;
+    const tx = appData.getTestData().tx.proto[index];
     let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
     let userId = 0; //userData.id;
 
@@ -180,6 +208,16 @@ async function signTx() {
 
     autoTestEl.append('Signer: ' + sign);
     console.log(sign);
+}
+
+function onChangeTxList(ev) {
+    const value = Number(ev.target.value);
+    const tx = appData.getTestData().tx.proto[value];
+    
+    appData.selectedTxIndex = value;
+
+    txPreviewEl.value = JSON.stringify(tx, null, ' ');
+    document.querySelector('.tx-preview-container').classList.remove('hidden');
 }
 
 function checkConnect() {
@@ -253,7 +291,7 @@ async function autoTest() {
 async function testOne(type) {
     let userData = appData.users[appData.selectedUser];
     const testData = appData.getTestData();
-debugger;
+
     destroyTestData();
     disableButtons();
     autoTestEl.append(" Start Test\n");
@@ -578,105 +616,6 @@ function getNextUsers(data) {
     );
 }
 
-// TODO signCustomEl is not exist
-// function _signCustom() {
-//     if (signCustomEl.getAttribute('disable') === 'true') {
-//         return null;
-//     }
-
-//     signCustomEl.setAttribute('disable', 'true');
-//     statusEl.setAttribute('loading', 'true');
-//     statusEl.setAttribute('error', 'false');
-
-//     appData.ledger().signSomeData(appData.selectedUser, {dataBuffer: appData.signData}).then(
-//         (data) => {
-//             statusEl.setAttribute('loading', 'false');
-//             signCustomEl.setAttribute('disable', 'false');
-//             const outEl: HTMLInputElement = document.querySelector('.data-out');
-//             outEl.value = data;
-//             appData.outData = data;
-//         },
-//         (err) => {
-//             console.log(err);
-//             statusEl.setAttribute('loading', 'false');
-//             statusEl.setAttribute('error', 'true');
-//             signCustomEl.setAttribute('disable', 'false');
-//             const outEl: HTMLInputElement = document.querySelector('.data-out');
-//             if (outEl) {
-//                 outEl.value = '';
-//             }
-//             appData.outData = null;
-//         }
-//     );
-// }
-
-// TODO signCustomEl is not exist
-// function _signTransaction() {
-//     if (signCustomEl.getAttribute('disable') === 'true') {
-//         return null;
-//     }
-//     signTransactionEl.setAttribute('disable', 'true');
-//     statusEl.setAttribute('loading', 'true');
-//     statusEl.setAttribute('error', 'false');
-//     appData.ledger().signTransaction(appData.selectedUser, {
-//         dataType: 4,
-//         dataVersion: 3,
-//         dataBuffer: appData.signData
-//     }).then(
-//         (data) => {
-//             statusEl.setAttribute('loading', 'false');
-//             signTransactionEl.setAttribute('disable', 'false');
-//             const outEl: HTMLInputElement = document.querySelector('.data-out');
-//             outEl.value = data;
-//             appData.outData = data;
-//         },
-//         (err) => {
-//             console.log(err);
-//             statusEl.setAttribute('loading', 'false');
-//             statusEl.setAttribute('error', 'true');
-//             signTransactionEl.setAttribute('disable', 'false');
-//             const outEl: HTMLInputElement = document.querySelector('.data-out');
-//             if (outEl) {
-//                 outEl.value = '';
-//             }
-//             appData.outData = null;
-//         }
-//     );
-// }
-
-// TODO signCustomEl is not exist
-// function _signRequest() {
-//     if (signCustomEl.getAttribute('disable') === 'true') {
-//         return null;
-//     }
-
-//     signTransactionEl.setAttribute('disable', 'true');
-//     statusEl.setAttribute('loading', 'true');
-//     statusEl.setAttribute('error', 'false');
-
-//     appData.ledger().signRequest(appData.selectedUser, {dataBuffer: appData.signData}).then(
-//         (data) => {
-//             statusEl.setAttribute('loading', 'false');
-//             signTransactionEl.setAttribute('disable', 'false');
-//             const outEl: HTMLInputElement = document.querySelector('.data-out');
-//             outEl.value = data;
-//             appData.outData = data;
-//         },
-//         (err) => {
-//             console.log(err);
-//             statusEl.setAttribute('loading', 'false');
-//             statusEl.setAttribute('error', 'true');
-//             signTransactionEl.setAttribute('disable', 'false');
-//             const outEl: HTMLInputElement = document.querySelector('.data-out');
-//             if (outEl) {
-//                 outEl.value = '';
-//             }
-//             appData.outData = null;
-//         }
-//     );
-// }
-
-
 function drawUsers() {
     let htmlData = '';
     appData.users.forEach((user) => {
@@ -734,14 +673,14 @@ function disableButtons() {
     }
 }
 
-function onChangeData() {
-    const dataBuffer = new Buffer(new Buffer(this.value.split(',')));
-    appData.signData = dataBuffer;
-    appData.outData = null;
+// function onChangeData() {
+//     const dataBuffer = new Buffer(new Buffer(this.value.split(',')));
+//     appData.signData = dataBuffer;
+//     appData.outData = null;
 
-    const elOut: HTMLInputElement = document.querySelector('.data-out');
-    elOut.value = '';
-}
+//     const elOut: HTMLInputElement = document.querySelector('.data-out');
+//     elOut.value = '';
+// }
 
 function toggleError(isError) {
     if (isError) {

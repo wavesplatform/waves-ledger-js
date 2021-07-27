@@ -3,7 +3,9 @@ import React from "react";
 export class AutotestLogComponent extends React.Component {
     render() {
         return (
-            <div>
+            <div className="result-container">
+                Result:
+                <br/>
                 <pre className="autotest-data"></pre>
             </div>
         );

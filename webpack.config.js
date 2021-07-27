@@ -6,9 +6,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
-// const createStyledComponentsTransformer = require("typescript-plugin-styled-components").default;
-// const styledComponentsTransformer = createStyledComponentsTransformer({ ssr: false });
-
 const webAppDir = __dirname;
 const rootDir = path.resolve(webAppDir, ".");
 const buildDir = path.join(webAppDir, "dist");
@@ -16,7 +13,6 @@ const buildDir = path.join(webAppDir, "dist");
 module.exports = {
     mode: "development",
     context: rootDir,
-    // devtool: isProd ? 'source-map' : 'inline-source-map',
     entry: "./monitor/index.ts",
     output: {
         path: buildDir,
@@ -26,17 +22,17 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(j|t)sx?$/,
+                test: /\.(js|jsx|ts|tsx)$/,
                 use: {
                     loader: "ts-loader",
-                    // options: {
-                    //     getCustomTransformers: () => ({ before: [styledComponentsTransformer] }),
-                    //     onlyCompileBundledFiles: true,
-                    // },
                 },
                 include: rootDir,
                 exclude: [/node_modules/, /\.test\.ts/],
             },
+            {
+                test: /\.css$/i,
+                use: ["css-loader"],
+              },
         ],
     },
     resolve: {
@@ -46,6 +42,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: "./monitor/index.html",
         }),
+        new MiniCssExtractPlugin({
+            filename: '[name].[hash].css'
+        }),
         new CopyPlugin({
             patterns: [
                 { from: "./monitor/testdata.json", to: buildDir },
@@ -53,14 +52,6 @@ module.exports = {
             ],
         }),
     ],
-    optimization: {
-        namedModules: true,
-        namedChunks: true,
-        splitChunks: {
-            chunks: "all",
-        },
-        noEmitOnErrors: true,
-    },
     devServer: {
         port: 3000,
         contentBase: buildDir,

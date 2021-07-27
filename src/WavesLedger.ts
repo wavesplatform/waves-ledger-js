@@ -1,8 +1,5 @@
-/// <reference path="../interface.d.ts"/>
-
-
 import '@babel/polyfill';
-import {Waves, IUserData, ISignTxData, ISignOrderData, ISignData} from './Waves';
+import { Waves, IUserData, ISignTxData, ISignOrderData, ISignData } from './Waves';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
 import { listen } from '@ledgerhq/logs';
 

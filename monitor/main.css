@@ -25,11 +25,11 @@
     top: 2px;
 }
 
-.device-status[status="off"] {
+.device-status.off {
     background: brown;
 }
 
-.device-status[status="on"] {
+.device-status.on {
     background: chartreuse;
 }
 
@@ -109,11 +109,6 @@ code.user-data.path {
     padding: 0px 5px;
 }
 
-.send-form {
-    background: #e6e6e6;
-    padding: 12px;
-}
-
 [loading="true"] {
     animation: loading 1s infinite;
 }
@@ -157,10 +152,6 @@ textarea.data, textarea.data-out {
     max-height: 150px;
 }
 
-[hide="true"] {
-    display: none!important;
-}
-
 .error button {
     background-color: firebrick;
     color: #e5e5e5;
@@ -175,6 +166,10 @@ textarea.data, textarea.data-out {
     overflow: auto;
 }
 
-.error-text[hide="true"] {
-    display: none;;
+.error.hide {
+    display: none!important;
+}
+
+.error-text.hide {
+    display: none;
 }

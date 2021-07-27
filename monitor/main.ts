@@ -1,13 +1,16 @@
+// @ts-nocheck
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { verifySignature } from '@waves/ts-lib-crypto'
 import { Signer } from '@waves/signer';
 import { ProviderLedger } from '@waves/provider-ledger';
-import { WavesLedger } from '../lib/WavesLedger';
+import { WavesLedger } from '../src/WavesLedger';
 
+export function main() {
+    
 const TEST_DATA_URL = './testdata.json'
 const Transport = TransportWebUSB;
 
-const appData = {
+const appData: any = {
     _ledger: null,
     _testData: null,
 
@@ -20,7 +23,7 @@ const appData = {
         if(this._testData) {
             return Promise.resolve(this._testData);
         } else {
-            fetch(`${TEST_DATA_URL}?${Date.now()}`)
+            return fetch(`${TEST_DATA_URL}?${Date.now()}`)
                 .then((response) => {
                     return response.json();
                 })
@@ -52,7 +55,7 @@ const errorEl = document.querySelector('.error');
 const errorButton = document.querySelector('.error button');
 const autoTestButton = document.querySelector('.autotest');
 
-const filterEl = document.querySelector('.hide-selected');
+const filterEl: HTMLInputElement = document.querySelector('.hide-selected');
 
 const signerInitBtn = document.querySelector('.signer-init');
 const signerSignBtn = document.querySelector('.signer-sign');
@@ -100,7 +103,7 @@ messageTestBut.addEventListener('click', function(){
 errorButton.addEventListener('click', _toggleShowError);
 
 filterEl.addEventListener('change', () => {
-    usersListEl.setAttribute('show-selected', !!filterEl.checked);
+    usersListEl.setAttribute('show-selected', String(!!filterEl.checked));
 });
 
 function initDevice() {
@@ -159,44 +162,20 @@ async function signTx() {
     //         });
     //     });
 
-    // const user = await signer.login();
-    // const balances = await signer.getBalance();
-    // const [broadcastedTransfer] = await signer
-    //     .transfer({amount: 100000000, recipient: 'alias:T:merry'}) // Transfer 1 WAVES to alias merry
-    //     .broadcast(); // Promise will resolved after user sign and node response
-
-    // signerInit();
-    // console.log('Sign');
-    // const [signedTransfer] = appData.signer
-    //     .transfer({amount: 100000000, recipient: 'alias:T:merry'}) // Transfer 1 WAVES to alias merry
-    //     // then((s) => {
-    //     //     s.sign(); // Promise will resolved after user sign
-    //     //     console.log('End');
-    //     // })
-
-    //     let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
-    //     let sign = await appData.ledger().signTransaction(userData.id, {
-    //         dataType: tx.dataType,
-    //         dataVersion: tx.dataVersion,
-    //         dataBuffer: dataBuf,
-    //         amountPrecision: tx.amountPrecision ?? null,
-    //         amount2Precision: tx.amount2Precision ?? null,
-    //         feePrecision: tx.feePrecision ?? null,
-    //     });
-
-    // await initDevice();
+    // ITS WORK
+    await initDevice();
 
     let tx = appData.getTestData().tx.proto[0];
     let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
     let userId = 0; //userData.id;
 
+    const dataType = 3; // tx type
+    const dataVersion = 3; // tx version
+
     let sign = await appData.ledger().signTransaction(userId, {
-        dataType: tx.dataType,
-        dataVersion: tx.dataVersion,
+        dataType: dataType,
+        dataVersion: dataVersion,
         dataBuffer: dataBuf,
-        amountPrecision: tx.amountPrecision ?? null,
-        amount2Precision: tx.amount2Precision ?? null,
-        feePrecision: tx.feePrecision ?? null,
     });
 
     autoTestEl.append('Signer: ' + sign);
@@ -204,19 +183,26 @@ async function signTx() {
 }
 
 function checkConnect() {
-    statusEl.setAttribute('loading', true);
-    nextUsersEl.setAttribute('disable', true);
+    statusEl.classList.add('loading');
+    nextUsersEl.setAttribute('disable', 'true');
     appData.ledger().probeDevice().then(
         (status) => {
-            appData.status = status ? 'on' : 'off';
-            statusEl.setAttribute('status', appData.status);
+            appData.status = status ? true : false;
+            if(appData.status) {
+                statusEl.classList.add('on');
+                statusEl.classList.remove('off');
+            } else{
+                statusEl.classList.add('off');
+                statusEl.classList.remove('on');
+            }
+            
             if (!status) {
                 showError();
-                nextUsersEl.setAttribute('disable', true);
+                nextUsersEl.setAttribute('disable', 'true');
             } else {
-                nextUsersEl.setAttribute('disable', false);
+                nextUsersEl.setAttribute('disable', 'false');
             }
-            statusEl.setAttribute('loading', false);
+            statusEl.classList.remove('loading');
         }
     );
 }
@@ -225,7 +211,7 @@ async function autoTest() {
     let userData = appData.users[appData.selectedUser];
     const testData = appData.getTestData();
 
-    statusEl.setAttribute('loading', true);
+    statusEl.classList.add('loading');
 
     disableButtons();
     destroyTestData();
@@ -260,7 +246,7 @@ async function autoTest() {
         await testMessage(testData.message, userData);
     }
 
-    statusEl.setAttribute('loading', false);
+    statusEl.setAttribute('loading', 'false');
     enableButtons();
 }
 
@@ -272,7 +258,7 @@ debugger;
     disableButtons();
     autoTestEl.append(" Start Test\n");
     autoTestEl.append("-------------------------------\n\n");
-    statusEl.setAttribute('loading', true);
+    statusEl.setAttribute('loading', 'true');
     switch (type) {
         case 'protoTx':
             if(testData.tx.proto.length > 0) {
@@ -324,7 +310,7 @@ debugger;
             }
             break;
     }
-    statusEl.setAttribute('loading', false);
+    statusEl.setAttribute('loading', 'false');
     enableButtons();
     autoTestEl.append(" End Test");
 }
@@ -415,7 +401,8 @@ async function testProtoOrder(orders, userData, one= false) {
             "\n Order Data: " + order.dataBuffer +
             "\n Order amount Precision: " +(order.amountPrecision ?? 8) +
             "\n Order fee Precision: " + (order.feePrecision ?? 8) +
-            "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
+            // "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
+            '';
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(order.dataBuffer.split(',')));
@@ -452,7 +439,8 @@ async function testByteOrder(orders, userData, one= false) {
             "\n Order Data: " + order.dataBuffer +
             "\n Order amount Precision: " +(order.amountPrecision ?? 8) +
             "\n Order fee Precision: " + (order.feePrecision ?? 8) +
-            "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
+            // "\n Tx json: \n" + JSON.stringify(tx && tx.jsonView, undefined, 4);
+            '';
         autoTestEl.append(out);
         try {
             let dataBuf = new Buffer(new Buffer(order.dataBuffer.split(',')));
@@ -572,118 +560,121 @@ function getNextUsers(data) {
         return null;
     }
 
-    nextUsersEl.setAttribute('disable', true);
-    statusEl.setAttribute('loading', true);
-    statusEl.setAttribute('error', false);
+    nextUsersEl.setAttribute('disable', 'true');
+    statusEl.setAttribute('loading', 'true');
+    statusEl.setAttribute('error', 'false');
     appData.ledger().getPaginationUsersData(appData.users.length, appData.users.length + 5).then(
         (users) => {
             appData.users = [...appData.users, ...users];
             drawUsers();
-            statusEl.setAttribute('loading', false);
-            nextUsersEl.setAttribute('disable', false);
+            statusEl.setAttribute('loading', 'false');
+            nextUsersEl.setAttribute('disable', 'false');
         },
         () => {
-            statusEl.setAttribute('loading', false);
-            statusEl.setAttribute('error', true);
-            nextUsersEl.setAttribute('disable', false);
+            statusEl.setAttribute('loading', 'false');
+            statusEl.setAttribute('error', 'true');
+            nextUsersEl.setAttribute('disable', 'false');
         }
     );
 }
 
-function _signCustom() {
-    if (signCustomEl.getAttribute('disable') === 'true') {
-        return null;
-    }
+// TODO signCustomEl is not exist
+// function _signCustom() {
+//     if (signCustomEl.getAttribute('disable') === 'true') {
+//         return null;
+//     }
 
-    signCustomEl.setAttribute('disable', true);
-    statusEl.setAttribute('loading', true);
-    statusEl.setAttribute('error', false);
+//     signCustomEl.setAttribute('disable', 'true');
+//     statusEl.setAttribute('loading', 'true');
+//     statusEl.setAttribute('error', 'false');
 
-    appData.ledger().signSomeData(appData.selectedUser, {dataBuffer: appData.signData}).then(
-        (data) => {
-            statusEl.setAttribute('loading', false);
-            signCustomEl.setAttribute('disable', false);
-            const outEl = document.querySelector('.data-out');
-            outEl.value = data;
-            appData.outData = data;
-        },
-        (err) => {
-            console.log(err);
-            statusEl.setAttribute('loading', false);
-            statusEl.setAttribute('error', true);
-            signCustomEl.setAttribute('disable', false);
-            const outEl = document.querySelector('.data-out');
-            if (outEl) {
-                outEl.value = '';
-            }
-            appData.outData = null;
-        }
-    );
-}
+//     appData.ledger().signSomeData(appData.selectedUser, {dataBuffer: appData.signData}).then(
+//         (data) => {
+//             statusEl.setAttribute('loading', 'false');
+//             signCustomEl.setAttribute('disable', 'false');
+//             const outEl: HTMLInputElement = document.querySelector('.data-out');
+//             outEl.value = data;
+//             appData.outData = data;
+//         },
+//         (err) => {
+//             console.log(err);
+//             statusEl.setAttribute('loading', 'false');
+//             statusEl.setAttribute('error', 'true');
+//             signCustomEl.setAttribute('disable', 'false');
+//             const outEl: HTMLInputElement = document.querySelector('.data-out');
+//             if (outEl) {
+//                 outEl.value = '';
+//             }
+//             appData.outData = null;
+//         }
+//     );
+// }
 
-function _signTransaction() {
-    if (signCustomEl.getAttribute('disable') === 'true') {
-        return null;
-    }
-    signTransactionEl.setAttribute('disable', true);
-    statusEl.setAttribute('loading', true);
-    statusEl.setAttribute('error', false);
-    appData.ledger().signTransaction(appData.selectedUser, {
-        dataType: 4,
-        dataVersion: 3,
-        dataBuffer: appData.signData
-    }).then(
-        (data) => {
-            statusEl.setAttribute('loading', false);
-            signTransactionEl.setAttribute('disable', false);
-            const outEl = document.querySelector('.data-out');
-            outEl.value = data;
-            appData.outData = data;
-        },
-        (err) => {
-            console.log(err);
-            statusEl.setAttribute('loading', false);
-            statusEl.setAttribute('error', true);
-            signTransactionEl.setAttribute('disable', false);
-            const outEl = document.querySelector('.data-out');
-            if (outEl) {
-                outEl.value = '';
-            }
-            appData.outData = null;
-        }
-    );
-}
+// TODO signCustomEl is not exist
+// function _signTransaction() {
+//     if (signCustomEl.getAttribute('disable') === 'true') {
+//         return null;
+//     }
+//     signTransactionEl.setAttribute('disable', 'true');
+//     statusEl.setAttribute('loading', 'true');
+//     statusEl.setAttribute('error', 'false');
+//     appData.ledger().signTransaction(appData.selectedUser, {
+//         dataType: 4,
+//         dataVersion: 3,
+//         dataBuffer: appData.signData
+//     }).then(
+//         (data) => {
+//             statusEl.setAttribute('loading', 'false');
+//             signTransactionEl.setAttribute('disable', 'false');
+//             const outEl: HTMLInputElement = document.querySelector('.data-out');
+//             outEl.value = data;
+//             appData.outData = data;
+//         },
+//         (err) => {
+//             console.log(err);
+//             statusEl.setAttribute('loading', 'false');
+//             statusEl.setAttribute('error', 'true');
+//             signTransactionEl.setAttribute('disable', 'false');
+//             const outEl: HTMLInputElement = document.querySelector('.data-out');
+//             if (outEl) {
+//                 outEl.value = '';
+//             }
+//             appData.outData = null;
+//         }
+//     );
+// }
 
-function _signRequest() {
-    if (signCustomEl.getAttribute('disable') === 'true') {
-        return null;
-    }
+// TODO signCustomEl is not exist
+// function _signRequest() {
+//     if (signCustomEl.getAttribute('disable') === 'true') {
+//         return null;
+//     }
 
-    signTransactionEl.setAttribute('disable', true);
-    statusEl.setAttribute('loading', true);
-    statusEl.setAttribute('error', false);
+//     signTransactionEl.setAttribute('disable', 'true');
+//     statusEl.setAttribute('loading', 'true');
+//     statusEl.setAttribute('error', 'false');
 
-    appData.ledger().signRequest(appData.selectedUser, {dataBuffer: appData.signData}).then(
-        (data) => {
-            statusEl.setAttribute('loading', false);
-            signTransactionEl.setAttribute('disable', false);
-            const outEl = document.querySelector('.data-out');
-            outEl.value = data;
-            appData.outData = data;
-        },
-        (err) => {
-            console.log(err);
-            statusEl.setAttribute('loading', false);
-            statusEl.setAttribute('error', true);
-            signTransactionEl.setAttribute('disable', false);
-            const outEl = document.querySelector('.data-out');
-            if (outEl) {
-                outEl.value = '';
-            }
-            appData.outData = null;
-        }
-    );
-}
+//     appData.ledger().signRequest(appData.selectedUser, {dataBuffer: appData.signData}).then(
+//         (data) => {
+//             statusEl.setAttribute('loading', 'false');
+//             signTransactionEl.setAttribute('disable', 'false');
+//             const outEl: HTMLInputElement = document.querySelector('.data-out');
+//             outEl.value = data;
+//             appData.outData = data;
+//         },
+//         (err) => {
+//             console.log(err);
+//             statusEl.setAttribute('loading', 'false');
+//             statusEl.setAttribute('error', 'true');
+//             signTransactionEl.setAttribute('disable', 'false');
+//             const outEl: HTMLInputElement = document.querySelector('.data-out');
+//             if (outEl) {
+//                 outEl.value = '';
+//             }
+//             appData.outData = null;
+//         }
+//     );
+// }
 
 
 function drawUsers() {
@@ -713,7 +704,7 @@ function selectUser() {
     let selected = false;
     for (const el of usersEls) {
         const isSelected = appData.selectedUser == el.getAttribute("user-id");
-        el.setAttribute('selected-user', isSelected);
+        el.setAttribute('selected-user', String(isSelected));
         selected = selected || isSelected;
     }
 
@@ -739,7 +730,7 @@ function enableButtons() {
 
 function disableButtons() {
     for (const [key, el] of Object.entries(buttons)) {
-        el.setAttribute('disabled', true);
+        el.setAttribute('disabled', 'true');
     }
 }
 
@@ -747,27 +738,41 @@ function onChangeData() {
     const dataBuffer = new Buffer(new Buffer(this.value.split(',')));
     appData.signData = dataBuffer;
     appData.outData = null;
-    document.querySelector('.data-out').value = '';
+
+    const elOut: HTMLInputElement = document.querySelector('.data-out');
+    elOut.value = '';
+}
+
+function toggleError(isError) {
+    if (isError) {
+        errorEl.classList.remove('hide');
+    } else {
+        errorEl.classList.add('hide');
+    }
 }
 
 function showError() {
     const error = appData.ledger().getLastError();
-    errorEl.setAttribute('hide', !error);
-    const errorText = (error ? JSON.stringify(appData.ledger().getLastError(), 4 ,4, 4) : '');
+
+    toggleError(error);
+
+    const errorText = (error ? JSON.stringify(appData.ledger().getLastError(), (k,v) => v ,4) : '');
     const textEl =  document.querySelector('.error-text');
     if (textEl.innerHTML !== errorText ) {
         textEl.innerHTML = errorText;
     }
 
-    textEl.setAttribute('hide', false);
+    toggleError(false);
 }
 
 function _toggleShowError() {
     const errorTextEl = document.querySelector('.error-text');
     const isHidden = errorTextEl.getAttribute('hide');
-    errorTextEl.setAttribute('hide', isHidden === 'true' ? false : true);
-}
 
+    toggleError(isHidden === 'true');
+}
 
 disableButtons();
 appData.loadTestData();
+
+}

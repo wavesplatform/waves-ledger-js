@@ -223,7 +223,7 @@ async function signerSignTx() {
         dataBuffer: dataBuf,
     });
 
-    autoTestEl.append('Signer: ' + sign);
+    autoTestEl.innerHTML += 'Signer: ' + sign + '<br />';
 }
 
 function onChangeTxList(ev) {

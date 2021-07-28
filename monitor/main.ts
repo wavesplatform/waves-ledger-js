@@ -67,6 +67,7 @@ const errorButton = document.querySelector('.error button');
 
 const autoTestButton = document.querySelector('.autotest');
 const autoTestEl = document.querySelector('.autotest-data');
+const signerLogEl = document.querySelector('.signer-log');
 const protoTxTestBut = document.querySelector('.proto-tx');
 const byteTxTestBut = document.querySelector('.byte-tx');
 const protoOrderTestBut = document.querySelector('.proto-order');
@@ -206,10 +207,12 @@ async function signerSignTx() {
 
     let originalTx = { ...tx.jsonView};
 
+    // todo hack
     delete originalTx.id;
     delete originalTx.proofs;
 
-    // let signTxRes = signTx(originalTx, '4Pgfke7gpAJq3fTTQWkHrY7oX7s4k28PyV1hrW9ocmJt');
+    let publicKey = '4Pgfke7gpAJq3fTTQWkHrY7oX7s4k28PyV1hrW9ocmJt'; // todo get seed from ledger
+    let signTxRes = signTx(originalTx, publicKey); 
     let dataBuf = makeTxBytes(originalTx);
 
     let userId = 0; //userData.id;
@@ -217,13 +220,21 @@ async function signerSignTx() {
     const dataType = tx.jsonView.type; // tx type
     const dataVersion = tx.jsonView.version; // tx version
 
+    signerLogEl.innerHTML += `TxId: ${signTxRes.id} (@waves/waves-transactions :: signTx)<br />`;
+
     let sign = await appData.ledger().signTransaction(userId, {
         dataType: dataType,
         dataVersion: dataVersion,
         dataBuffer: dataBuf,
     });
 
-    autoTestEl.innerHTML += 'Signer: ' + sign + '<br />';
+    signerLogEl.innerHTML += 'Signer result: ' + sign + '<br />';
+    
+    if (verifySignature(publicKey, dataBuf, sign)) {
+        signerLogEl.innerHTML += 'PASS<br />*<br />';
+    } else {
+        signerLogEl.innerHTML += 'NOT PASS<br />*<br />';
+    }
 }
 
 function onChangeTxList(ev) {

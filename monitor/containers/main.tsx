@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    AutotestLogComponent,
+    LogComponent,
     MenuComponent,
     TxPreviewComponent,
     UserListComponent
@@ -16,7 +16,7 @@ export default class MainContainer extends React.Component<IMainContainerProps, 
                 <MenuComponent />
                 <UserListComponent />
                 <TxPreviewComponent />
-                <AutotestLogComponent />
+                <LogComponent />
             </React.Fragment>
         );
     }

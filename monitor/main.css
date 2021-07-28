@@ -124,7 +124,7 @@ select {
     box-sizing: border-box;
     padding: 4px 8px;
     width: 700px;
-    height: 300px;
+    height: 150px;
 
 }
 
@@ -231,7 +231,8 @@ span.data-wrapper label {
     display: none;
 }
 
-.result-container {
+.result-container,
+.signer-log-container {
     box-sizing: border-box;
     padding: 4px 8px;
     min-height: 20px;

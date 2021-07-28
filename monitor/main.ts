@@ -22,6 +22,7 @@ const appData: any = {
 
     selectedTxIndex: null,
     signer: null,
+    defaultUser: null,
     users: [],
 
     ledger: function() { return this._ledger; },
@@ -80,6 +81,7 @@ const signerInitBtn = document.querySelector('.signer-init');
 const signerSignBtn = document.querySelector('.signer-sign');
 const txListEL = document.querySelector('.tx-list');
 const txPreviewEl = document.querySelector('.tx-preview-json');
+const txPreviewIdEl = document.querySelector('.tx-preview-id');
 
 const usersListEl = document.querySelector('.users-list');
 
@@ -150,9 +152,16 @@ function initDevice() {
 
     appData._ledger = ledger;
 
-    return ledger.tryConnect().then(() => {
-        checkConnect();
-    })
+    return ledger.tryConnect()
+        .then(() => {
+            return checkConnect();
+        })
+        .then(() => {
+            return appData.ledger().getUserDataById(0)
+                .then((user) => {
+                    appData.defaultUser = user;
+                })
+        })
 }
 
 function signerInit() {
@@ -205,14 +214,10 @@ async function signerSignTx() {
     const index = appData.selectedTxIndex;
     const tx = appData.getTestData().tx.proto[index];
 
-    let originalTx = { ...tx.jsonView};
+    let originalTx = origTx(tx.jsonView);
+    let publicKey = appData.defaultUser.publicKey;
 
-    // todo hack
-    delete originalTx.id;
-    delete originalTx.proofs;
-
-    let publicKey = '4Pgfke7gpAJq3fTTQWkHrY7oX7s4k28PyV1hrW9ocmJt'; // todo get seed from ledger
-    let signTxRes = signTx(originalTx, publicKey); 
+    let signedTx = signTx(originalTx, publicKey);
     let dataBuf = makeTxBytes(originalTx);
 
     let userId = 0; //userData.id;
@@ -220,7 +225,7 @@ async function signerSignTx() {
     const dataType = tx.jsonView.type; // tx type
     const dataVersion = tx.jsonView.version; // tx version
 
-    signerLogEl.innerHTML += `TxId: ${signTxRes.id} (@waves/waves-transactions :: signTx)<br />`;
+    signerLogEl.innerHTML += `TxId: ${signedTx.id} (@waves/waves-transactions :: signTx)<br />`;
 
     let sign = await appData.ledger().signTransaction(userId, {
         dataType: dataType,
@@ -243,33 +248,39 @@ function onChangeTxList(ev) {
     
     appData.selectedTxIndex = value;
 
+    let originalTx = origTx(tx.jsonView);
+    let publicKey = appData.defaultUser.publicKey;
+
+    let signedTx = signTx(originalTx, publicKey);
+
+    txPreviewIdEl.innerHTML = signedTx.id;
     txPreviewEl.value = JSON.stringify(tx, null, ' ');
+
     document.querySelector('.tx-preview-container').classList.remove('hidden');
 }
 
 function checkConnect() {
     statusEl.classList.add('loading');
     nextUsersEl.setAttribute('disable', 'true');
-    appData.ledger().probeDevice().then(
-        (status) => {
-            appData.status = status ? true : false;
-            if(appData.status) {
-                statusEl.classList.add('on');
-                statusEl.classList.remove('off');
-            } else{
-                statusEl.classList.add('off');
-                statusEl.classList.remove('on');
-            }
-            
-            if (!status) {
-                showError();
-                nextUsersEl.setAttribute('disable', 'true');
-            } else {
-                nextUsersEl.setAttribute('disable', 'false');
-            }
-            statusEl.classList.remove('loading');
+
+    return appData.ledger().probeDevice().then((status) => {
+        appData.status = status ? true : false;
+        if(appData.status) {
+            statusEl.classList.add('on');
+            statusEl.classList.remove('off');
+        } else{
+            statusEl.classList.add('off');
+            statusEl.classList.remove('on');
         }
-    );
+
+        if (!status) {
+            showError();
+            nextUsersEl.setAttribute('disable', 'true');
+        } else {
+            nextUsersEl.setAttribute('disable', 'false');
+        }
+        statusEl.classList.remove('loading');
+    });
 }
 
 async function autoTest() {
@@ -736,6 +747,16 @@ function _toggleShowError() {
     const isHidden = errorTextEl.getAttribute('hide');
 
     toggleError(isHidden === 'true');
+}
+
+function origTx(txView) {
+    let orig = { ...txView };
+
+    // // todo hack
+    // delete orig.id;
+    // delete orig.proofs;
+
+    return orig;
 }
 
 disableButtons();

@@ -34,6 +34,10 @@
 .hidden {
     display: none;
 }
+/* */
+.gray {
+ color: rgba(0, 0, 0, .5);
+}
 
 /* */
 button {
@@ -130,7 +134,7 @@ select {
 
 .tx-preview-container .tx-preview-json {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 20px);
 }
 
 @media (max-width: 480px) {

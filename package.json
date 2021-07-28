@@ -34,6 +34,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
     "@types/styled-components": "^5.1.2",
+    "@waves/waves-transactions": "^4.2.1",
     "babel-loader": "^8.1.0",
     "copy-webpack-plugin": "^6.1.0",
     "css-loader": "^6.2.0",

@@ -4,6 +4,7 @@ import { verifySignature } from '@waves/ts-lib-crypto'
 import { Signer } from '@waves/signer';
 import { ProviderLedger } from '@waves/provider-ledger';
 import { WavesLedger } from '../src/WavesLedger';
+import { signTx, makeTxBytes } from "@waves/waves-transactions";
 // import { ThemeConsumer } from 'styled-components';
 // import { isConstructorDeclaration } from 'typescript';
 
@@ -98,7 +99,7 @@ nextUsersEl.addEventListener('click', getNextUsers);
 usersListEl.addEventListener('click', _selectUser);
 
 signerInitBtn.addEventListener('click', signerInit);
-signerSignBtn.addEventListener('click', signTx);
+signerSignBtn.addEventListener('click', signerSignTx);
 txListEL.addEventListener('change', onChangeTxList);
 
 protoTxTestBut.addEventListener('click', function(){
@@ -154,8 +155,6 @@ function initDevice() {
 }
 
 function signerInit() {
-    console.log(' :: Init signer');
-
     const signer = new Signer({
         NODE_URL: DEFAULT_NODE_URL,
     });
@@ -170,9 +169,7 @@ function signerInit() {
     appData.signer = signer;
 }
 
-async function signTx() {
-    // console.log(' :: Sign tx');
-
+async function signerSignTx() {
     // const tx = {"id":"AiCWg4DTqgr5AKCYdD4M7hHDvVPg9ojM986CZwYmBTHT","type":15,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"E5Rcha533YfMJZE9aDmx2m5tZSYYt6HWgFU3jkP4YGDV","script":"base64:AwZd0cYf","fee":100000000,"feeAssetId":null,"timestamp":1601366036889,"proofs":["5uvrjcUikMPipfxbQtAQEqFcwVz14Kcn7pACKPxAU7zs2ttK2szcBSoDviVqzK2i5qXbzFAwvyoxyXmuChVDaA6s"]};
 
     // if(appData.signer == null) {
@@ -192,8 +189,13 @@ async function signTx() {
     //         });
     //     });
 
-    if (!appData.selectedTxIndex) {
+    if (appData.selectedTxIndex == null) {
         alert('Select tx');
+    }
+
+    function str2buf(str) {
+        var enc = new TextEncoder(); // always utf-8
+        return enc.encode(str);
     }
 
     // ITS WORK
@@ -201,11 +203,19 @@ async function signTx() {
 
     const index = appData.selectedTxIndex;
     const tx = appData.getTestData().tx.proto[index];
-    let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
+
+    let originalTx = { ...tx.jsonView};
+
+    delete originalTx.id;
+    delete originalTx.proofs;
+
+    // let signTxRes = signTx(originalTx, '4Pgfke7gpAJq3fTTQWkHrY7oX7s4k28PyV1hrW9ocmJt');
+    let dataBuf = makeTxBytes(originalTx);
+
     let userId = 0; //userData.id;
 
-    const dataType = 3; // tx type
-    const dataVersion = 3; // tx version
+    const dataType = tx.jsonView.type; // tx type
+    const dataVersion = tx.jsonView.version; // tx version
 
     let sign = await appData.ledger().signTransaction(userId, {
         dataType: dataType,
@@ -214,7 +224,6 @@ async function signTx() {
     });
 
     autoTestEl.append('Signer: ' + sign);
-    console.log(sign);
 }
 
 function onChangeTxList(ev) {

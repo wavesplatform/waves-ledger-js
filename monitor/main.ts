@@ -211,8 +211,19 @@ async function signerSignTx() {
     // ITS WORK
     await initDevice();
 
-    const index = appData.selectedTxIndex;
-    const tx = appData.getTestData().tx.proto[index];
+    // const index = appData.selectedTxIndex;
+    // const tx = appData.getTestData().tx.proto[index];
+    let data;
+    let tx;
+
+    try {
+        data = JSON.parse(txPreviewEl.value);
+    } catch (er) {
+        alert('Invalid JSON');
+        console.log(er);
+    }
+
+    tx = data;
 
     let originalTx = origTx(tx.jsonView);
     let publicKey = appData.defaultUser.publicKey;

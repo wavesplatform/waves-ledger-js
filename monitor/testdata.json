@@ -51,6 +51,28 @@
         "jsonView": {"id":"9LgPZDEuBQZN65DKyu8U9mdoCFqHr4iXK2GnMyt3dEhj","type":4,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","recipient":"alias:W:_rich-account.with@30_symbols_","amount":9223372036854775807,"assetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","attachment":"2UyXA7eLNfqs1","fee":9223372036854775807,"feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","timestamp":1601310361433,"proofs":["2jnVzcsrUZ2efgxvKMxYBuMbi8heJaGqCKz3XtXL895CyyQgt6JaaJduT7CmomL4uBvHboRutDXheFZf6WZwvNha"]}
       },
       {
+        "dataType": 4,
+        "amountPrecision": 0,
+        "dataVersion": 3,
+        "feePrecision": 0,
+        "jsonView": {
+            "id":"28Ahqh6hxVgRpJTFLvjnXBFbBZuMMUh5fo5vzuGqSUpa",
+            "type":4,
+            "version":3,
+            "chainId":68,
+            "senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF",
+            "sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX",
+            "recipient":"alias:W:_rich-account.with@30_symbols_",
+            "amount":1000,
+            "assetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9",
+            "attachment":"2UyXA7eLNfqs1",
+            "fee":1000,
+            "feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9",
+            "timestamp":1601310361337,
+            "proofs":["2cQB9VRRkef9Zyon7H54DVEUNv4ZBorYVjy1HTwmMfT77zNUtEb4oXTceg8pZvR53Giz9hBtLnCVRrnBeY1kwyrs"]
+        }
+      },
+      {
         "dataType": 5,
         "amountPrecision": 8,
         "dataVersion": 3,

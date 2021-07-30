@@ -44,8 +44,9 @@ const appData: any = {
                     const txList = data.tx.proto;
 
                     txListEL.innerHTML = txList
-                        .map((tx, index) => {
-                            const text = `T: ${tx.dataType} V: ${tx.dataVersion} A: ${tx.amountPrecision} F: ${tx.feePrecision}`;
+                        .map((data, index) => {
+                            const tx = data.jsonView;
+                            const text = `T: ${tx.type} V: ${tx.version} A: ${data.amountPrecision} F: ${data.feePrecision}`;
                             const option = `<option value="${index}">${text}</option>`;
 
                             return option;
@@ -223,9 +224,9 @@ async function signerSignTx() {
         console.log(er);
     }
 
-    tx = data;
-
-    let originalTx = origTx(tx.jsonView);
+    tx = data.jsonView;
+console.log(makeTxBytes(tx).toString());
+    let originalTx = origTx(tx);
     let publicKey = appData.defaultUser.publicKey;
 
     let signedTx = signTx(originalTx, publicKey);
@@ -233,16 +234,21 @@ async function signerSignTx() {
 
     let userId = 0; //userData.id;
 
-    const dataType = tx.jsonView.type; // tx type
-    const dataVersion = tx.jsonView.version; // tx version
+    const dataType = tx.type; // tx type
+    const dataVersion = tx.version; // tx version
 
     signerLogEl.innerHTML += `TxId: ${signedTx.id} (@waves/waves-transactions :: signTx)<br />`;
 
-    let sign = await appData.ledger().signTransaction(userId, {
+    let signData = {
         dataType: dataType,
         dataVersion: dataVersion,
+        // amount2Precision: 0,
+        // amountPrecision: 8,
+        // feePrecision: 8,
         dataBuffer: dataBuf,
-    });
+    };
+
+    let sign = await appData.ledger().signTransaction(userId, signData);
 
     signerLogEl.innerHTML += 'Signer result: ' + sign + '<br />';
     
@@ -403,21 +409,25 @@ async function testOne(type) {
 }
 
 async function testProtoTxs(txs, userData, one= false) {
+    const type = tx.dataType;
+    const version = tx.dataVersion;
+    const buffer = makeTxBytes(tx).toString();
+
     autoTestEl.append(" Prototype transactions\n\n");
     for (const tx of txs) {
-        let out = " Tx Type: " + tx.dataType +
-            "\n Tx Version: " + tx.dataVersion +
-            "\n Tx Data: " + tx.dataBuffer +
+        let out = " Tx Type: " + type +
+            "\n Tx Version: " + version +
+            "\n Tx Data: " +  +
             "\n Tx amount Precision: " + (tx.amountPrecision ?? 8) +
             "\n Tx amount Precision 2: " + (tx.amount2Precision ?? 0) +
             "\n Tx fee Precision: " + (tx.feePrecision ?? 8) +
             "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
         autoTestEl.append(out);
         try {
-            let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
+            let dataBuf = new Buffer(new Buffer(buffer.split(',')));
             let sign = await appData.ledger().signTransaction(userData.id, {
-                dataType: tx.dataType,
-                dataVersion: tx.dataVersion,
+                dataType: type,
+                dataVersion: version,
                 dataBuffer: dataBuf,
                 amountPrecision: tx.amountPrecision ?? null,
                 amount2Precision: tx.amount2Precision ?? null,
@@ -443,20 +453,24 @@ async function testProtoTxs(txs, userData, one= false) {
 }
 
 async function testOldTxs(txs, userData, one= false) {
+    const type = tx.dataType;
+    const version = tx.dataVersion;
+    const buffer = makeTxBytes(tx).toString();
+
     autoTestEl.append(" Byte transactions\n\n");
     for (const tx of txs) {
-        let out = " Tx Type: " + tx.dataType +
-            "\n Tx Version: " + tx.dataVersion +
-            "\n Tx Data: " + tx.dataBuffer +
+        let out = " Tx Type: " + type +
+            "\n Tx Version: " + version +
+            "\n Tx Data: " + buffer +
             "\n Tx amount Precision: " +(tx.amountPrecision ?? 8) +
             "\n Tx fee Precision: " + (tx.feePrecision ?? 8) +
             "\n Tx json: \n" + JSON.stringify(tx.jsonView, undefined, 4);
         autoTestEl.append(out);
         try {
-            let dataBuf = new Buffer(new Buffer(tx.dataBuffer.split(',')));
+            let dataBuf = new Buffer(new Buffer(buffer.split(',')));
             let sign = await appData.ledger().signTransaction(userData.id, {
-                dataType: tx.dataType,
-                dataVersion: tx.dataVersion,
+                dataType: type,
+                dataVersion: version,
                 dataBuffer: dataBuf,
                 amountPrecision: tx.amountPrecision ?? null,
                 amount2Precision: tx.amount2Precision ?? null,

@@ -2,58 +2,42 @@
   "tx": {
     "proto": [
       {
-        "dataType": 3,
         "amountPrecision": 0,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"3JXvucUC3P4SaE39LgxTHNsao5pKu5UavjHvaV3M8FdD","type":3,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","name":"aaaa","description":"","quantity":9223372036854775807,"decimals":0,"reissuable":false,"script":null,"fee":100000000,"feeAssetId":null,"timestamp":1601311665700,"proofs":["4uApZcWCzDuGzp5DBCEJbk4N3c9qfnXxvHobdaLdkbt3LcGocHc8HjK9JJjz2JNRiNDLzv5ZiW5HkRGzRT7vwsGQ"]}
       },
       {
-        "dataType": 3,
         "amountPrecision": 7,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"CpUnp5m6twdWUjX9SwFjanVUKkERz3JFcwzc3w7oYzwh","type":3,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","name":"aaaaaaaaaaaaaaaa","description":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","quantity":1234567,"decimals":7,"reissuable":true,"script":null,"fee":9223372036854775807,"feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","timestamp":1601311665776,"proofs":["ZCc79LDyz6JXBok1Wa7A9xH2b5Gy42Xh7bd9ovfsVjKsHbRvvhzwcANdb1H57JYUj2GaYFZYqCsyQWvay5NsRP5"]}
       },
       {
-        "dataType": 3,
         "amountPrecision": 6,
-        "dataVersion": 3,
         "feePrecision": 6,
         "jsonView": {"id":"WAQpvC7tNYhS5ezQXnHGYqja689b1yiAT4PgUqAnTzJ","type":3,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","name":"aaaaaaaaaaaaaaaa","description":"Some asset description","quantity":9223372036854775807,"decimals":6,"reissuable":true,"script":null,"fee":5,"feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","timestamp":1601311665779,"proofs":["5SpBTN2hxpMCquJf7tCGbJzQqJ75wCiW8PoUAFjvAHegSTthdJzk1EviMXSeuaKnm9zG2y2FUME3FeGPhUEP5nV1"]}
       },
       {
-        "dataType": 3,
         "amountPrecision": 0,
-        "dataVersion": 3,
         "feePrecision": 0,
         "jsonView": {"id":"E5Rcha533YfMJZE9aDmx2m5tZSYYt6HWgFU3jkP4YGDV","type":3,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","name":"aaaaaaaaaaaaaaaa","description":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","quantity":9223372036854775807,"decimals":0,"reissuable":true,"script":"base64:AwZd0cYf","fee":9223372036854775807,"feeAssetId":"GMiZSiRUd2kWrc2PDVWGGE2bB219wp2CHCBUipeJkvVm","timestamp":1601311665898,"proofs":["3cxior2DKyUuNkuPsqrPUZjkw3BYRpCD8bjJc5QX5Wt9oeafnisvEWNw1ALoH7Fy3gM853qdx7u3uAdcWx8bFee5"]}
       },
       {
-        "dataType": 4,
         "amountPrecision": 0,
-        "dataVersion": 3,
         "feePrecision": 0,
         "jsonView": {"id":"28Ahqh6hxVgRpJTFLvjnXBFbBZuMMUh5fo5vzuGqSUpa","type":4,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","recipient":"alias:W:_rich-account.with@30_symbols_","amount":9223372036854775807,"assetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","attachment":"2UyXA7eLNfqs1","fee":9223372036854775807,"feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","timestamp":1601310361337,"proofs":["2cQB9VRRkef9Zyon7H54DVEUNv4ZBorYVjy1HTwmMfT77zNUtEb4oXTceg8pZvR53Giz9hBtLnCVRrnBeY1kwyrs"]}
       },
       {
-        "dataType": 4,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"CNMdHyuxCX1KH3UfukezkjfHcDXb3LFKHEGL9jZxdPys","type":4,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","recipient":"3FdYgzsifavrivwWLYCuRGLYtqQTbAZzAzP","amount":9223372036854775807,"assetId":null,"attachment":"","fee":9223372036854775807,"feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","timestamp":1601310361428,"proofs":["2u6p9vUdyLowry9AYmsgHbBN2vNbtn8gQTYEMQd7Zns5bfZFsdC1Z3ZEY8iUcsLGwsH2AAfjG8i42nZwYNq3Gvpu"]}
       },
       {
-        "dataType": 4,
         "amountPrecision": 5,
-        "dataVersion": 3,
         "feePrecision": 5,
         "jsonView": {"id":"9LgPZDEuBQZN65DKyu8U9mdoCFqHr4iXK2GnMyt3dEhj","type":4,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","recipient":"alias:W:_rich-account.with@30_symbols_","amount":9223372036854775807,"assetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","attachment":"2UyXA7eLNfqs1","fee":9223372036854775807,"feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","timestamp":1601310361433,"proofs":["2jnVzcsrUZ2efgxvKMxYBuMbi8heJaGqCKz3XtXL895CyyQgt6JaaJduT7CmomL4uBvHboRutDXheFZf6WZwvNha"]}
       },
       {
-        "dataType": 4,
         "amountPrecision": 0,
-        "dataVersion": 3,
         "feePrecision": 0,
         "jsonView": {
             "id":"28Ahqh6hxVgRpJTFLvjnXBFbBZuMMUh5fo5vzuGqSUpa",
@@ -73,227 +57,163 @@
         }
       },
       {
-        "dataType": 5,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"HBLRf1qL7owPQBhSqLU8fHRTMF5h5B6YWi217EZC6LrT","type":5,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"DbAik7g5NQcqTPPTiZnr97w4c6jjuahwjeDtTB7tJuQv","quantity":9223372036854775807,"reissuable":false,"fee":9223372036854775807,"feeAssetId":null,"timestamp":1601329160701,"proofs":["4U4psufpvZWVE772gSpUMa9hEy8x3Yak5KQ7LDTK6BgY7ayc9wqgR8NdzagTPq8ZNoTSsA6WPqSpyxL1e6pPp7Sr"]}
       },
       {
-        "dataType": 5,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"GAPgjV8fLAKcHJLq3YHB4WCHyBYU3cF1xN6iwvdR6Yru","type":5,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"DbAik7g5NQcqTPPTiZnr97w4c6jjuahwjeDtTB7tJuQv","quantity":9223372036854775807,"reissuable":true,"fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601329160779,"proofs":["2sZGyQ2qFxC5QtsBc8b9JtRTcC9KPvCUgr8X2ukhXZikre7PioyAXtLD5F1UoKT4bbS1Mho9bD31X8caoAun54z4"]}
       },
       {
-        "dataType": 5,
         "amountPrecision": 0,
-        "dataVersion": 3,
         "feePrecision": 0,
         "jsonView": {"id":"GAPgjV8fLAKcHJLq3YHB4WCHyBYU3cF1xN6iwvdR6Yru","type":5,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"DbAik7g5NQcqTPPTiZnr97w4c6jjuahwjeDtTB7tJuQv","quantity":9223372036854775807,"reissuable":true,"fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601329160779,"proofs":["2sZGyQ2qFxC5QtsBc8b9JtRTcC9KPvCUgr8X2ukhXZikre7PioyAXtLD5F1UoKT4bbS1Mho9bD31X8caoAun54z4"]}
       },
       {
-        "dataType": 6,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"4Kghmk8PGZPDEfx6R3QPDZYcfuZLXVUTmrNJDB4mSS9r","type":6,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"DbAik7g5NQcqTPPTiZnr97w4c6jjuahwjeDtTB7tJuQv","amount":9223372036854775807,"fee":9223372036854775807,"feeAssetId":null,"timestamp":1601330014676,"proofs":["48tcGG2FwLr89oKRL6qJ4Ps4FCmkBBZpiLLz3VfmDgFds6NZyJ8RqJLJYP71CbU7FvEeXKfWiJzLAq5P3pDMrkQQ"]}
       },
       {
-        "dataType": 6,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"9w9edcwqxXyY2j65toXTDf3iwg8ZPrFfZYfRQUs5uafL","type":6,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"DbAik7g5NQcqTPPTiZnr97w4c6jjuahwjeDtTB7tJuQv","amount":9223372036854775807,"fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601330014728,"proofs":["5igg1uT3fBpSoYRFBYjEdpUeYHk8s6SQBNFMex53RRc1uCjWcyv6uwLb3YR4XGpC4jdg9iMhTBy8dih61NZRWUeC"]}
       },
       {
-        "dataType": 6,
         "amountPrecision": 0,
-        "dataVersion": 3,
         "feePrecision": 0,
         "jsonView": {"id":"DfB8k8thSaiRnnW1cZxK5iUYbkhp3sB8BpfMkgauR2Yi","type":6,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"DbAik7g5NQcqTPPTiZnr97w4c6jjuahwjeDtTB7tJuQv","amount":9223372036854775807,"fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601330014729,"proofs":["3rNzJYYnQuDEmULds9Dv25o9cijXuEQB9L5cRViKBKrUfXFZgvQKAcSgBjddjxQa9WcNz1oCrxNEkQpYkbCBk5pM"]}
       },
       {
-        "dataType": 8,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"373mV4pYTxLLWjQ56YWL16BFig52afuJhJSMrWrF47BL","type":8,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","recipient":"3FS4NTAeEZkBasQFQnEWJTtwCvL6RJWBnMi","amount":9223372036854775807,"fee":9223372036854775807,"feeAssetId":null,"timestamp":1601330548700,"proofs":["3yWKcxDdTVC7eBRPeRPiZNkHkVuAHr7o9yEMva5FNFyWAfGuQKGtCtMcGgU4mv8dqhDTHRjcQ6ff81tjRd8veWNs"]}
       },
       {
-        "dataType": 8,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"3XAWsXh3K311VCWepiDVvc2hpBxrW3y2jG5FvyggwqRe","type":8,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807,"fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601330548752,"proofs":["42yQgaGhPMQbnayFeZ2zGJdvbxSftVE5J1LVy1Tp759j9ehCwc1j6we8Qk2to5H5XA1a2kDJQKFMmoAzFUinC1Cg"]}
       },
       {
-        "dataType": 8,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 0,
         "jsonView": {"id":"3MACUgZmK4spoK6n7zRiaer1WZfVMSDg8xb2LFwNnAXK","type":8,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807,"fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601330548755,"proofs":["3jt1H5hP8fdzGb63mURRAn8ZDfcn7KAcB3nd7EYCwKFwe6hoatjYbXzCFSKT2CfcXVyTyc2SQ75syY476ski1i2X"]}
       },
       {
-        "dataType": 9,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"5wM7VoyeF2fnvXQB8X1awbEnXXTLPz1xbm1PapMCxajY","type":9,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","leaseId":"BhaURR89tjeVWq1xnt4qLjQvYAGnmmocDmvnb1hooR1z","fee":9223372036854775807,"feeAssetId":null,"timestamp":1601331141246,"proofs":["3Bg6cmuKkzhoGTRBn3MaKxjwTnCQmDCZC9hX1jzvBENj7ASufegC2iYE7wswyThpFtKPwkzBqx3A4vn5Jo75H1A2"]}
       },
       {
-        "dataType": 9,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 0,
         "jsonView": {"id":"9qc9mLLHA3bFmgJ3paPYJX8gdmueZuo6bLB6nssjdgez","type":9,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","leaseId":"BhaURR89tjeVWq1xnt4qLjQvYAGnmmocDmvnb1hooR1z","fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601331141316,"proofs":["3tWHw1GazZTDfaft1ccid5F584MbjYW3upW4pVW2tx4b99U2mUHj2YxDLHdRDbL1U1fNXRMmRgijpeuie7xStwPJ"]}
       },
       {
-        "dataType": 10,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"6FUi8TktsckNLPjizWXTn4BqCX2eeWhkr5wTy1gZTf4A","type":10,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","alias":"_rich-account.with@30_symbols_","fee":9223372036854775807,"feeAssetId":null,"timestamp":1601331677232,"proofs":["3uQXxv1cdcpHw7TghU3imQXVw7iDRRqcJYikn3AZjJq381cqMQacp3mEAZZ4nq3iehVdWNn33tPi2Xpmc1cBEWVP"]}
       },
       {
-        "dataType": 10,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 0,
         "jsonView": {"id":"DX8rCfZpApf8EihSbA1igVJsvJSeQ6QTMszoQzztv6nu","type":10,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","alias":"_min","fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601331677305,"proofs":["2osd74o8HU8sqR8eKndSwD1NnUmTCknRdc85akLTZZu796RAi8ZY2gKxNYxLunbkw9ScSqUZmK9LNDkeKqY3kRgK"]}
       },
       {
-        "dataType": 10,
         "amountPrecision": 8,
-        "dataVersion": 3,
         "feePrecision": 8,
         "jsonView": {"id":"GJ25qRcpSqPmVCFrgJYzGxjFWvdFA8jVZuim1NAKbvGy","type":10,"version":3,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","alias":"_rich-account.with@30_symbols_","fee":9223372036854775807,"feeAssetId":"GrHjCV6At8tUW5DipwBbXEJJX6Rk2YJbzqYQ5nUwh3U7","timestamp":1601331677306,"proofs":["5LeC8A94tuUpBdEYAD5V2kgBnUDryssYXN61vqaqNZvaWxtS1PqtR51Uy4oMuKGuYFUZi3BGK5PfJ3KKxBssxo1X"]}
       },
       {
-        "dataType": 11,
         "amountPrecision": 8,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"HeghJb1mXzhCGwhpBjuqA5TZipLCsuD1wX4YtVHkUmDB","type":11,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":null,"attachment":"2UyXA7eLNfqs1","transfers":[{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0}],"fee":9223372036854775807,"feeAssetId":null,"timestamp":1601333325261,"proofs":["4NfJGEd6vYyWavhsMj6S8Rpgbiz3MrdcydND7FMt2GeTkbJudgxYNzXdRBY4htpj48y1UUMSs1YwQvqBY9UYX1RK"]}
       },
       {
-        "dataType": 11,
         "amountPrecision": 8,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"BybmBbrm4xUhPLQtTcoYfpZ53TgnQhXvey4BiFA2kzfZ","type":11,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"682CZKmF8DH4zypt1hEsksL8xTsPUw1i1T51DhXZHVWY","attachment":"","transfers":[{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0}],"fee":9223372036854775807,"feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","timestamp":1601333325327,"proofs":["4F2cP3qtHrHAw1sQW6kQu8JF2vsxNJRDAgsfJ71hW2gKJZgdK3DU8GuCQTtChrVYSGsu6Myd6jRVZ1T2bpxpqgBq"]}
       },
       {
-        "dataType": 11,
         "amountPrecision": 0,
-        "dataVersion": 2,
         "feePrecision": 5,
         "jsonView": {"id":"BgcWsRfzHbsJJPWX7vyVBZ4JxSccmRx9sduHYvP5xSmA","type":11,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"682CZKmF8DH4zypt1hEsksL8xTsPUw1i1T51DhXZHVWY","attachment":"","transfers":[{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0},{"recipient":"alias:D:_rich-account.with@30_symbols_","amount":9223372036854775807},{"recipient":"alias:D:_min","amount":0},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":9223372036854775807},{"recipient":"3FWjA446pg3dqcqqrdGYXENTy9oCWf8Rubh","amount":0}],"fee":9223372036854775807,"feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9","timestamp":1601333325331,"proofs":["2Fwpm6ocoP5YJwRK4mTmy6snrQxommBm3SgdeCt35wpkhqLRMLWP1y6Z8TkRx7XUTQcZv1vs4HcvEPc271926r8s"]}
       },
       {
-        "dataType": 12,
         "amountPrecision": 8,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"GXeUcFzgNcih4qtCEFwbREpxsbkHzs8MAyBkYFwFvMFe","type":12,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","data":[{"key":"bool","type":"boolean","value":true},{"key":"int","type":"integer","value":9223372036854775807},{"key":"bin","type":"binary","value":"base64:c29tZSBzdHJpbmc="},{"key":"str","type":"string","value":"some string"},{"key":"delKey","value":null}],"fee":9223372036854775807,"feeAssetId":null,"timestamp":1601333920717,"proofs":["4L8ib24aAYrGUsYi3i63J6a5NgzZmtFcyFbK1UprN7djY2hvvBQCUfKtN81XfXCaUYTx9TkPu9j7GzJKwHFMhcwc"]}
       },
       {
-        "dataType": 12,
         "amountPrecision": 8,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"FYB8tEyN7dXMF19ZfPY8GjDAWQt3dNmFC8ATD1BSK5bm","type":12,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","data":[{"key":"bool","type":"boolean","value":true},{"key":"int","type":"integer","value":9223372036854775807},{"key":"bin","type":"binary","value":"base64:c29tZSBzdHJpbmc="},{"key":"str","type":"string","value":"some string"},{"key":"delKey","value":null}],"fee":9223372036854775807,"feeAssetId":"682CZKmF8DH4zypt1hEsksL8xTsPUw1i1T51DhXZHVWY","timestamp":1601333920775,"proofs":["4xicfHxiAzQM9feAivyHQtqYaDCNdPFM9prPXfU86sG57ZCZWj3EuYqgLJsnVqXzT4BYNDx8mxaUi8wbLpvzw4pW"]}
       },
       {
-        "dataType": 13,
         "amountPrecision": 0,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"6nVXkHt2LQ7sfBWgmb524LHf3rNNuezrgGbTk31tvmAR","type":13,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","script":"base64:AwZd0cYf","fee":1000000,"feeAssetId":null,"timestamp":1601334731551,"proofs":["41DwLYzZAMTRLoLBq6D8jvnJYYqmbge5r378CV7AMUNcVix1Pqx4g3S6t4UFaKe5uZwwmnzLtR1d6sbMGpyvwtwY"]}
       },
       {
-        "dataType": 13,
         "amountPrecision": 0,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"5bPv4KGiXDPxUinMb8zmWPfZ5C1QtLbSzKhyeLUwbaZL","type":13,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","script":"base64:AwZd0cYf","fee":9223372036854775807,"feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","timestamp":1601334731596,"proofs":["2AgnsvDaG9ZAjm7AAkywdSZDhjUiSQ5ecLSTAbAHXUrGMgRSS6w8KR6AtH71Dmr5T39bmGMXANDb7KvWBKDdV6hc"]}
       },
       {
-        "dataType": 14,
         "amountPrecision": 0,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"Dvwc69cqb7qyhVi37HjHVSasWy1tb8V9oE3YvMoKjcpq","type":14,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"GMiZSiRUd2kWrc2PDVWGGE2bB219wp2CHCBUipeJkvVm","minSponsoredAssetFee":9223372036854775807,"fee":100000,"feeAssetId":null,"timestamp":1601365557050,"proofs":["5WmmbuvzixYigXSF8YohcuSh2SEUV6BSShUw6tmPwqPtxfaDhcmnthDg3K6FZxer4S5UdGoaZ8sAyuHox3AdVAmH"]}
       },
       {
-        "dataType": 14,
         "amountPrecision": 8,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"27GkcYV8QjK4oJjbTCb7nt9wPRtszXKm94fTY49BM5f5","type":14,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","minSponsoredAssetFee":1,"fee":9223372036854775807,"feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","timestamp":1601365557094,"proofs":["XWk6SuhBADDVmra2dRZU2XKutox3New4D1XYZAUPKdrhSX4WrKapqYRVJYACBmLZkJc7oSvVseTqmXKM2Zr6AYj"]}
       },
       {
-        "dataType": 15,
         "amountPrecision": 0,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"AiCWg4DTqgr5AKCYdD4M7hHDvVPg9ojM986CZwYmBTHT","type":15,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"E5Rcha533YfMJZE9aDmx2m5tZSYYt6HWgFU3jkP4YGDV","script":"base64:AwZd0cYf","fee":100000000,"feeAssetId":null,"timestamp":1601366036889,"proofs":["5uvrjcUikMPipfxbQtAQEqFcwVz14Kcn7pACKPxAU7zs2ttK2szcBSoDviVqzK2i5qXbzFAwvyoxyXmuChVDaA6s"]}
       },
       {
-        "dataType": 15,
         "amountPrecision": 8,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"5sDHcpK51msZx4nic136roHkJzP5igx5r3ZM3kDtJLLp","type":15,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"E5Rcha533YfMJZE9aDmx2m5tZSYYt6HWgFU3jkP4YGDV","script":"base64:AwZd0cYf","fee":9223372036854775807,"feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","timestamp":1601366036933,"proofs":["4UMcdXk6p5duyCak8SbCvqTSNdbBTbEqvVdbnLjseKuxm3abJKif3r8oh8KKHBdHiixy76fmjz56CYw8VhkcK4QD"]}
       },
       {
-        "dataType": 16,
         "amountPrecision": 0,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"EUzhXof7uePC9nrHAQxVqBrH131wkjq1nLRrBfANUYFt","type":16,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","dApp":"3Fi624d1C2eMNuoVaDF7oeq1SpwyB6DtAh2","payment":[],"fee":500000,"feeAssetId":null,"timestamp":1601366422088,"proofs":["JFmFgcnx1mskmm9kHahhcxiRLg9yihcm2wDdR4bWdmLCt4QWNZMUfzTvxkYz6Se5XveYuzG3Gce13VjFeF97JtX"]}
       },
       {
-        "dataType": 16,
         "amountPrecision": 8,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"9Sf1s7BxpgEkErEzKZm9nWTaM98YwffLmHMN9U2bA6ba","type":16,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","dApp":"3Fi624d1C2eMNuoVaDF7oeq1SpwyB6DtAh2","call":{"function":"default","args":[]},"payment":[{"amount":10,"assetId":null}],"fee":9223372036854775807,"feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","timestamp":1601366422137,"proofs":["P6MWXSNj2c1KWzdqWN9UW9sPAq468AEAYsCHLu2cEMTwKhaMRYGCVhGEJi6NfDTobXoBatLxvMcYwguHcRtx4t1"]}
       },
       {
-        "dataType": 16,
         "amountPrecision": 0,
-        "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"4cxRtxueHiqjJuh9vM8xHHWmhWPt6L9Vif6rDuePcE4v","type":16,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","dApp":"3Fi624d1C2eMNuoVaDF7oeq1SpwyB6DtAh2","call":{"function":"testFunctionV2","args":[{"type":"boolean","value":true},{"type":"boolean","value":false},{"type":"binary","value":"base64:YWFhYWFh"},{"type":"string","value":"9223372036854775807"},{"type":"string","value":"aaaaaa"}]},"payment":[{"amount":20,"assetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ"}],"fee":500000,"feeAssetId":null,"timestamp":1601366422138,"proofs":["3wq569aSJYowFtX9CqxZXrnxkAaSgUU3oRq9zjvkrD9oBt8EmaS4HJPusvJUohpJMo6k5NDGBVdDLZ1BgZ7VAbFs"]}
       },
       {
-        "dataType": 16,
         "amountPrecision": 8,
-        "amount2Precision": 1,
         "dataVersion": 2,
         "feePrecision": 8,
         "jsonView": {"id":"CxijArNt7BhhMNtqDXhvQcdJSbR4UQ882wsxbUAUD6fy","type":16,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","dApp":"3Fi624d1C2eMNuoVaDF7oeq1SpwyB6DtAh2","call":{"function":"testFunctionV2","args":[{"type":"boolean","value":true},{"type":"boolean","value":false},{"type":"binary","value":"base64:YWFhYWFh"},{"type":"string","value":"9223372036854775807"},{"type":"string","value":"aaaaaa"},{"type":"list","value":[{"type":"boolean","value":true},{"type":"boolean","value":false},{"type":"binary","value":"base64:YWFhYWFh"},{"type":"string","value":"9223372036854775807"},{"type":"string","value":"aaaaaa"}]}]},"payment":[{"amount":10,"assetId":null},{"amount":20,"assetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ"}],"fee":500000,"feeAssetId":null,"timestamp":1601366422140,"proofs":["3SWypP7EbnKnsJYYf4qtJKVeYrG6XVyJvamE9SN2dFPNxnmMUrCYfLWGJpHewaT7jFYmHMyGGcWEEBZBBnWhj1YP"]}
       },
       {
-        "dataType": 17,
         "amountPrecision": 8,
-        "dataVersion": 1,
         "feePrecision": 8,
         "jsonView": {"id":"EnBgp1R6kXDD59PtN3f1s1yxGGwX4ApNQXCE7MGLHZWD","type":17,"version":1,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","name":"aaaa","description":"","fee":9223372036854775807,"feeAssetId":null,"timestamp":1601368993090,"proofs":["xawh2g6yqDJZqxpDnUoyWkWT5fa1q2pGwk99cSMxGbSjUfPqEENVnJsQKTtces8qSvuk6DsB5gskLvV2v47gTu5"]}
       },
       {
-        "dataType": 17,
         "amountPrecision": 8,
-        "dataVersion": 1,
         "feePrecision": 0,
         "jsonView": {"id":"GDKhQT8ZCimdHmRkWmvnYk3k1DTuci8RJKN1aYf2abDp","type":17,"version":1,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"GMiZSiRUd2kWrc2PDVWGGE2bB219wp2CHCBUipeJkvVm","name":"aaaaaaaaaaaaaaaa","description":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","fee":9223372036854775807,"feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","timestamp":1601368993184,"proofs":["54QBcn6wfw7pLgt3yRHSiDiE77frL6EnyfM5txyAb2QmJhCPKkYxo3EksmDpKuYzZKWY4BpJRN9aQdDVTLBVPNsA"]}
       },
       {
-        "dataType": 17,
         "amountPrecision": 4,
-        "dataVersion": 1,
         "feePrecision": 5,
         "jsonView": {"id":"ApFjShtLFdZaL7TP7VqbqM8vYevYhRZpVE8d41bNiUy2","type":17,"version":1,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"GMiZSiRUd2kWrc2PDVWGGE2bB219wp2CHCBUipeJkvVm","name":"aaaaaaaaaaaaaaaa","description":"This\nis description","fee":12345,"feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ","timestamp":1601368993187,"proofs":["4JyRFsNWKRc4cfYXgcdMCqmMXzuPAWJvTnbUKQpfkCY4Tm5wpUmcwqqnDPGL6oUGdAHycLtQgptAyrDYYWbyYPYP"]}
       }

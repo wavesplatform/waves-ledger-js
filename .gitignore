@@ -3,4 +3,5 @@ lib
 node_modules
 dist
 dist_monitor
+dist_ui_utils
 lib

@@ -12,7 +12,9 @@
     "build_old": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u @ledgerhq/logs -o dist/waves-ledger.js",
     "build_monitor_old": "rimraf dist && npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -t [ babelify ] -t",
     "start": "webpack-dev-server --progress --config ./webpack.config.js ",
-    "build_monitor": "rimraf dist_monitor && webpack --progress --mode=production --config ./webpack.config.js "
+    "start:uiutils": "webpack-dev-server --progress --config ./webpack-ui-utils.config.js ",
+    "build_monitor": "rimraf dist_monitor && webpack --progress --mode=production --config ./webpack.config.js ",
+    "build_uiutils": "rimraf dist_ui_utils && webpack --progress --mode=production --config ./webpack-ui-utils.config.js "
   },
   "keywords": [],
   "author": {

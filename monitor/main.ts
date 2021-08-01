@@ -11,10 +11,20 @@ import { signTx, makeTxBytes } from "@waves/waves-transactions";
 export function main() {
 
 const DEFAULT_NODE_URL = 'https://nodes-testnet.wavesnodes.com'; // Specify URL of the node on Testnet
-const DEFAULT_NETWORK_CODE = 68; // 82
+// const DEFAULT_NETWORK_CODE = 68;
+const DEFAULT_NETWORK_CODE = 82;
+// const DEFAULT_NETWORK_CODE = 87;
 
 const TEST_DATA_URL = './testdata.json';
-const Transport = TransportWebUSB;
+const DEFAULT_TRANSPORT = TransportWebUSB;
+const DEFAULT_LEDGER_CONFIG = {
+    debug: true,
+    // openTimeout: 3000,
+    // listenTimeout: 30000,
+    // exchangeTimeout: 30000,
+    networkCode: DEFAULT_NETWORK_CODE,
+    // transport: DEFAULT_TRANSPORT
+};
 
 const appData: any = {
     _ledger: null,
@@ -25,7 +35,7 @@ const appData: any = {
     defaultUser: null,
     users: [],
 
-    ledger: function() { return this._ledger; },
+    ledger: function(): ProviderLedger { return this._ledger; },
     getTestData: function() { return this._testData; },
     loadTestData: function() {
         if(this._testData) {
@@ -142,14 +152,7 @@ function initDevice() {
         return;
     }
 
-    const ledger = new WavesLedger({
-        debug: true,
-        openTimeout: 3000,
-        listenTimeout: 30000,
-        exchangeTimeout: 30000,
-        networkCode: DEFAULT_NETWORK_CODE,
-        transport: Transport
-    });
+    const ledger = new WavesLedger(DEFAULT_LEDGER_CONFIG);
 
     appData._ledger = ledger;
 
@@ -169,10 +172,10 @@ function signerInit() {
     const signer = new Signer({
         NODE_URL: DEFAULT_NODE_URL,
     });
-    const provider = new ProviderLedger();
 
-    provider.ledgerConfig({
-        networkCode: DEFAULT_NETWORK_CODE
+    const provider = new ProviderLedger({
+        debug: true,
+        wavesLedgerConfig: DEFAULT_LEDGER_CONFIG
     });
 
     signer.setProvider(provider);
@@ -181,25 +184,25 @@ function signerInit() {
 }
 
 async function signerSignTx() {
-    // const tx = {"id":"AiCWg4DTqgr5AKCYdD4M7hHDvVPg9ojM986CZwYmBTHT","type":15,"version":2,"chainId":68,"senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF","sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX","assetId":"E5Rcha533YfMJZE9aDmx2m5tZSYYt6HWgFU3jkP4YGDV","script":"base64:AwZd0cYf","fee":100000000,"feeAssetId":null,"timestamp":1601366036889,"proofs":["5uvrjcUikMPipfxbQtAQEqFcwVz14Kcn7pACKPxAU7zs2ttK2szcBSoDviVqzK2i5qXbzFAwvyoxyXmuChVDaA6s"]};
-
-    // if(appData.signer == null) {
-    //     signerInit();
-    // }
-
-    // appData.signer.login()
-    //     .then(() => {
-    //         appData.signer
-    //         .transfer({ amount: 100000000, recipient: 'alias:T:merry' })
-    //         .sign()
-    //         .then((data) => {
-    //             const [signedTransfer] = data;
+    appData.signer.login()
+        .then((userData) => {
+            console.log(userData);
+            // appData.signer
+            // .transfer({
+            //     amount: 100000000,
+            //     recipient: 'alias:T:merry'
+            // })
+            // .sign()
+            // .then((data) => {
+            //     const [signedTransfer] = data;
     
-    //             console.log('Sign');
-    //             console.log(signedTransfer);
-    //         });
-    //     });
+            //     console.log('Sign');
+            //     console.log(signedTransfer);
+            // });
+        });
+}
 
+async function _signerSignTx() {
     if (appData.selectedTxIndex == null) {
         alert('Select tx');
     }

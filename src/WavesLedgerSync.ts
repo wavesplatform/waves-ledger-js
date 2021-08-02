@@ -3,7 +3,7 @@
 
 import '@babel/polyfill';
 import {Waves, IUserData, ISignTxData, ISignOrderData, ISignData} from './Waves';
-import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
+import { default as TransportWebusb } from '@ledgerhq/hw-transport-webusb';
 import { listen } from '@ledgerhq/logs';
 
 declare const Buffer: any;
@@ -33,21 +33,19 @@ export class WavesLedger {
         this._listenTimeout = options.listenTimeout;
         this._exchangeTimeout = options.exchangeTimeout;
         this._error = null;
-        this._transport = options.transport || TransportU2F;
-        this.tryConnect().catch(
-            (e) => console.warn('Ledger lib is not available', e)
-        );
+        this._transport = options.transport || TransportWebusb;
     }
 
     async tryConnect(): Promise<void> {
         try {
             const disconnectPromise = this.disconnect();
-            this._initU2FTransport();
+            this._initTransport();
             this._setSettings();
             this._initWavesLib();
             await disconnectPromise;
             await Promise.all([this._initTransportPromise, this._wavesLibPromise]);
         } catch (e) {
+            console.warn('Ledger lib is not available', e);
             throw new Error(e);
         }
     }
@@ -221,7 +219,7 @@ export class WavesLedger {
         }).catch(e => console.warn('can\'t init ledger', e));
     }
 
-    _initU2FTransport() {
+    _initTransport() {
         this.ready = false;
         this._initTransportPromise = this._transport.create(this._openTimeout, this._listenTimeout);
         (this._initTransportPromise as Promise<any>).catch((e) => console.warn('Can\'t init transport', e));

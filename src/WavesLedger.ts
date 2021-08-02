@@ -2,23 +2,11 @@
 
 
 import '@babel/polyfill';
-import {Waves, IUserData, ISignTxData, ISignOrderData, ISignData} from './Waves';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
 import { listen } from '@ledgerhq/logs';
 
-interface IWavesLedger {
-    debug?: boolean;
-    openTimeout?: number;
-    listenTimeout?: number;
-    exchangeTimeout?: number;
-    networkCode?: number,
-    transport?: any;
-}
-
-interface IUser extends IUserData {
-    id: number;
-    path: string;
-}
+import { Waves, ISignTxData, ISignOrderData, ISignData } from './Waves';
+import { IWavesLedger, IUser } from "./WavesLedger.interface";
 
 declare const Buffer: any;
 
@@ -255,3 +243,4 @@ export class WavesLedger {
 
 export default WavesLedger;
 export * from "./WavesLedgerSync";
+export * from "./WavesLedger.interface";

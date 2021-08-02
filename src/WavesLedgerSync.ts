@@ -2,9 +2,11 @@
 
 
 import '@babel/polyfill';
-import {Waves, IUserData, ISignTxData, ISignOrderData, ISignData} from './Waves';
 import { default as TransportWebusb } from '@ledgerhq/hw-transport-webusb';
 import { listen } from '@ledgerhq/logs';
+
+import { Waves, ISignTxData, ISignOrderData, ISignData } from './Waves';
+import { IWavesLedger, IUser } from "./WavesLedger.interface";
 
 declare const Buffer: any;
 
@@ -235,18 +237,4 @@ export class WavesLedgerSync {
         return this._wavesLibPromise;
     }
 
-}
-
-interface IWavesLedger {
-    debug?: boolean;
-    openTimeout?: number;
-    listenTimeout?: number;
-    exchangeTimeout?: number;
-    networkCode?: number,
-    transport?: any;
-}
-
-interface IUser extends IUserData {
-    id: number;
-    path: string;
 }

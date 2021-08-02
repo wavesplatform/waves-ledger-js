@@ -10,7 +10,7 @@ declare const Buffer: any;
 
 const ADDRES_PREFIX = '44\'/5741564\'/0\'/0\'/';
 
-export class WavesLedger {
+export class WavesLedgerSync {
 
     public ready: boolean;
     private _wavesLibPromise: Promise<Waves> | null;
@@ -236,8 +236,6 @@ export class WavesLedger {
     }
 
 }
-
-export default WavesLedger;
 
 interface IWavesLedger {
     debug?: boolean;

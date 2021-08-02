@@ -6,6 +6,20 @@ import {Waves, IUserData, ISignTxData, ISignOrderData, ISignData} from './Waves'
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
 import { listen } from '@ledgerhq/logs';
 
+interface IWavesLedger {
+    debug?: boolean;
+    openTimeout?: number;
+    listenTimeout?: number;
+    exchangeTimeout?: number;
+    networkCode?: number,
+    transport?: any;
+}
+
+interface IUser extends IUserData {
+    id: number;
+    path: string;
+}
+
 declare const Buffer: any;
 
 const ADDRES_PREFIX = '44\'/5741564\'/0\'/0\'/';
@@ -240,17 +254,4 @@ export class WavesLedger {
 }
 
 export default WavesLedger;
-
-interface IWavesLedger {
-    debug?: boolean;
-    openTimeout?: number;
-    listenTimeout?: number;
-    exchangeTimeout?: number;
-    networkCode?: number,
-    transport?: any;
-}
-
-interface IUser extends IUserData {
-    id: number;
-    path: string;
-}
+export * from "./WavesLedgerSync";

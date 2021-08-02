@@ -6,7 +6,7 @@ import { default as TransportWebusb } from '@ledgerhq/hw-transport-webusb';
 import { listen } from '@ledgerhq/logs';
 
 import { Waves, ISignTxData, ISignOrderData, ISignData } from './Waves';
-import { IWavesLedger, IUser } from "./WavesLedger.interface";
+import { IWavesLedgerConfig, IUser } from "./WavesLedger.interface";
 
 declare const Buffer: any;
 
@@ -25,7 +25,7 @@ export class WavesLedgerSync {
     private _error: any;
     private _transport: any;
 
-    constructor(options: IWavesLedger) {
+    constructor(options: IWavesLedgerConfig) {
         this.ready = false;
         this._networkCode = options.networkCode == null ? 87 : options.networkCode;
         this._wavesLibPromise = null;

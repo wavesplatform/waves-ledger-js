@@ -1,7 +1,7 @@
 import '@babel/polyfill';
 import { IUserData } from './Waves';
 
-export interface IWavesLedger {
+export interface IWavesLedgerConfig {
     debug?: boolean;
     openTimeout?: number;
     listenTimeout?: number;

@@ -5,6 +5,7 @@ import { Signer } from '@waves/signer';
 import { ProviderLedger } from '@waves/provider-ledger';
 import { WavesLedger } from '../src/WavesLedger';
 import { signTx, makeTxBytes } from "@waves/waves-transactions";
+import { IUser } from '../../provider-ledger/node_modules/@waves/ledger/lib/WavesLedger.interface';
 // import { ThemeConsumer } from 'styled-components';
 // import { isConstructorDeclaration } from 'typescript';
 
@@ -23,7 +24,7 @@ const DEFAULT_LEDGER_CONFIG = {
     // listenTimeout: 30000,
     // exchangeTimeout: 30000,
     networkCode: DEFAULT_NETWORK_CODE,
-    // transport: DEFAULT_TRANSPORT
+    transport: DEFAULT_TRANSPORT
 };
 
 const appData: any = {
@@ -88,9 +89,11 @@ const requestTestBut = document.querySelector('.request');
 const customDataTestBut = document.querySelector('.custom-data');
 const messageTestBut = document.querySelector('.message');
 
-const signerInitBtn = document.querySelector('.signer-init');
+// const signerInitBtn = document.querySelector('.signer-init');
+const signerLoginBtn = document.querySelector('.signer-login');
 const signerSignBtn = document.querySelector('.signer-sign');
 const txListEL = document.querySelector('.tx-list');
+const signerUser = document.querySelector('.signer-user');
 const txPreviewEl = document.querySelector('.tx-preview-json');
 const txPreviewIdEl = document.querySelector('.tx-preview-id');
 
@@ -112,7 +115,8 @@ autoTestButton.addEventListener('click', autoTest);
 nextUsersEl.addEventListener('click', getNextUsers);
 usersListEl.addEventListener('click', _selectUser);
 
-signerInitBtn.addEventListener('click', signerInit);
+// signerInitBtn.addEventListener('click', signerInit);
+signerLoginBtn.addEventListener('click', signerLogin);
 signerSignBtn.addEventListener('click', signerSignTx);
 txListEL.addEventListener('change', onChangeTxList);
 
@@ -183,84 +187,132 @@ function signerInit() {
     appData.signer = signer;
 }
 
-async function signerSignTx() {
+async function signerLogin() {
     appData.signer.login()
-        .then((userData) => {
-            console.log(userData);
-            // appData.signer
-            // .transfer({
-            //     amount: 100000000,
-            //     recipient: 'alias:T:merry'
-            // })
-            // .sign()
-            // .then((data) => {
-            //     const [signedTransfer] = data;
-    
-            //     console.log('Sign');
-            //     console.log(signedTransfer);
-            // });
+        .then((user: IUser) => {
+            signerUser.innerHTML = user.address;
         });
 }
 
-async function _signerSignTx() {
-    if (appData.selectedTxIndex == null) {
-        alert('Select tx');
-    }
+async function signerSignTx() {
+    // appData.signer.login()
+    //     .then((userData) => {
+            appData.signer
+                .transfer({
+                    amount: 100,
+                    recipient: 'alias:T:merry',
 
-    function str2buf(str) {
-        var enc = new TextEncoder(); // always utf-8
-        return enc.encode(str);
-    }
+                    // debug
+                    timestamp: Date.now(),
+                    fee: 1,
+                    attachment: ""
+                })
+                .sign()
+                .then((data) => {
+                    const [signedTransfer] = data;
 
-    // ITS WORK
-    await initDevice();
+                    console.log('Signed');
+                    console.log(signedTransfer);
 
-    // const index = appData.selectedTxIndex;
-    // const tx = appData.getTestData().tx.proto[index];
-    let data;
-    let tx;
-
-    try {
-        data = JSON.parse(txPreviewEl.value);
-    } catch (er) {
-        alert('Invalid JSON');
-        console.log(er);
-    }
-
-    tx = data.jsonView;
-console.log(makeTxBytes(tx).toString());
-    let originalTx = origTx(tx);
-    let publicKey = appData.defaultUser.publicKey;
-
-    let signedTx = signTx(originalTx, publicKey);
-    let dataBuf = makeTxBytes(originalTx);
-
-    let userId = 0; //userData.id;
-
-    const dataType = tx.type; // tx type
-    const dataVersion = tx.version; // tx version
-
-    signerLogEl.innerHTML += `TxId: ${signedTx.id} (@waves/waves-transactions :: signTx)<br />`;
-
-    let signData = {
-        dataType: dataType,
-        dataVersion: dataVersion,
-        // amount2Precision: 0,
-        // amountPrecision: 8,
-        // feePrecision: 8,
-        dataBuffer: dataBuf,
-    };
-
-    let sign = await appData.ledger().signTransaction(userId, signData);
-
-    signerLogEl.innerHTML += 'Signer result: ' + sign + '<br />';
-    
-    if (verifySignature(publicKey, dataBuf, sign)) {
-        signerLogEl.innerHTML += 'PASS<br />*<br />';
-    } else {
-        signerLogEl.innerHTML += 'NOT PASS<br />*<br />';
-    }
+                    signerLog('Signer result: ' + signedTransfer);
+                });
+        // });
 }
+// {
+// "id":"HedT8qavfsLGqfbGGdkbiehDs5VtRagV2UZrDo13A8ca",
+// "type":4,
+// "version":2,
+// "senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF",
+// "sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX",
+
+// "timestamp":1601310428099,
+// "fee":9223372036854775807,
+// "attachment":"2UyXA7eLNfqs1",
+
+// "recipient":"alias:W:_rich-account.with@30_symbols_",
+// "amount":9223372036854775807,
+// "assetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9",
+// "feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9",
+// "proofs":["3eSTpydTW92U4t6GLpQSDDXSsUXm94P7FrzNLRBKoRg4XePkBJgxUuph1RMZTP6CkF5sF9gNsh7zmemsFhGfEnBa"]
+//}
+
+
+// "type":16,
+// "version":1,
+// "senderPublicKey":"HXs9rwQW9CGM2KXkxMoubwnhWypCa2LtH1JEJkZa9yDF",
+// "sender":"3Fe3oGLjrxJasvgLyEVHEfA3ryMF3G9BEhX",
+// "timestamp":1601366421896,
+
+// "dApp":"3Fjy2G1kvQjwVcjfkzi9b6NYrwkW2PqiT5k",
+
+// "call":{
+//"function":"default",
+// "args":[]},
+// "payment":[{"amount":10,
+// "assetId":null}],
+
+// "fee":9223372036854775807,
+// "feeAssetId":"EbvoPG191bVa2HfMGoRAJyeysHQbTDLDMadtSfCmSggJ",
+// "proofs":[]
+// async function _signerSignTx() {
+//     if (appData.selectedTxIndex == null) {
+//         alert('Select tx');
+//     }
+
+//     function str2buf(str) {
+//         var enc = new TextEncoder(); // always utf-8
+//         return enc.encode(str);
+//     }
+
+//     // ITS WORK
+//     await initDevice();
+
+//     // const index = appData.selectedTxIndex;
+//     // const tx = appData.getTestData().tx.proto[index];
+//     let data;
+//     let tx;
+
+//     try {
+//         data = JSON.parse(txPreviewEl.value);
+//     } catch (er) {
+//         alert('Invalid JSON');
+//         console.log(er);
+//     }
+
+//     tx = data.jsonView;
+
+//     let originalTx = origTx(tx);
+//     let publicKey = appData.defaultUser.publicKey;
+
+//     let signedTx = signTx(originalTx, publicKey);
+//     let dataBuf = makeTxBytes(originalTx);
+
+//     let userId = 0; //userData.id;
+
+//     const dataType = tx.type; // tx type
+//     const dataVersion = tx.version; // tx version
+
+//     signerLogEl.innerHTML += `TxId: ${signedTx.id} (@waves/waves-transactions :: signTx)<br />`;
+
+//     let signData = {
+//         dataType: dataType,
+//         dataVersion: dataVersion,
+//         // amount2Precision: 0,
+//         // amountPrecision: 8,
+//         // feePrecision: 8,
+//         dataBuffer: dataBuf,
+//     };
+
+//     let sign = await appData.ledger().signTransaction(userId, signData);
+
+//     signerLogEl.innerHTML += 
+    
+//     if (verifySignature(publicKey, dataBuf, sign)) {
+//         signerLogEl.innerHTML += 'PASS<br />*<br />';
+//     } else {
+//         signerLogEl.innerHTML += 'NOT PASS<br />*<br />';
+//     }
+// }
 
 function onChangeTxList(ev) {
     const value = Number(ev.target.value);
@@ -787,7 +839,12 @@ function origTx(txView) {
     return orig;
 }
 
+function signerLog(str) {
+    signerLogEl.innerHTML += str + '<br />';
+}
+
 disableButtons();
 appData.loadTestData();
+signerInit();
 
 }

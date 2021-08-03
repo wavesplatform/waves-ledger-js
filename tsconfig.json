@@ -73,8 +73,5 @@
   "include": [
     "src"
   ],
-  "exclude": ["dist", "dist_monitor", "node_modules"],
-
-  /* React */
-  "jsx": "react"
+  "exclude": ["dist", "dist_monitor", "node_modules"]
 }

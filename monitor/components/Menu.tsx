@@ -56,14 +56,20 @@ export class MenuComponent extends React.Component {
                     </div>
                 </div>
                 <div className="signer-panel">
-                    <div>
+                    {/* <div>
                         <button className="signer-init">Init signer</button>
+                    </div> */}
+                    <div>
+                        <button className="signer-login">Login</button>
                     </div>
                     <div>
-                        <button className="signer-sign">Sign tx</button>
+                        <button className="signer-sign">Sign Tx</button>
                     </div>
-                    <div>
+                    <div style={{ display: 'none' }}>
                         Tx:&nbsp;<select className="tx-list" />
+                    </div>
+                    <div>
+                        User: &nbsp;<div className="signer-user" />
                     </div>
                 </div>
             </div>

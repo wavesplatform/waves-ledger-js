@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-webusb": "^6.2.0",
-    "@waves/provider-ledger": "0.0.2",
+    "@waves/provider-ledger": "0.0.3",
     "@waves/signer": "^1.0.2",
     "@waves/ts-lib-crypto": "^1.4.4-beta.1",
     "buffer": "^6.0.3"

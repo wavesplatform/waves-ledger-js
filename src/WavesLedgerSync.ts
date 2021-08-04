@@ -65,7 +65,7 @@ export class WavesLedgerSync {
         }
     }
 
-    async getTransport(): Promise<any> {
+    async getTransport(): Promise<Promise<Waves> | null> {
         try {
             return await this._wavesLibPromise;
         } catch (e) {
@@ -78,7 +78,7 @@ export class WavesLedgerSync {
         try {
             const waves = await this.getTransport();
             const path = this.getPathById(id);
-            const userData = await waves.getWalletPublicKey(path, false);
+            const userData = await waves!.getWalletPublicKey(path, false);
             return {
                 ...userData, id, path
             };
@@ -92,7 +92,7 @@ export class WavesLedgerSync {
     async getVersion(): Promise<Array<number>> {
         try {
             const waves = await this.getTransport();
-            return await waves.getVersion();
+            return await waves!.getVersion();
 
         } catch (e) {
             this.tryConnect();
@@ -123,7 +123,7 @@ export class WavesLedgerSync {
         sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signTransaction(path, sData);
+            return await waves!.signTransaction(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -136,7 +136,7 @@ export class WavesLedgerSync {
         sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signOrder(path, sData);
+            return await waves!.signOrder(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -149,7 +149,7 @@ export class WavesLedgerSync {
         sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signSomeData(path, sData);
+            return await waves!.signSomeData(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -162,7 +162,7 @@ export class WavesLedgerSync {
         sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signRequest(path, sData);
+            return await waves!.signRequest(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -175,7 +175,7 @@ export class WavesLedgerSync {
         let sData: ISignData = {dataBuffer: new Buffer(message, 'ascii')};
         try {
             const waves = await this.getTransport();
-            return await waves.signMessage(path, sData);
+            return await waves!.signMessage(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;

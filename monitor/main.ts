@@ -8,6 +8,7 @@ import { signTx, makeTxBytes } from "@waves/waves-transactions";
 import { IUser } from '../../provider-ledger/node_modules/@waves/ledger/lib/WavesLedger.interface';
 // import { ThemeConsumer } from 'styled-components';
 // import { isConstructorDeclaration } from 'typescript';
+import { txMock } from './mock';
 
 export function main() {
 
@@ -198,17 +199,10 @@ async function signerSignTx() {
     // appData.signer.login()
     //     .then((userData) => {
             appData.signer
-                .transfer({
-                    amount: 100,
-                    recipient: 'alias:T:merry',
-
-                    // debug
-                    timestamp: Date.now(),
-                    fee: 1,
-                    attachment: ""
-                })
+                // .transfer(txMock.transfer)
+                .invoke(txMock.invoke)
                 .sign()
-                .then((data) => {
+                .then((data: any) => {
                     const [signedTransfer] = data;
 
                     console.log('Signed');
@@ -218,6 +212,7 @@ async function signerSignTx() {
                 });
         // });
 }
+
 // {
 // "id":"HedT8qavfsLGqfbGGdkbiehDs5VtRagV2UZrDo13A8ca",
 // "type":4,
@@ -235,7 +230,6 @@ async function signerSignTx() {
 // "feeAssetId":"AzFCetMjPhAv4gjdnYzWsoEesyAdAB26kK81DU8yjMb9",
 // "proofs":["3eSTpydTW92U4t6GLpQSDDXSsUXm94P7FrzNLRBKoRg4XePkBJgxUuph1RMZTP6CkF5sF9gNsh7zmemsFhGfEnBa"]
 //}
-
 
 // "type":16,
 // "version":1,

@@ -212,7 +212,6 @@ export class WavesLedgerSync {
         (this._initTransportPromise as Promise<any>).then((transport) => {
             if(this._debug) {
                 listen(function (l:  any) {
-                    console.log(123);
                     console.log(l);
                 })
             }

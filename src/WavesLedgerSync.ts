@@ -2,7 +2,7 @@
 
 
 import '@babel/polyfill';
-import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
+import { default as TransportWebusb } from '@ledgerhq/hw-transport-webusb';
 import { listen } from '@ledgerhq/logs';
 
 import { Waves, ISignTxData, ISignOrderData, ISignData } from './Waves';
@@ -12,7 +12,7 @@ declare const Buffer: any;
 
 const ADDRES_PREFIX = '44\'/5741564\'/0\'/0\'/';
 
-export class WavesLedger {
+export class WavesLedgerSync {
 
     public ready: boolean;
     private _wavesLibPromise: Promise<Waves> | null;
@@ -35,21 +35,19 @@ export class WavesLedger {
         this._listenTimeout = options.listenTimeout;
         this._exchangeTimeout = options.exchangeTimeout;
         this._error = null;
-        this._transport = options.transport || TransportU2F;
-        this.tryConnect().catch(
-            (e) => console.warn('Ledger lib is not available', e)
-        );
+        this._transport = options.transport || TransportWebusb;
     }
 
     async tryConnect(): Promise<void> {
         try {
             const disconnectPromise = this.disconnect();
-            this._initU2FTransport();
+            this._initTransport();
             this._setSettings();
             this._initWavesLib();
             await disconnectPromise;
             await Promise.all([this._initTransportPromise, this._wavesLibPromise]);
         } catch (e) {
+            console.warn('Ledger lib is not available', e);
             throw new Error(e);
         }
     }
@@ -67,7 +65,7 @@ export class WavesLedger {
         }
     }
 
-    async getTransport(): Promise<any> {
+    async getTransport(): Promise<Promise<Waves> | null> {
         try {
             return await this._wavesLibPromise;
         } catch (e) {
@@ -80,7 +78,7 @@ export class WavesLedger {
         try {
             const waves = await this.getTransport();
             const path = this.getPathById(id);
-            const userData = await waves.getWalletPublicKey(path, false);
+            const userData = await waves!.getWalletPublicKey(path, false);
             return {
                 ...userData, id, path
             };
@@ -94,7 +92,7 @@ export class WavesLedger {
     async getVersion(): Promise<Array<number>> {
         try {
             const waves = await this.getTransport();
-            return await waves.getVersion();
+            return await waves!.getVersion();
 
         } catch (e) {
             this.tryConnect();
@@ -125,7 +123,7 @@ export class WavesLedger {
         sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signTransaction(path, sData);
+            return await waves!.signTransaction(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -138,7 +136,7 @@ export class WavesLedger {
         sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signOrder(path, sData);
+            return await waves!.signOrder(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -151,7 +149,7 @@ export class WavesLedger {
         sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signSomeData(path, sData);
+            return await waves!.signSomeData(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -164,7 +162,7 @@ export class WavesLedger {
         sData.dataBuffer = new Buffer(sData.dataBuffer);
         try {
             const waves = await this.getTransport();
-            return await waves.signRequest(path, sData);
+            return await waves!.signRequest(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -177,7 +175,7 @@ export class WavesLedger {
         let sData: ISignData = {dataBuffer: new Buffer(message, 'ascii')};
         try {
             const waves = await this.getTransport();
-            return await waves.signMessage(path, sData);
+            return await waves!.signMessage(path, sData);
         } catch (e) {
             this.tryConnect();
             this._error = e;
@@ -214,7 +212,6 @@ export class WavesLedger {
         (this._initTransportPromise as Promise<any>).then((transport) => {
             if(this._debug) {
                 listen(function (l:  any) {
-                    console.log(123);
                     console.log(l);
                 })
             }
@@ -223,7 +220,7 @@ export class WavesLedger {
         }).catch(e => console.warn('can\'t init ledger', e));
     }
 
-    _initU2FTransport() {
+    _initTransport() {
         this.ready = false;
         this._initTransportPromise = this._transport.create(this._openTimeout, this._listenTimeout);
         (this._initTransportPromise as Promise<any>).catch((e) => console.warn('Can\'t init transport', e));
@@ -240,7 +237,3 @@ export class WavesLedger {
     }
 
 }
-
-export default WavesLedger;
-export * from "./WavesLedgerSync";
-export * from "./WavesLedger.interface";

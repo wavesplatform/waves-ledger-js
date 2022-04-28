@@ -1,6 +1,6 @@
 {
   "name": "@waves/ledger",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Waves ladger lib for browser",
   "main": "lib/WavesLedger.js",
   "types": "lib/WavesLedger.d.ts",
@@ -27,6 +27,7 @@
     "@babel/plugin-transform-runtime": "^7.0.0-beta.54",
     "@babel/preset-env": "^7.0.0-beta.54",
     "@babel/runtime": "^7.0.0-beta.54",
+    "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
     "babel-runtime": "^6.26.0",
     "babelify": "^9.0.0",
     "browserify": "^16.2.3",

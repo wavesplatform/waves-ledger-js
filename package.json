@@ -4,6 +4,12 @@
   "description": "Waves ladger lib for browser",
   "main": "lib/WavesLedger.js",
   "types": "lib/WavesLedger.d.ts",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Waves Platform",
+    "email": "info@wavesplatform.com",
+    "url": "https://wavesplatform.com"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"
@@ -14,13 +20,14 @@
     "prepare": "npm run build",
     "build_ledger_monitor": "rimraf dist && npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -t [ babelify ] -t"
   },
-  "keywords": [],
-  "author": {
-    "name": "Waves Platform",
-    "email": "info@wavesplatform.com",
-    "url": "https://wavesplatform.com"
+  "dependencies": {
+    "@babel/polyfill": "^7.6.0",
+    "@ledgerhq/hw-transport-u2f": "^5.34.0",
+    "@ledgerhq/hw-transport-webusb": "^5.34.1",
+    "@ledgerhq/logs": "^5.19.1",
+    "@waves/ts-lib-crypto": "^1.4.3",
+    "rimraf": "^3.0.2"
   },
-  "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.54",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
@@ -34,13 +41,5 @@
     "typescript": "^3.9.6",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
-  },
-  "dependencies": {
-    "@babel/polyfill": "^7.6.0",
-    "@ledgerhq/hw-transport-u2f": "^5.34.0",
-    "@ledgerhq/hw-transport-webusb": "^5.34.1",
-    "@ledgerhq/logs": "^5.19.1",
-    "@waves/ts-lib-crypto": "^1.4.3",
-    "rimraf": "^3.0.2"
   }
 }

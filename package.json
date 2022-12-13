@@ -21,7 +21,6 @@
     "build_ledger_monitor": "rimraf dist && npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -t [ babelify ] -t"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.6.0",
     "@ledgerhq/hw-transport-u2f": "^5.34.0",
     "@ledgerhq/hw-transport-webusb": "^5.34.1",
     "@ledgerhq/logs": "^5.19.1",

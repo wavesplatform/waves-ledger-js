@@ -1,5 +1,5 @@
-.idea/*
-lib
-node_modules
-dist
-lib
+/.idea
+/.vscode
+/dist
+/lib
+/node_modules

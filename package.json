@@ -22,10 +22,7 @@
   },
   "dependencies": {
     "@ledgerhq/hw-transport-u2f": "^5.34.0",
-    "@ledgerhq/hw-transport-webusb": "^5.34.1",
-    "@ledgerhq/logs": "^5.19.1",
-    "@waves/ts-lib-crypto": "^1.4.3",
-    "rimraf": "^3.0.2"
+    "@ledgerhq/logs": "^5.19.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.54",
@@ -33,10 +30,13 @@
     "@babel/plugin-transform-runtime": "^7.0.0-beta.54",
     "@babel/preset-env": "^7.0.0-beta.54",
     "@babel/runtime": "^7.0.0-beta.54",
+    "@ledgerhq/hw-transport-webusb": "^5.34.1",
+    "@waves/ts-lib-crypto": "^1.4.3",
     "babel-runtime": "^6.26.0",
     "babelify": "^9.0.0",
     "browserify": "^16.2.3",
     "browserify-global-shim": "^1.0.3",
+    "rimraf": "^3.0.2",
     "typescript": "^3.9.6",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"

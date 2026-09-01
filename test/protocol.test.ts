@@ -17,6 +17,10 @@ describe('resolveProtocolFromVersion', () => {
     it('selects 1.0 for older apps', () => {
         expect(resolveProtocolFromVersion([1, 0, 9])).toBe('1.0');
     });
+
+    it('assumes 1.1 when minor is missing on v1.x app', () => {
+        expect(resolveProtocolFromVersion([1])).toBe('1.1');
+    });
 });
 
 describe('buildSignPayload', () => {

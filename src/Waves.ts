@@ -212,6 +212,12 @@ export class Waves {
             if (reason) {
                 return new Error(`Ledger error 0x${code.toString(16)} — ${reason}`);
             }
+            if (code === WAVES_CONFIG.STATUS.SW_DEPRECATED_SIGN_PROTOCOL) {
+                return new Error(
+                    'Ledger error 0x9102 — deprecated signing protocol. ' +
+                    'Update the Waves app in Ledger Live, or set signProtocol to "1.1" or "1.2".',
+                );
+            }
         }
         if (err instanceof Error) {
             return err;
@@ -245,7 +251,8 @@ export class Waves {
 
 export function resolveProtocolFromVersion(appVersion: number[]): SignProtocol {
     const major = appVersion[0] || 0;
-    const minor = appVersion[1] || 0;
+    // If patch-only response is truncated, assume 1.1+ (v1.0 rejects on modern apps).
+    const minor = appVersion.length >= 2 ? appVersion[1] : (major >= 1 ? 1 : 0);
     if (major > 1 || (major >= 1 && minor >= 2)) {
         return '1.2';
     }

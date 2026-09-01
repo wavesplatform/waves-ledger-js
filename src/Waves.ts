@@ -146,7 +146,22 @@ export class Waves {
         const amountPrecision = sData?.amountPrecision ?? WAVES_CONFIG.WAVES_PRECISION;
         const amount2Precision = sData?.amount2Precision ?? 0;
         const feePrecision = sData.feePrecision ?? WAVES_CONFIG.WAVES_PRECISION;
-        if (appVersion[0] >= 1 && appVersion[1] >= 2 && appVersion[2] >= 0) {
+
+        /**
+         * Signing protocol formats:
+         *
+         * | Waves App version             | Prefix size | dataBuffer copies |
+         * |-------------------------------|-------------|-------------------|
+         * | Below 1.1.0                   | 24 bytes    | 1                 |
+         * | 1.1.0 and above, except 1.2.2 | 28 bytes    | 2                 |
+         * | Exactly 1.2.2                 | 29 bytes    | 4                 |
+        */
+
+        const isVersion122 = Waves.compareVersions(appVersion, [1, 2, 2]) === 0;
+
+        const isVersionAtLeast110 = Waves.compareVersions(appVersion, [1, 1, 0]) >= 0;
+
+        if (isVersion122) {
             const prefixData = Buffer.concat([
                 Waves.splitPath(path),
                 Buffer.from([
@@ -159,7 +174,7 @@ export class Waves {
                 new Buffer(Waves._toInt32Bytes(sData.dataBuffer.byteLength))
             ]);
             return Buffer.concat([prefixData, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer]);
-        } else if (appVersion[0] >= 1 && appVersion[1] >= 1 && appVersion[2] >= 0) {
+        } else if (isVersionAtLeast110) {
             const prefixData = Buffer.concat([
                 Waves.splitPath(path),
                 Buffer.from([
@@ -237,6 +252,30 @@ export class Waves {
         });
 
         return buffer;
+    }
+
+    /**
+     * Compares semantic versions represented as [major, minor, patch].
+     *
+     * Returns:
+     *  - a negative number if version < required
+     *  - 0 if version === required
+     *  - a positive number if version > required
+     */
+    protected static compareVersions(
+        version: Array<number>,
+        required: Array<number>
+    ): number {
+        for (let index = 0; index < 3; index++) {
+            const currentPart = version[index] == null ? 0 : version[index];
+            const requiredPart = required[index] == null ? 0 : required[index];
+
+            if (currentPart !== requiredPart) {
+                return currentPart - requiredPart;
+            }
+        }
+
+        return 0;
     }
 
 }

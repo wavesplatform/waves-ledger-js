@@ -1,6 +1,6 @@
 {
   "name": "@waves/ledger",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Waves ladger lib for browser",
   "main": "lib/WavesLedger.js",
   "types": "lib/WavesLedger.d.ts",
@@ -15,14 +15,16 @@
     "url": "https://github.com/wavesplatform/waves-ledger-js.git"
   },
   "scripts": {
-    "build": "tsc && node_modules/.bin/browserify lib/WavesLedger.js -s WavesLedgerJs -u @ledgerhq/logs -u @ledgerhq/hw-transport-u2f -o dist/waves-ledger.js && npm run build_transport",
-    "build_transport": "node_modules/.bin/browserify ./node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F.js -s TransportU2F -o dist/transport-u2f.js",
+    "build": "tsc && npx browserify lib/WavesLedger.js -s WavesLedgerJs -u @ledgerhq/logs -u @ledgerhq/hw-transport-u2f -o dist/waves-ledger.js && npm run build_transport",
+    "build_transport": "npx browserify ./node_modules/@ledgerhq/hw-transport-u2f/lib/TransportU2F.js -s TransportU2F -o dist/transport-u2f.js",
+    "test": "vitest run",
     "prepare": "npm run build",
     "build_ledger_monitor": "rimraf dist && npm run build && node_modules/.bin/browserify ledgerTest/index.js -o dist/ledgerTest.js -t [ babelify ] -t"
   },
   "dependencies": {
     "@ledgerhq/hw-transport-u2f": "^5.34.0",
-    "@ledgerhq/hw-transport-webusb": "^5.34.1",
+    "@ledgerhq/hw-transport-webhid": "^6.35.4",
+    "@ledgerhq/hw-transport-webusb": "^6.34.4",
     "@ledgerhq/logs": "^5.19.1",
     "@waves/ts-lib-crypto": "^1.4.3",
     "rimraf": "^3.0.2"
@@ -38,6 +40,8 @@
     "browserify": "^16.2.3",
     "browserify-global-shim": "^1.0.3",
     "typescript": "^3.9.6",
+    "vitest": "^2.0.0",
+    "@types/node": "^12.20.55",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   }

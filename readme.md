@@ -38,11 +38,27 @@ const ledger = new WavesLedger();
 `networkCode` is Waves network code (87 - for mainet)  
 `transport` is U2F Transport implementation. (hw-transport-u2f by default) 
 + [@ledgerhq/hw-transport-u2f](https://github.com/LedgerHQ/ledgerjs/tree/master/packages/hw-transport-u2f) 
++ [@ledgerhq/hw-transport-webhid](https://github.com/LedgerHQ/ledgerjs/tree/master/packages/hw-transport-webhid) (recommended for modern browsers)
 + [@ledgerhq/hw-transport-webusb](https://github.com/LedgerHQ/ledgerjs/tree/master/packages/hw-transport-webusb) 
 + [@ledgerhq/hw-transport-web-ble](https://github.com/LedgerHQ/ledgerjs/tree/master/packages/hw-transport-web-ble) 
 + [@ledgerhq/hw-transport-http](https://github.com/LedgerHQ/ledgerjs/tree/master/packages/hw-transport-http) 
 
 [Read about transport](https://github.com/LedgerHQ/ledgerjs)
+
+### WavesLedgerSync (recommended)
+
+For Chrome/Edge in 2024+, use `WavesLedgerSync` which connects via **WebHID** with WebUSB fallback.
+U2F (`WavesLedger` default) no longer works in modern browsers.
+
+```js
+import { WavesLedgerSync } from '@waves/ledger/lib/WavesLedgerSync';
+
+const ledger = new WavesLedgerSync({ networkCode: 87 });
+await ledger.tryConnect();
+const user = await ledger.getUserDataById(0);
+```
+
+Optional: force signing protocol if needed: `{ signProtocol: '1.1' }`.
 
 ### WavesLedger API
 

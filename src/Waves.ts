@@ -1,4 +1,5 @@
 import { base58Encode } from './utils';
+import type { SignProtocol } from './WavesLedger.interface';
 
 declare const Buffer: any;
 
@@ -34,15 +35,31 @@ const WAVES_CONFIG = {
     MAIN_NET_CODE: 87,
 };
 
+const STATUS_TEXT: Record<number, string> = {
+    [WAVES_CONFIG.STATUS.SW_CONDITIONS_NOT_SATISFIED]:
+        'Conditions not satisfied (you likely rejected the prompt on the device).',
+    [WAVES_CONFIG.STATUS.SW_DEVICE_IS_LOCKED]: 'Device is locked — unlock it and retry.',
+    [WAVES_CONFIG.STATUS.SW_SECURITY_STATUS_NOT_SATISFIED]: 'Security status not satisfied.',
+    [WAVES_CONFIG.STATUS.SW_INCORRECT_P1_P2]: 'Incorrect P1/P2 parameters.',
+    [WAVES_CONFIG.STATUS.SW_INS_NOT_SUPPORTED]:
+        'INS not supported — open the "Waves" app on the Ledger device.',
+    [WAVES_CONFIG.STATUS.SW_CLA_NOT_SUPPORTED]:
+        'CLA not supported — the Waves app is not open on the device.',
+    [WAVES_CONFIG.STATUS.SW_USER_CANCELLED]: 'Transaction was cancelled on the device.',
+    [WAVES_CONFIG.STATUS.SW_DEPRECATED_SIGN_PROTOCOL]: 'Deprecated signing protocol was used.',
+};
+
 export class Waves {
 
     protected transport: any;
     protected networkCode: number;
+    protected signProtocol: SignProtocol;
     protected _version: Promise<Array<number>> | null = null;
 
-    constructor(transport: any, networkCode = WAVES_CONFIG.MAIN_NET_CODE) {
+    constructor(transport: any, networkCode = WAVES_CONFIG.MAIN_NET_CODE, signProtocol: SignProtocol = 'auto') {
         this.transport = transport;
         this.networkCode = networkCode;
+        this.signProtocol = signProtocol;
         this.decorateClassByTransport();
     }
 
@@ -59,24 +76,28 @@ export class Waves {
     }
 
     protected static _toInt32Bytes(num: number): ArrayBuffer {
-        const buf = new ArrayBuffer(4); // an Int32 takes 4 bytes
+        const buf = new ArrayBuffer(4);
         const view = new DataView(buf);
-        view.setUint32(0, num, false); // byteOffset = 0; litteEndian = false
+        view.setUint32(0, num, false);
         return new Uint8Array(buf);
     }
 
     async getWalletPublicKey(path: string, verify = false): Promise<IUserData> {
         const buffer = Waves.splitPath(path);
         const p1 = verify ? 0x80 : 0x00;
-        const response = await this.transport.send(0x80, 0x04, p1, this.networkCode, buffer);
-        const publicKey = base58Encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
-        const address = response
-            .slice(WAVES_CONFIG.PUBLIC_KEY_LENGTH, WAVES_CONFIG.PUBLIC_KEY_LENGTH + WAVES_CONFIG.ADDRESS_LENGTH)
-            .toString('ascii');
-        const statusCode = response
-            .slice(-WAVES_CONFIG.STATUS_LENGTH)
-            .toString('hex');
-        return { publicKey, address, statusCode };
+        try {
+            const response = await this.transport.send(0x80, 0x04, p1, this.networkCode, buffer);
+            const publicKey = base58Encode(response.slice(0, WAVES_CONFIG.PUBLIC_KEY_LENGTH));
+            const address = response
+                .slice(WAVES_CONFIG.PUBLIC_KEY_LENGTH, WAVES_CONFIG.PUBLIC_KEY_LENGTH + WAVES_CONFIG.ADDRESS_LENGTH)
+                .toString('ascii');
+            const statusCode = response
+                .slice(-WAVES_CONFIG.STATUS_LENGTH)
+                .toString('hex');
+            return { publicKey, address, statusCode };
+        } catch (err) {
+            throw Waves.describeError(err);
+        }
     }
 
     async signTransaction(path: string, sData: ISignTxData): Promise<string> {
@@ -86,14 +107,14 @@ export class Waves {
 
     async signOrder(path: string, sOData: ISignOrderData): Promise<string> {
         const sData = sOData as ISignTxData;
-        sData.dataType = WAVES_CONFIG.SIGNED_CODES.ORDER
+        sData.dataType = WAVES_CONFIG.SIGNED_CODES.ORDER;
         const dataForDevice = await this._fillDataForSign(path, sData);
         return await this._signData(dataForDevice);
     }
 
     async signSomeData(path: string, sOData: ISignData): Promise<string> {
         const sData = sOData as ISignTxData;
-        sData.dataType = WAVES_CONFIG.SIGNED_CODES.SOME_DATA
+        sData.dataType = WAVES_CONFIG.SIGNED_CODES.SOME_DATA;
         sData.dataVersion = 0;
         sData.amountPrecision = 0;
         sData.feePrecision = 0;
@@ -103,7 +124,7 @@ export class Waves {
 
     async signRequest(path: string, sOData: ISignData): Promise<string> {
         const sData = sOData as ISignTxData;
-        sData.dataType = WAVES_CONFIG.SIGNED_CODES.REQUEST
+        sData.dataType = WAVES_CONFIG.SIGNED_CODES.REQUEST;
         sData.dataVersion = 0;
         sData.amountPrecision = 0;
         sData.feePrecision = 0;
@@ -113,7 +134,7 @@ export class Waves {
 
     async signMessage(path: string, sOData: ISignData): Promise<string> {
         const sData = sOData as ISignTxData;
-        sData.dataType = WAVES_CONFIG.SIGNED_CODES.MESSAGE
+        sData.dataType = WAVES_CONFIG.SIGNED_CODES.MESSAGE;
         sData.dataVersion = 0;
         sData.amountPrecision = 0;
         sData.feePrecision = 0;
@@ -142,52 +163,15 @@ export class Waves {
     }
 
     protected async _fillDataForSign(path: string, sData: ISignTxData) {
-        const appVersion = await this.getVersion();
-        const amountPrecision = sData?.amountPrecision ?? WAVES_CONFIG.WAVES_PRECISION;
-        const amount2Precision = sData?.amount2Precision ?? 0;
-        const feePrecision = sData.feePrecision ?? WAVES_CONFIG.WAVES_PRECISION;
-        if (appVersion[0] >= 1 && appVersion[1] >= 2 && appVersion[2] >= 0) {
-            const prefixData = Buffer.concat([
-                Waves.splitPath(path),
-                Buffer.from([
-                    amountPrecision,
-                    amount2Precision,
-                    feePrecision,
-                    sData.dataType,
-                    sData.dataVersion
-                ]),
-                new Buffer(Waves._toInt32Bytes(sData.dataBuffer.byteLength))
-            ]);
-            return Buffer.concat([prefixData, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer]);
-        } else if (appVersion[0] >= 1 && appVersion[1] >= 1 && appVersion[2] >= 0) {
-            const prefixData = Buffer.concat([
-                Waves.splitPath(path),
-                Buffer.from([
-                    amountPrecision,
-                    feePrecision,
-                    sData.dataType,
-                    sData.dataVersion
-                ]),
-                new Buffer(Waves._toInt32Bytes(sData.dataBuffer.byteLength))
-            ]);
-
-            return Buffer.concat([prefixData, sData.dataBuffer, sData.dataBuffer]);
-        } else {
-            const prefixData = Buffer.concat([
-                Waves.splitPath(path),
-                Buffer.from([
-                    amountPrecision,
-                    feePrecision,
-                    sData.dataType,
-                    sData.dataVersion
-                ])
-            ]);
-
-            return Buffer.concat([prefixData, sData.dataBuffer]);
+        let protocol = this.signProtocol;
+        if (protocol === 'auto') {
+            const appVersion = await this.getVersion();
+            protocol = resolveProtocolFromVersion(appVersion);
         }
+        return buildSignPayload(path, sData, protocol);
     }
 
-    protected async _signData(dataBufferAsync: Uint8Array): Promise<string> {
+    protected async _signData(dataBufferAsync: Uint8Array | Buffer): Promise<string> {
         const dataBuffer = await dataBufferAsync;
         const maxChunkLength = WAVES_CONFIG.MAX_SIZE - 5;
         const dataLength = dataBuffer.length;
@@ -214,7 +198,31 @@ export class Waves {
         if (statusCode === WAVES_CONFIG.STATUS.SW_OK) {
             return null;
         }
-        return { error: 'Wrong data', status: statusCode };
+        const reason = STATUS_TEXT[statusCode];
+        return {
+            error: reason ? `Ledger error 0x${statusCode.toString(16)} — ${reason}` : 'Wrong data',
+            status: statusCode
+        };
+    }
+
+    static describeError(err: unknown): Error {
+        if (err && typeof err === 'object' && 'statusCode' in err) {
+            const code = (err as { statusCode: number }).statusCode;
+            const reason = STATUS_TEXT[code];
+            if (reason) {
+                return new Error(`Ledger error 0x${code.toString(16)} — ${reason}`);
+            }
+            if (code === WAVES_CONFIG.STATUS.SW_DEPRECATED_SIGN_PROTOCOL) {
+                return new Error(
+                    'Ledger error 0x9102 — deprecated signing protocol. ' +
+                    'Update the Waves app in Ledger Live, or set signProtocol to "1.1" or "1.2".',
+                );
+            }
+        }
+        if (err instanceof Error) {
+            return err;
+        }
+        return new Error(String(err));
     }
 
     static splitPath(path: string) {
@@ -241,6 +249,73 @@ export class Waves {
 
 }
 
+export function resolveProtocolFromVersion(appVersion: number[]): SignProtocol {
+    const major = appVersion[0] || 0;
+    // If patch-only response is truncated, assume 1.1+ (v1.0 rejects on modern apps).
+    const minor = appVersion.length >= 2 ? appVersion[1] : (major >= 1 ? 1 : 0);
+    if (major > 1 || (major >= 1 && minor >= 2)) {
+        return '1.2';
+    }
+    if (major >= 1 && minor >= 1) {
+        return '1.1';
+    }
+    return '1.0';
+}
+
+function toInt32Bytes(num: number): Uint8Array {
+    const buf = new ArrayBuffer(4);
+    const view = new DataView(buf);
+    view.setUint32(0, num, false);
+    return new Uint8Array(buf);
+}
+
+export function buildSignPayload(path: string, sData: ISignTxData, protocol: SignProtocol): Buffer {
+    const pathBytes = Waves.splitPath(path);
+    const txBytes = new Buffer(sData.dataBuffer);
+    const amountPrecision = sData.amountPrecision ?? WAVES_CONFIG.WAVES_PRECISION;
+    const amount2Precision = sData.amount2Precision ?? 0;
+    const feePrecision = sData.feePrecision ?? WAVES_CONFIG.WAVES_PRECISION;
+
+    if (protocol === '1.2') {
+        const prefixData = Buffer.concat([
+            pathBytes,
+            Buffer.from([
+                amountPrecision,
+                amount2Precision,
+                feePrecision,
+                sData.dataType,
+                sData.dataVersion
+            ]),
+            new Buffer(toInt32Bytes(txBytes.byteLength))
+        ]);
+        return Buffer.concat([prefixData, txBytes, txBytes, txBytes, txBytes]);
+    }
+
+    if (protocol === '1.1') {
+        const prefixData = Buffer.concat([
+            pathBytes,
+            Buffer.from([
+                amountPrecision,
+                feePrecision,
+                sData.dataType,
+                sData.dataVersion
+            ]),
+            new Buffer(toInt32Bytes(txBytes.byteLength))
+        ]);
+        return Buffer.concat([prefixData, txBytes, txBytes]);
+    }
+
+    const prefixData = Buffer.concat([
+        pathBytes,
+        Buffer.from([
+            amountPrecision,
+            feePrecision,
+            sData.dataType,
+            sData.dataVersion
+        ])
+    ]);
+    return Buffer.concat([prefixData, txBytes]);
+}
 
 export interface IUserData {
     publicKey: string;
@@ -265,3 +340,5 @@ export interface ISignOrderData extends ISignData{
     amountPrecision?: number;
     feePrecision?: number;
 }
+
+export { WAVES_CONFIG };

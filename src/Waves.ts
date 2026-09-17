@@ -144,37 +144,20 @@ export class Waves {
     protected async _fillDataForSign(path: string, sData: ISignTxData) {
         const appVersion = await this.getVersion();
         const amountPrecision = sData?.amountPrecision ?? WAVES_CONFIG.WAVES_PRECISION;
-        const amount2Precision = sData?.amount2Precision ?? 0;
         const feePrecision = sData.feePrecision ?? WAVES_CONFIG.WAVES_PRECISION;
 
         /**
          * Signing protocol formats:
          *
-         * | Waves App version             | Prefix size | dataBuffer copies |
-         * |-------------------------------|-------------|-------------------|
-         * | Below 1.1.0                   | 24 bytes    | 1                 |
-         * | 1.1.0 and above, except 1.2.2 | 28 bytes    | 2                 |
-         * | Exactly 1.2.2                 | 29 bytes    | 4                 |
+         * | Waves App version  | Prefix size | dataBuffer copies |
+         * |--------------------|-------------|-------------------|
+         * | Below 1.1.0        | 24 bytes    | 1                 |
+         * | 1.1.0 and above    | 28 bytes    | 2                 |
         */
-
-        const isVersion122 = Waves.compareVersions(appVersion, [1, 2, 2]) === 0;
 
         const isVersionAtLeast110 = Waves.compareVersions(appVersion, [1, 1, 0]) >= 0;
 
-        if (isVersion122) {
-            const prefixData = Buffer.concat([
-                Waves.splitPath(path),
-                Buffer.from([
-                    amountPrecision,
-                    amount2Precision,
-                    feePrecision,
-                    sData.dataType,
-                    sData.dataVersion
-                ]),
-                new Buffer(Waves._toInt32Bytes(sData.dataBuffer.byteLength))
-            ]);
-            return Buffer.concat([prefixData, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer, sData.dataBuffer]);
-        } else if (isVersionAtLeast110) {
+        if (isVersionAtLeast110) {
             const prefixData = Buffer.concat([
                 Waves.splitPath(path),
                 Buffer.from([

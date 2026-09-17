@@ -36,21 +36,21 @@ async function getSigningDataLength(version) {
 }
 
 async function run() {
-    // 28-byte prefix + two 1-byte data copies.
+    // Versions below 1.1.0 use a 24-byte prefix and one data copy.
     assert.strictEqual(
-        await getSigningDataLength([1, 2, 1]),
+        await getSigningDataLength([0, 9, 6]),
+        25
+    );
+
+    // Versions starting from 1.1.0 use a 28-byte prefix and two data copies.
+    assert.strictEqual(
+        await getSigningDataLength([1, 1, 0]),
         30
     );
 
-    // 29-byte prefix + four 1-byte data copies.
+    // Waves App 1.2.2 also uses the 28-byte, two-copy protocol.
     assert.strictEqual(
         await getSigningDataLength([1, 2, 2]),
-        33
-    );
-
-    // 1.2.2 is an exact exception. 1.2.3 uses the two-copy protocol.
-    assert.strictEqual(
-        await getSigningDataLength([1, 2, 3]),
         30
     );
 

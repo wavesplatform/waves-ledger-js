@@ -1,0 +1,15 @@
+import { IUserData } from './Waves';
+
+export interface IWavesLedgerConfig {
+    debug?: boolean;
+    openTimeout?: number;
+    listenTimeout?:number;
+    exchangeTimeout?: number;
+    networkCode?: number;
+    transport?: any;
+}
+
+export interface IUser extends IUserData {
+    id: number;
+    path: string;
+}

@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { Waves } = require('../lib/Waves');
+const ledger = require('../lib/WavesLedger');
 
 const PATH = "44'/5741564'/0'/0'/0'";
 const DATA = Buffer.from([1]);
@@ -52,6 +53,12 @@ async function run() {
     assert.strictEqual(
         await getSigningDataLength([1, 2, 2]),
         30
+    );
+
+    assert.strictEqual(
+        typeof ledger.WavesLedgerSync,
+        'function',
+        'WavesLedgerSync must be exported'
     );
 
     console.log('Protocol selection tests passed');

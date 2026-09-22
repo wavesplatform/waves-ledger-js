@@ -1,9 +1,13 @@
 /// <reference path="../interface.d.ts"/>
 
 
-import {Waves, IUserData, ISignTxData, ISignOrderData, ISignData} from './Waves';
+import {Waves, ISignTxData, ISignOrderData, ISignData} from './Waves';
 import { default as TransportU2F } from '@ledgerhq/hw-transport-u2f';
 import { listen } from '@ledgerhq/logs';
+import {
+    IWavesLedgerConfig,
+    IUser
+} from './WavesLedger.interface';
 
 declare const Buffer: any;
 
@@ -22,7 +26,7 @@ export class WavesLedger {
     private _error: any;
     private _transport: any;
 
-    constructor(options: IWavesLedger) {
+    constructor(options: IWavesLedgerConfig, autoConnect: boolean = true) {
         this.ready = false;
         this._networkCode = options.networkCode == null ? 87 : options.networkCode;
         this._wavesLibPromise = null;
@@ -33,9 +37,12 @@ export class WavesLedger {
         this._exchangeTimeout = options.exchangeTimeout;
         this._error = null;
         this._transport = options.transport || TransportU2F;
-        this.tryConnect().catch(
-            (e) => console.warn('Ledger lib is not available', e)
-        );
+
+        if (autoConnect) {
+            this.tryConnect().catch(
+                (e) => console.warn('Ledger lib is not available', e)
+            );
+        }
     }
 
     async tryConnect(): Promise<void> {
@@ -101,7 +108,7 @@ export class WavesLedger {
     }
 
     async getPaginationUsersData(from: number, limit: number): Promise<Array<IUser>> {
-        const usersData = [];
+        const usersData: Array<IUser> = [];
 
         try {
             for (let id = from; id <= from + limit; id++) {
@@ -239,17 +246,5 @@ export class WavesLedger {
 }
 
 export default WavesLedger;
-
-interface IWavesLedger {
-    debug?: boolean;
-    openTimeout?: number;
-    listenTimeout?: number;
-    exchangeTimeout?: number;
-    networkCode?: number,
-    transport?: any;
-}
-
-interface IUser extends IUserData {
-    id: number;
-    path: string;
-}
+export * from './WavesLedgerSync';
+export * from './WavesLedger.interface';

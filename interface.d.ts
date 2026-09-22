@@ -4,3 +4,8 @@ declare module '@ledgerhq/hw-transport-u2f' {
 }
 
 declare module '@ledgerhq/logs'
+
+declare module '@ledgerhq/hw-transport-webusb' {
+    const TransportWebusb: any;
+    export default TransportWebusb;
+}
